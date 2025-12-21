@@ -9,11 +9,15 @@ about:
 :::{#me}
 
 ## Goals
-...
+Than
+
 ## Education
-...
+
+Bachelors - Political Science, received 2024 from Montclair State University.
+
+Masters - Data Analytics, Expected 2026 from University of Massachusetts.
+
 ## Experience
-...
 
 :::
 
