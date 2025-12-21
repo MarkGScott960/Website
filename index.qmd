@@ -9,10 +9,11 @@ about:
 :::{#me}
 
 ## Goals
-
+...
 ## Education
-
+...
 ## Experience
+...
 
 :::
 
