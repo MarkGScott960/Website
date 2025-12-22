@@ -10,8 +10,6 @@ website:
         text: Home
       - projects.qmd
     tools:
-      - icon: twitter
-        href: https://twitter.com/
       - icon: github
         href: https://github.com/MarkGScott960/Website
   page-footer:
@@ -22,6 +20,7 @@ format:
   html:
     theme: solar
     toc: true
+    toc-depth: 1
 
 editor: source
 

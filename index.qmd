@@ -9,7 +9,7 @@ about:
 :::{#me}
 
 ## Goals
-Than
+To become a professor and researcher of political science. 
 
 ## Education
 
@@ -21,4 +21,4 @@ Masters - Data Analytics, Expected 2026 from University of Massachusetts.
 
 :::
 
-Thanks for checking out my web site!
+
