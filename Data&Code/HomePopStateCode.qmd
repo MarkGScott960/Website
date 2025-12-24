@@ -45,7 +45,7 @@ ggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer >
     guide = FALSE  # hides the legend; remove if you want legend
   ) +
   labs(
-    title = "Individual Shelter Beds per Homeless Individual by State (2024)",
+    title = "Individual Emergency Shelter Beds per Homeless Individual by State (2024)",
     x = "State",
     y = "Beds per Homeless Individual"
   ) +
