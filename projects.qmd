@@ -2,7 +2,7 @@
 title: "Projects"
 ---
 # Completed Projects
-## Paterson City Mayor's Office Collaboration
+## Paterson City Mayor's Office Collaboration 
 
 As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor's Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuum of Cares to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law. 
 
