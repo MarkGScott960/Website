@@ -1,0 +1,76 @@
+---
+title: "DataVisualization"
+format:
+  html:
+    embed-resources: true
+engine: knitr
+---
+
+### Welcome to some of my data visualization projects
+
+
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+# results: hide
+
+packages <- c("tidyverse", "ggplot2", "plotly", "usmap")
+invisible(lapply(packages, library, character.only = TRUE))
+rm(packages)
+
+HomeState <- read.csv("C:/Users/markg/OneDrive/Documents/Website/Data&Code/HomPopState.csv")
+
+HomeStateUse <- HomeState |>
+  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |>
+  mutate(BedPer = total/HPop,
+         region = tolower(State))
+
+states_map <- map_data("state")
+states_map <- states_map |>
+  left_join(HomeStateUse, by = "region")
+
+ggplotly(
+  ggplot(states_map, aes(
+    x = long,
+    y = lat,
+    group = group,
+    fill = BedPer,
+    text = paste0(
+      "State: ", tools::toTitleCase(region),
+      "<br>Emergency Shelter Beds per Homeless Individual: ",
+      round(BedPer, 2)
+    )
+  )) +
+    geom_polygon(color = "white", linewidth = 0.2) +
+    coord_fixed(1.3) +
+    scale_fill_gradient2(
+      name = "Beds per\nHomeless Individual",
+      low = "#570C18",
+      
+      high = "#000087",
+      midpoint = 1,
+      labels = scales::number_format(accuracy = 0.01)
+    ) +
+    labs(
+      title = "Shelter Bed Availability by State",
+      subtitle = "Red = shortage (< 1), Blue = surplus (> 1)"
+    ) +
+    theme_void() +
+    theme(
+      legend.position = "right"
+    ),
+  tooltip = "text"
+)
+```
+
+
+
+
+
+
+
+
+
+

@@ -9,6 +9,8 @@ website:
       - href: index.qmd
         text: Home
       - projects.qmd
+      - href: DataVisualization.qmd
+        text: Data Visualization
     tools:
       - icon: github
         href: https://github.com/MarkGScott960/Website
