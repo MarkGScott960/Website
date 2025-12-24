@@ -1,15 +1,18 @@
 ---
-title: "DataVisualization"
+title: "Welcome to some of my data visualization projects"
 format:
   html:
     embed-resources: true
 engine: knitr
 ---
 
-### Welcome to some of my data visualization projects
+# Review of Homelessness 2024
+
+When looking at aggregate numbers state wide interesting patterns appear. All data is from the [Hud Exchange] and World Population News. <sup>[1][2]</sup>
 
 
 
+### Individual Emergency Shelter Beds Per Homeless Individual
 ```{r}
 #| echo: false
 #| message: false
