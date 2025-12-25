@@ -25,7 +25,7 @@
     "href": "DataVisualization.html",
     "title": "Welcome to some of my data visualization projects",
     "section": "",
-    "text": "Individual Emergency Shelter Beds Per Homeless Individual\n\n::: column width=“45%”When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative surplus capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs.\n\n::: column width=“55%”\n\n\n\n\n\n\n:::\n:::"
+    "text": "Individual Emergency Shelter Beds Per Homeless Individual\nWhen looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative surplus capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs."
   },
   {
     "objectID": "Data&Code/HomePopStateCode.embed.html",

@@ -6,19 +6,15 @@ format:
 engine: knitr
 ---
 
+
+
+::: {.columns} 
+::: {.column width="35%"}
 ### Individual Emergency Shelter Beds Per Homeless Individual
+When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. 
+:::
 
-
-::: columns 
-
-::: column width="45%" 
-
-When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative surplus capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. 
-
-::: 
-
-::: column width="55%"
-
+::: {.column width="65%"}
 ```{r}
 #| echo: false
 #| message: false
@@ -65,7 +61,5 @@ ggplotly(
   tooltip = "text"
 )
 ```
-
-::: 
-
+:::
 :::
