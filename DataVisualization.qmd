@@ -88,6 +88,7 @@ p$x$data[[trace_id]]$marker$colorbar <- list(
 p <- p %>% layout(margin = list(b = 120))
 
 p
+
 rm(HomeState,HomeStateUse,p,states_map, trace_id)
 
 ```
