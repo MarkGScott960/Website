@@ -24,7 +24,7 @@ packages <- c("tidyverse", "ggplot2", "plotly", "usmap")
 invisible(lapply(packages, library, character.only = TRUE))
 rm(packages)
 
-HomeState <- read.csv("Data&Code/HomPopState.csv")
+HomeState <- read.csv("VizCode/HomPopState.csv")
 
 HomeStateUse <- HomeState |>
   mutate(total = rowSums(across(4:11), na.rm = TRUE),
