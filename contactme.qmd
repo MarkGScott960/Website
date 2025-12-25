@@ -50,7 +50,7 @@ If you would like to contact me regarding my research, data visualizations, coll
 
 /* Button styling */
 .contact-form button {
-  background: none;
+  background-color: #fafafa;  
   border: 1px solid #444;
   padding: 10px 20px;
   font-size: 0.9rem;
