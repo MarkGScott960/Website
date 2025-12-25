@@ -34,7 +34,7 @@ HomeStateUse <- HomeState |>
 states_map <- map_data("state") |>
   left_join(HomeStateUse, by = "region")
 
-ggplotly(
+p <- ggplotly(
   ggplot(states_map, aes(
     long, lat, group = group,
     fill = BedPer,
@@ -57,9 +57,40 @@ ggplotly(
       title = "Emergency Shelter Beds per Homeless Individual (2024)",
       subtitle = "Red = shortage (<1), Blue = surplus (>1)"
     ) +
-    theme_void(),
+    theme_void()+
+  theme(
+    panel.background = element_rect(fill = "lightblue", colour = "lightblue"),
+    plot.background = element_rect(fill = "lightblue"),
+    legend.position = "bottom"
+  ),
   tooltip = "text"
+) 
+  
+# Find the trace that has a marker color scale
+trace_id <- which(
+  sapply(p$x$data, function(x) !is.null(x$marker$colorbar))
 )
+
+# Modify the colorbar 
+p$x$data[[trace_id]]$marker$colorbar <- list(
+  orientation = "h",
+  x = 0.5,
+  xanchor = "center",
+  y = -0.15,
+  thickness = 15,
+  title = list(
+    text = "Beds per Individual",
+    side = "bottom"
+  )
+)
+
+# Give space for the colorbar
+p <- p %>% layout(margin = list(b = 120))
+
+p
+rm(HomeState,HomeStateUse,p,states_map, trace_id)
+
 ```
+
 :::
 :::
