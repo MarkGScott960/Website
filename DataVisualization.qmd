@@ -6,39 +6,41 @@ format:
 engine: knitr
 ---
 
-# Review of Homelessness 2024
-
-When looking at aggregate numbers state wide interesting patterns appear. All data is from the [Hud Exchange] and World Population News. <sup>[1][2]</sup>
-
-
-
 ### Individual Emergency Shelter Beds Per Homeless Individual
+
+
+::: columns 
+
+::: column width="45%" 
+
+When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative surplus capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. 
+
+::: 
+
+::: column width="55%"
+
 ```{r}
 #| echo: false
 #| message: false
 #| warning: false
-# results: hide
 
 packages <- c("tidyverse", "ggplot2", "plotly", "usmap")
 invisible(lapply(packages, library, character.only = TRUE))
 rm(packages)
 
-HomeState <- read.csv("C:/Users/markg/OneDrive/Documents/Website/Data&Code/HomPopState.csv")
+HomeState <- read.csv("Data&Code/HomPopState.csv")
 
 HomeStateUse <- HomeState |>
-  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |>
-  mutate(BedPer = total/HPop,
+  mutate(total = rowSums(across(4:11), na.rm = TRUE),
+         BedPer = total / HPop,
          region = tolower(State))
 
-states_map <- map_data("state")
-states_map <- states_map |>
+states_map <- map_data("state") |>
   left_join(HomeStateUse, by = "region")
 
 ggplotly(
   ggplot(states_map, aes(
-    x = long,
-    y = lat,
-    group = group,
+    long, lat, group = group,
     fill = BedPer,
     text = paste0(
       "State: ", tools::toTitleCase(region),
@@ -46,33 +48,24 @@ ggplotly(
       round(BedPer, 2)
     )
   )) +
-    geom_polygon(color = "black", linewidth = 0.3) +  # black outlines
+    geom_polygon(color = "black", linewidth = 0.3) +
     coord_fixed(1.3) +
     scale_fill_gradient2(
-      name = "Emergency Shelter Beds per\nHomeless Individual",
       low = "#570C18",
       high = "#000087",
       midpoint = 1,
-      labels = scales::number_format(accuracy = 0.01)
+      labels = scales::number_format(accuracy = 0.01),
+      name = "Beds per Individual"
     ) +
     labs(
-      title = "Individual Emergency Shelter Beds per Homeless Individual by State (2024)",
-      subtitle = "Red = shortage (< 1), Blue = surplus (> 1)"
+      title = "Emergency Shelter Beds per Homeless Individual (2024)",
+      subtitle = "Red = shortage (<1), Blue = surplus (>1)"
     ) +
-    theme_void() +
-    theme(
-      legend.position = "right"
-    ),
+    theme_void(),
   tooltip = "text"
 )
 ```
 
+::: 
 
-
-
-
-
-
-
-
-
+:::
