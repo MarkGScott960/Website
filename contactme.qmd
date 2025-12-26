@@ -77,7 +77,7 @@ If you would like to contact me regarding my research, data visualizations, coll
   <input
     type="hidden"
     name="_redirect"
-    value="https://github.com/MarkGScott960/Website/thank-you.html"
+    value="https://markgscott960.github.io/Website/thank-you.html"
   >
 
   <label for="email">Your Email</label>
