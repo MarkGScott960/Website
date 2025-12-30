@@ -3,18 +3,22 @@ title: "Welcome to some of my data visualization projects"
 format:
   html:
     embed-resources: true
+    link-external-newwindow: true
 engine: knitr
 ---
 
 
-
+#Visulization of American Housing
 ::: {.columns} 
 ::: {.column width="35%"}
+<div style="padding-right: .25rem;">
 ### Individual Emergency Shelter Beds Per Homeless Individual
-When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. 
+When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data[^1] and a yearly report created by the World Population review.[^2] 
+</div>
 :::
 
 ::: {.column width="65%"}
+<div style="padding-left: .25rem;">
 ```{r}
 #| echo: false
 #| message: false
@@ -89,6 +93,9 @@ p
 # rm(HomeState,HomeStateUse,p,states_map, trace_id)
 
 ```
+</div>
+:::
+:::
 
-:::
-:::
+[^1]: [HUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)](https://files.hudexchange.info/reports/published/CoC_HIC_NatlTerrDC_2024.pdf)
+[^2]: [World Population Review - Homeless Population By State (2025)](https://worldpopulationreview.com/state-rankings/homeless-population-by-state)

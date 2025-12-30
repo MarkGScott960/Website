@@ -11,8 +11,6 @@ website:
       - projects.qmd
       - href: DataVisualization.qmd
         text: Data Visualization
-      - href: contactme.qmd
-        text: Contact Me
     tools:
       - icon: github
         href: https://github.com/MarkGScott960/Website
