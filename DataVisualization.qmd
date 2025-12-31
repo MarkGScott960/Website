@@ -10,7 +10,12 @@ format:
     css: styles.css
 engine: knitr
 ---
+::: {.lead}
+This page highlights my ability to design clear, professional, and analytically useful data visualizations.  
+The figures presented here are not intended solely as final results, but as demonstrations of methodological choices—such as data transformation, visual encoding, annotation, and layout—that support accurate interpretation and effective communication.  
 
+Together, these examples reflect my emphasis on clarity, accessibility, and reproducibility in data-driven work.
+:::
 
 # Visulization of American Housing
 ## The Homelessness Crisis
@@ -106,6 +111,7 @@ p
 
 ## The Medical Debt Crisis
 ### Medicaid Adult Coverage Expansion and Debt
+In this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt.
 
 :::{.columns}
 ::: {.column width ="65%"}
@@ -208,7 +214,9 @@ rm(MDEdesc)
 
 :::{.column width = "35%"}
 <div style="padding-left: .25rem;">
-In this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt. In this bar graph to the left leverages Medicaid expansion data was gathered from Medicaid.com [^3] and The Commonwealth Fund [^4]. This appetizer can be seen as a quick (yet messy and problematic) overview of the differences between medical debt and Medicaid availability. 
+This bar chart compares medical debt collection rates across U.S. states by Medicaid expansion status in 2023, using data from Medicaid.com[^1] and The Commonwealth Fund[^2]. States are grouped by expansion status and benchmarked against the national average.
+
+States that did not expand Medicaid show higher rates of medical debt in collections relative to both the national average and expansion states. While this does not provide causal evidence, this figure provides a quick, illustrative snapshot that highlights disparities linked to health care access and motivates deeper policy analysis.
 </div>
 :::
 
@@ -232,7 +240,9 @@ As the average American ages, increased expenditures into elderly care have been
 
 
 
+# Political Movments and Trends
 
+## Veterans Voting Patterns
 
 
 
