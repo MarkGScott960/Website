@@ -2,7 +2,7 @@
 title: "About Me"
 about:
   id: me
-  template: broadside
+  template: jolla
   image: img/profile.jpg
 ---
 

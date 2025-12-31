@@ -4,11 +4,14 @@ format:
   html:
     embed-resources: true
     link-external-newwindow: true
+    page-layout: full
+    toc-depth: 2
 engine: knitr
 ---
 
 
-#Visulization of American Housing
+# Visulization of American Housing
+## The Homelessness Crisis
 ::: {.columns} 
 ::: {.column width="35%"}
 <div style="padding-right: .25rem;">
