@@ -3,6 +3,8 @@ title: "Projects"
 format:
   html:
     link-external-newwindow: true
+    theme: quartz
+    css: styles.css
 ---
 # Completed Projects
 ## Paterson City Mayor's Office Collaboration

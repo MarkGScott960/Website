@@ -3,6 +3,8 @@ title: "Contact Me"
 format:
   html:
     embed-resources: true
+    theme: superhero
+    css: styles.css
 ---
 
 If you would like to contact me regarding my research, data visualizations, collaboration opportunities, or any other opportunity please use the form below.

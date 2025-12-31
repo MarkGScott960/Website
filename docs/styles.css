@@ -1,0 +1,20 @@
+/* Minty-like navbar for Cosmo theme */
+.navbar {
+  background-color: #78c2ad !important;  /* Minty green background */
+  border-color: #5bb598 !important;      /* Slightly darker border */
+}
+
+.navbar a,
+.navbar-brand,
+.navbar-nav a {
+  color: white !important;               /* Minty style white links */
+}
+
+.navbar a:hover,
+.navbar-nav a:hover {
+  color: #f0f0f0 !important;            /* Lighter hover */
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+}
