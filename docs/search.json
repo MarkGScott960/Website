@@ -9,9 +9,9 @@
   {
     "objectID": "thank-you.html",
     "href": "thank-you.html",
-    "title": "\nThank You for Reaching Out\n",
+    "title": "Mark G Scott",
     "section": "",
-    "text": "Your message has been successfully sent. I appreciate you taking the time to get in touch, and I will respond as soon as possible.\n\n\nWhether your message relates to research, data visualization, collaboration, or general inquiry, I look forward to continuing the conversation.\n\nReturn to Home"
+    "text": "Content for first column.\n\n\nMore content here.\n\n\n\n\nThis will stack below on mobile."
   },
   {
     "objectID": "index.html",
@@ -60,14 +60,14 @@
     "href": "DataVisualization.html#the-homelessness-crisis",
     "title": "Welcome to some of my data visualization projects",
     "section": "The Homelessness Crisis",
-    "text": "The Homelessness Crisis\n\n\n\nIndividual Emergency Shelter Beds Per Homeless Individual\nWhen looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data1 and a yearly report created by the World Population review.2"
+    "text": "The Homelessness Crisis\n\n\n\n\nIndividual Emergency Shelter Beds Per Homeless Individual\nWhen looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data1 and a yearly report created by the World Population review.2"
   },
   {
     "objectID": "DataVisualization.html#the-medical-debt-crisis",
     "href": "DataVisualization.html#the-medical-debt-crisis",
     "title": "Welcome to some of my data visualization projects",
     "section": "The Medical Debt Crisis",
-    "text": "The Medical Debt Crisis\n\nMedicaid Adult Coverage Expansion and Debt\nIn this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThis bar chart compares medical debt collection rates across U.S. states by Medicaid expansion status in 2023, using data from Medicaid.com3 and The Commonwealth Fund4. States are grouped by expansion status and benchmarked against the national average.\nStates that did not expand Medicaid show higher rates of medical debt in collections relative to both the national average and expansion states. While this does not provide causal evidence, this figure provides a quick, illustrative snapshot that highlights disparities linked to health care access and motivates deeper policy analysis."
+    "text": "The Medical Debt Crisis\n\nMedicaid Adult Coverage Expansion and Debt\nIn this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThis bar chart compares medical debt collection rates across U.S. states by Medicaid expansion status in 2023, using data from Medicaid.com3 and The Commonwealth Fund4. States are grouped by expansion status and benchmarked against the national average.\nStates that did not expand Medicaid show higher rates of medical debt in collections relative to both the national average and expansion states. While this does not provide causal evidence, this figure provides a quick, illustrative snapshot that highlights disparities linked to health care access and motivates deeper policy analysis."
   },
   {
     "objectID": "DataVisualization.html#do-we-respect-our-elders",
