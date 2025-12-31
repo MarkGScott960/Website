@@ -93,12 +93,135 @@ p$x$data[[trace_id]]$marker$colorbar <- list(
 
 p
 
-# rm(HomeState,HomeStateUse,p,states_map, trace_id)
+ rm(HomeState,HomeStateUse,p,states_map, trace_id)
 
 ```
 </div>
 :::
 :::
 
+# Visulization of The American Healthcare Crisis
+
+
+### Medicaid Adult Coverage Expansion and Debt
+
+:::{.columns}
+::: {.column width ="65%"}
+
+```{r}
+#| label: MedicadeExpansion
+#| echo: false
+#| message: false
+#| warning: false
+MDEdf <- read.csv("VizCode/MedicalDebtExpansion.csv")
+MDEdf <- MDEdf |>
+  mutate(region = state, .before = time_period) |> 
+  select(!state & !time_period & !cohort &!population) |> 
+  mutate(Expanded = as.character(Expanded),
+  Expanded = case_when(
+    Expanded == 1 ~ "Medicaid Expanded",
+    Expanded == 0 ~ "Medicaid Not Expanded",
+    TRUE ~ Expanded
+  ))
+
+MDEdesc <- MDEdf |> 
+  group_by(Expanded) |>
+  filter(!is.na(point_estimate)) |> 
+  summarize(
+    Count = n(),
+    `Mean` = mean(point_estimate),
+    `Standard Deviation` = sd(point_estimate),
+    Range =str_c(min(point_estimate)," : ",(max(point_estimate)))
+  ) |> 
+  na.omit()
+
+ggplot(MDEdesc, aes(x = Expanded, y = Mean, fill = Expanded)) +
+  
+  # Bars
+  geom_col(width = 0.55, alpha = 0.9) +
+  
+  # National average reference line
+  geom_hline(
+    yintercept = 5.04,
+    linetype = "dashed",
+    linewidth = 0.5,
+    color = "gray30"
+  ) +
+  
+  # Annotation for national average (to the right)
+  annotate(
+    "text",
+    x = Inf,
+    y = 5.04,
+    label = "National Average: 5.04%",
+    hjust = 3.35,
+    vjust = -0.6,
+    size = 4,
+    color = "gray30"
+  ) +
+  
+  # Labels
+  labs(
+    title = "Medical Debt in Collections by Medicaid Expansion",
+    subtitle = "Share of individuals with a credit bureau record (%)",
+    x = NULL,
+    y = "Percent with Medical Debt in Collections",
+    caption = "Source: The Commonwealth Fund & Medicaid.gov"
+  ) +
+  
+  # Color palette
+  scale_fill_manual(
+    values = c(
+      "Medicaid Expanded" = "#2C7FB8",
+      "Medicaid Not Expanded" = "#D95F02"
+    )
+  ) +
+  
+  # Percent formatting
+  scale_y_continuous(
+    labels = function(x) paste0(x, "%"),
+    expand = expansion(mult = c(0, 0.1))
+  ) +
+  
+  # THIS fixes clipping
+  coord_cartesian(clip = "off") +
+  
+  # Theme tuning for Quarto/web
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold", size = 18),
+    plot.subtitle = element_text(size = 13, color = "gray40"),
+    axis.text.x = element_text(face = "bold"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 10, color = "gray50"),
+    plot.margin = margin(10, 45, 10, 10)
+  )
+
+rm(MDEdesc)
+```
+
+:::
+
+:::{.column width = "35%"}
+In this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt. In this bar graph Medicaid expansion data was gathered from Medicaid.com [^3] and The Commonwealth Fund [^4]
+:::
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
 [^1]: [HUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)](https://files.hudexchange.info/reports/published/CoC_HIC_NatlTerrDC_2024.pdf)
 [^2]: [World Population Review - Homeless Population By State (2025)](https://worldpopulationreview.com/state-rankings/homeless-population-by-state)
+[^3]: [Medicaid Expansion Program Data (2023)](https://www.medicaid.gov/medicaid/program-information/downloads/medicaid-expansion-state-map.pdf)
+[^4]: [The Commonwealth Fund - People With Medical Debt in Collections (2023)](https://www.commonwealthfund.org/datacenter/people-medical-debt-collections)
