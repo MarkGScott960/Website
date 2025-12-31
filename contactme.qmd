@@ -3,6 +3,7 @@ title: "Contact Me"
 format:
   html:
     embed-resources: true
+    link-external-newwindow: true
     theme: superhero
     css: styles.css
 ---
