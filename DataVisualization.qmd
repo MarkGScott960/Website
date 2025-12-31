@@ -205,7 +205,7 @@ rm(MDEdesc)
 :::
 
 :::{.column width = "35%"}
-In this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt. In this bar graph Medicaid expansion data was gathered from Medicaid.com [^3] and The Commonwealth Fund [^4]
+In this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt. In this bar graph to the left leverages Medicaid expansion data was gathered from Medicaid.com [^3] and The Commonwealth Fund [^4]. This appetizer can be seen as a quick (yet messy and problematic) overview of the differences between medical debt and Medicaid availability. 
 :::
 
 :::
