@@ -102,7 +102,7 @@ p
 
 # Visulization of The American Healthcare Crisis
 
-
+## The Medical Debt Crisis
 ### Medicaid Adult Coverage Expansion and Debt
 
 :::{.columns}
@@ -209,7 +209,21 @@ In this next section I will be investigating the differences in the COVID-19 Med
 :::
 
 :::
+## Do We Respect Our Elders?
 
+::: {.columns}
+
+:::{.column width = "35%"}
+As the average American ages, increased expenditures into elderly care have been experienced. But this raises the question, what is our care capacity and what are our healthcare outcomes?
+:::
+
+:::{.column width = "65%"}
+```{r}
+
+```
+
+:::
+:::
 
 
 

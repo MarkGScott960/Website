@@ -1,0 +1,54 @@
+---
+title: "HomePopStateCode"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: Loadem
+#| echo: false
+
+packages <- c("tidyverse", "ggplot2", "plotly", "usmap")
+lapply(packages, library, character.only = TRUE)
+rm(packages)
+
+HomeState <- read_csv("HomPopState.csv")
+
+```
+
+```{r}
+#| label: Mutate
+
+HomeStateUse <- HomeState |>
+  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |>
+  mutate(BedPer = total/HPop,
+         region = tolower(State))
+
+states_map <- map_data("state")
+states_map <- states_map |>
+  left_join(HomeStateUse, by = "region")
+```
+
+```{r}
+#| label: ColGraph
+
+# {{< embed Data&Code/HomePopStateCode.qmd#ColGraph >}} -To call in other document
+
+ggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer > 1)) +
+  geom_col(width = .6) +
+  coord_flip() +
+  scale_fill_manual(
+    values = c("TRUE" = "blue", "FALSE" = "red"),
+    labels = c("FALSE" = "<= 1", "TRUE" = "> 1"),
+    guide = FALSE  # hides the legend; remove if you want legend
+  ) +
+  labs(
+    title = "Individual Emergency Shelter Beds per Homeless Individual by State (2024)",
+    x = "State",
+    y = "Beds per Homeless Individual"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(angle = 45, hjust = 1)  # slant y-axis labels
+  )
+```

@@ -154,6 +154,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="paterson-city-mayors-office-collaboration" class="level2">
 <h2 class="anchored" data-anchor-id="paterson-city-mayors-office-collaboration">Paterson City Mayor’s Office Collaboration</h2>
 <p>As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuum of Cares to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.</p>
+<p>You can find the full chapter <a href="PassaicCoC.pdf" target="_blank">Paterson City Mayor’s Office Collaboration (PDF)</a></p>
 </section>
 </section>
 <section id="planned-projects" class="level1">
@@ -161,6 +162,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="an-exploratory-study-of-end-of-life-planning-among-unsheltered-and-unhoused-individuals" class="level2">
 <h2 class="anchored" data-anchor-id="an-exploratory-study-of-end-of-life-planning-among-unsheltered-and-unhoused-individuals">An Exploratory Study of End-of-Life Planning Among Unsheltered and Unhoused Individuals</h2>
 <p>This project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life’s end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.</p>
+<p>You can find the full proposal <a href="_RP - 3.0.pdf" target="_blank">Research Proposal (PDF)</a></p>
 
 
 </section>
@@ -253,6 +255,11 @@ ul.task-list li input[type="checkbox"] {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
         }
       }
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
