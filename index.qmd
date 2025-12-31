@@ -4,6 +4,9 @@ about:
   id: me
   template: jolla
   image: img/profile.jpg
+format:
+  html:
+    link-external-newwindow: true
 ---
 
 :::{#me}
@@ -19,13 +22,13 @@ about:
 
 ## Experience
 
-***2025 - Current:*** *Office Administrator - Green Collar LLC*
+***2025 - Current:*** *Office Administrator - [Green Collar LLC](https://www.greencollarma.com/)*
 
-***2024 - 2025:*** *Research Assistant - APPRISE INC*
+***2024 - 2025:*** *Research Assistant - [APPRISE INC](https://www.appriseinc.org/)*
 
-***2023 - 2024:*** *Research Assistant - Montclair State University*
+***2023 - 2024:*** *Research Assistant - [Montclair State University](https://www.montclair.edu/)*
 
-***2018 - 2024:*** *Shift Leader - Qdoba*
+***2018 - 2024:*** *Shift Leader - [Qdoba](https://www.qdoba.com/)*
 
 :::
 
