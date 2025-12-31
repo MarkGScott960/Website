@@ -6,6 +6,8 @@ format:
     link-external-newwindow: true
     page-layout: full
     toc-depth: 2
+    theme: cosmo
+    css: styles.css
 engine: knitr
 ---
 
@@ -210,11 +212,12 @@ In this next section I will be investigating the differences in the COVID-19 Med
 
 :::
 ## Do We Respect Our Elders?
+As the average American ages, increased expenditures into elderly care have been experienced. But this raises the question, what is our care capacity and what are our healthcare outcomes?
 
 ::: {.columns}
 
 :::{.column width = "35%"}
-As the average American ages, increased expenditures into elderly care have been experienced. But this raises the question, what is our care capacity and what are our healthcare outcomes?
+
 :::
 
 :::{.column width = "65%"}
