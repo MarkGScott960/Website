@@ -165,8 +165,8 @@ ggplot(MDEdesc, aes(x = Expanded, y = Mean, fill = Expanded)) +
     title = "Medical Debt in Collections by Medicaid Expansion",
     subtitle = "Share of individuals with a credit bureau record (%)",
     x = NULL,
-    y = "Percent with Medical Debt in Collections",
-    caption = "Source: The Commonwealth Fund & Medicaid.gov"
+    y = "Percent with Medical Debt in Collections (2023)",
+    caption = "Source: The Commonwealth Fund & Medicaid.gov (2023)"
   ) +
   
   # Color palette
