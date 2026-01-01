@@ -27,7 +27,7 @@ When looking at emergency shelter capacity relative to the homeless population, 
 </div>
 :::
 
-::: {.column width="65%"}
+::: {layout-cell}
 <div style="padding-left: .25rem;">
 ```{r}
 #| echo: false
@@ -224,15 +224,101 @@ States that did not expand Medicaid show higher rates of medical debt in collect
 ## Do We Respect Our Elders?
 As the average American ages, increased expenditures into elderly care have been experienced. But this raises the question, what is our care capacity and what are our healthcare outcomes?
 
-::: {.columns}
+::: {layout-ncol=2}
 
-:::{.column width = "35%"}
+:::{layout-cell}
 
 :::
 
-:::{.column width = "65%"}
+:::{layout-cell}
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
+Census2020 <- read_csv("VizCode/Census/Census2020.csv") |> 
+  select(3,4,6,contains("TOT")) |> 
+  rename(age_under_5   = UNDER5_TOT,
+    rrr1      = AGE513_TOT,
+    rrr2     = AGE1417_TOT,
+    rrr3     = AGE1824_TOT,
+    rrr4   = AGE16PLUS_TOT,
+    rrr5   = AGE18PLUS_TOT,
+    rrr6     = AGE1544_TOT,
+    rrr8     = AGE2544_TOT,
+    rrr9     = AGE4564_TOT,
+    rrr0   = AGE65PLUS_TOT,
+    rrr01 = MEDIAN_AGE_TOT) |> 
+  select(!contains("rrr")) |>
+  mutate(YEAR = case_when(
+    YEAR == 1 ~ 2020,
+    YEAR == 4 ~ 2022,
+    YEAR == 6 ~ 2024,
+    TRUE ~ NA_real_
+  )) |> 
+  filter(!is.na(YEAR))
+  
+Census2010 <- read_csv("VizCode/Census/Census2010.csv") |> 
+  select(3,4,6,contains("TOT")) |> 
+  rename(age_under_5   = UNDER5_TOT,
+    rrr1      = AGE513_TOT,
+    rrr2     = AGE1417_TOT,
+    rrr3     = AGE1824_TOT,
+    rrr4   = AGE16PLUS_TOT,
+    rrr5   = AGE18PLUS_TOT,
+    rrr6     = AGE1544_TOT,
+    rrr8     = AGE2544_TOT,
+    rrr9     = AGE4564_TOT,
+    rrr0   = AGE65PLUS_TOT,
+    rrr01 = MEDIAN_AGE_TOT) |> 
+  select(!contains("rrr")) |> 
+  mutate(YEAR = case_when(
+    YEAR == 3 ~ 2010,
+    YEAR == 5 ~ 2012,
+    YEAR == 7 ~ 2014,
+    YEAR == 9 ~ 2016,
+    YEAR == 11 ~ 2018,
+    YEAR == 14 ~ 2020,
+    TRUE ~ NA_real_
+  ),
+  COUNTY = as.character(COUNTY)) |> 
+  filter(!is.na(YEAR))
 
+CensusFull <- bind_rows(
+  Census2010,
+  Census2020
+) |> 
+  pivot_longer(
+    cols = starts_with("AGE"),
+    names_to = "age_group",
+    values_to = "population"
+  ) |> 
+  mutate(age_group= case_when(
+    age_group == "age_under_5" ~ "4 Years and Under",
+     age_group == "AGE1014_TOT" ~ "10 - 14 Years",
+     age_group == "AGE1519_TOT" ~ "15 - 19 Years",
+     age_group == "AGE2024_TOT" ~ "20 - 24 Years",
+     age_group == "AGE2529_TOT" ~ "25 - 29 Years",
+     age_group == "AGE3034_TOT" ~ "30 - 34 Years",
+    age_group == "AGE3539_TOT" ~ "35 - 39 Years",
+    age_group == "AGE4044_TOT" ~ "40 - 44 Years",
+    age_group == "AGE4549_TOT" ~ "45 - 49 Years",
+    age_group == "AGE5054_TOT" ~ "50 -54 Years",
+    age_group == "AGE5559_TOT" ~ "55 - 59 Years",
+    age_group == "AGE6064_TOT" ~ "60 - 64 Years",
+    age_group == "AGE6569_TOT" ~ "65 - 69 Years",
+    age_group == "AGE7074_TOT" ~ "70 - 74 Years",
+    age_group == "AGE7579_TOT" ~ "75 - 79 Years",
+    age_group == "AGE8084_TOT" ~ "80 - 84 Years",
+    age_group == "AGE85PLUS_TOT" ~ "85+",
+    TRUE ~ NA_character_
+  ))
+
+CensusDesc <- CensusFull |> 
+  group_by(age_group, YEAR) |> 
+  summarize(
+    N = n(),
+    Percentage = (N/ sum(N))
+  )
 ```
 
 :::
@@ -254,3 +340,4 @@ As the average American ages, increased expenditures into elderly care have been
 [^2]: [World Population Review - Homeless Population By State (2025)](https://worldpopulationreview.com/state-rankings/homeless-population-by-state)
 [^3]: [Medicaid Expansion Program Data (2023)](https://www.medicaid.gov/medicaid/program-information/downloads/medicaid-expansion-state-map.pdf)
 [^4]: [The Commonwealth Fund - People With Medical Debt in Collections (2023)](https://www.commonwealthfund.org/datacenter/people-medical-debt-collections)
+
