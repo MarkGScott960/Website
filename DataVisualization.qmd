@@ -34,7 +34,7 @@ When looking at emergency shelter capacity relative to the homeless population, 
 #| message: false
 #| warning: false
 
-packages <- c("tidyverse", "ggplot2", "plotly", "usmap")
+packages <- c("tidyverse", "ggplot2", "plotly", "usmap", "scales", "readxl")
 invisible(lapply(packages, library, character.only = TRUE))
 rm(packages)
 
@@ -224,17 +224,16 @@ States that did not expand Medicaid show higher rates of medical debt in collect
 ## Do We Respect Our Elders?
 As the average American ages, increased expenditures into elderly care have been experienced. But this raises the question, what is our care capacity and what are our healthcare outcomes?
 
-::: {layout-ncol=2}
+### General Population Trends
 
-:::{layout-cell}
+Before tackling if an elder care crisis exists, one must first ask, what have the general population trends been in the United States.
 
-:::
-
-:::{layout-cell}
 ```{r}
+#| label: CensusData
 #| echo: false
 #| message: false
 #| warning: false
+
 Census2020 <- read_csv("VizCode/Census/Census2020.csv") |> 
   select(3,4,6,contains("TOT")) |> 
   rename(age_under_5   = UNDER5_TOT,
@@ -277,11 +276,17 @@ Census2010 <- read_csv("VizCode/Census/Census2010.csv") |>
     YEAR == 7 ~ 2014,
     YEAR == 9 ~ 2016,
     YEAR == 11 ~ 2018,
-    YEAR == 14 ~ 2020,
+    YEAR == 12 ~ 2019,
     TRUE ~ NA_real_
   ),
   COUNTY = as.character(COUNTY)) |> 
   filter(!is.na(YEAR))
+
+BirthRates <- read_csv("VizCode/Census/births.csv") |> 
+  rename(YEAR = Year, 
+         Fertility = `Fertility Rate (Births Per Woman)`) |> 
+  mutate(YEAR = as.double(YEAR),
+         FertilityA =  (Fertility - 1.62) / (3.65 - 1.62))
 
 CensusFull <- bind_rows(
   Census2010,
@@ -293,36 +298,114 @@ CensusFull <- bind_rows(
     values_to = "population"
   ) |> 
   mutate(age_group= case_when(
-    age_group == "age_under_5" ~ "4 Years and Under",
-     age_group == "AGE1014_TOT" ~ "10 - 14 Years",
-     age_group == "AGE1519_TOT" ~ "15 - 19 Years",
-     age_group == "AGE2024_TOT" ~ "20 - 24 Years",
-     age_group == "AGE2529_TOT" ~ "25 - 29 Years",
-     age_group == "AGE3034_TOT" ~ "30 - 34 Years",
-    age_group == "AGE3539_TOT" ~ "35 - 39 Years",
-    age_group == "AGE4044_TOT" ~ "40 - 44 Years",
-    age_group == "AGE4549_TOT" ~ "45 - 49 Years",
-    age_group == "AGE5054_TOT" ~ "50 -54 Years",
-    age_group == "AGE5559_TOT" ~ "55 - 59 Years",
+    age_group %in% c("AGE1014_TOT", "AGE1519_TOT") ~ "10 -19 Years",
+    age_group %in% c("AGE2024_TOT", "AGE2529_TOT") ~ "20 -29 Years",
+    age_group %in% c("AGE3034_TOT", "AGE3539_TOT") ~ "30 -39 Years",
+    age_group %in% c("AGE4044_TOT", "AGE4549_TOT") ~ "40 -49 Years",
+    age_group %in% c("AGE5054_TOT", "AGE5559_TOT") ~ "50 -59 Years",
     age_group == "AGE6064_TOT" ~ "60 - 64 Years",
-    age_group == "AGE6569_TOT" ~ "65 - 69 Years",
-    age_group == "AGE7074_TOT" ~ "70 - 74 Years",
-    age_group == "AGE7579_TOT" ~ "75 - 79 Years",
-    age_group == "AGE8084_TOT" ~ "80 - 84 Years",
-    age_group == "AGE85PLUS_TOT" ~ "85+",
+    age_group %in% c("AGE6569_TOT", "AGE7074_TOT", "AGE7579_TOT", "AGE8084_TOT", "AGE85PLUS_TOT") ~ "65 And Above",
     TRUE ~ NA_character_
   ))
 
-CensusDesc <- CensusFull |> 
-  group_by(age_group, YEAR) |> 
-  summarize(
-    N = n(),
-    Percentage = (N/ sum(N))
-  )
+CensusFull <- full_join(BirthRates, CensusFull, by = "YEAR")
+```
+  
+
+```{r}
+#| label: BirthrateViz
+#| echo: false
+#| message: false
+#| warning: false
+#| out-width: "100%"
+#| fig-height: 6
+#| fig-asp: 0.6
+  
+bands <- data.frame(
+  start = c(1946, 1973, 2007, 2020),
+  end   = c(1964, 1975, 2009, 2023),
+  period = c("Baby Boom", "Oil Crisis / Recession", "Great Recession", "COVID-19 Pandemic"),
+  color = c("#85C9E8", "#F6762A", "#630031", "#171717")
+)
+
+ggplot(BirthRates, aes(x = YEAR, y = Fertility)) +
+  geom_rect(
+    data = bands,
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = period),
+    alpha = 0.5,
+    inherit.aes = FALSE)+
+  geom_line(color = "#460001", size = 1) +
+  geom_hline(yintercept = 2.1, linetype = "dashed", color = "blue") +
+  annotate("text", x = 1955, y = 2.15, label = "Replacement Level (2.1)", color = "black", hjust = -.75, vjust = .25) +
+  scale_fill_manual(values = bands$color) +
+  labs(
+    y = "National Average Birthrate (Births Per Woman)",
+    x = "Year",
+    fill = "Historical Periods",
+    title = "American Birthrates, (1950-2024)",
+    subtitle = "Births per individual woman")+
+theme_minimal()+
+theme(plot.margin = margin(10, 10, 10, 10),
+      aspect.ratio = 0.6,
+      legend.position = "bottom")
+
 ```
 
-:::
-:::
+
+```{r}
+#| label: CensusViz
+#| echo: false
+#| message: false
+#| warning: false
+#| out-width: "100%"
+#| fig-height: 6
+#| fig-asp: 0.6
+
+age_order <- c(
+  "10 -19 Years",
+  "20 -29 Years",
+  "30 - 39 Years",
+  "40 - 49 Years",
+  "50 - 59 Years",
+  "60 - 64 Years",
+  "65 And Above"
+)
+
+CensusStack <- CensusFull |>
+  na.omit() |> 
+  group_by(YEAR, age_group) |>
+  summarize(
+    population = sum(population, na.rm = TRUE),
+    .groups = "drop_last"
+  ) |>
+  mutate(
+    year_total = sum(population),
+    Percentage = (population / year_total)
+  ) |>
+  ungroup() 
+
+
+ggplot(CensusStack, aes(x = YEAR, y = Percentage, fill = age_group)) +
+  geom_area(alpha = 0.9, color = "white", linewidth = 0.2) +
+  scale_x_continuous(
+    limits = c(2010, 2024),
+    breaks = seq(2010, 2024, 2)) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(0,1)) +
+labs(
+    title = "U.S. Population by Age Group Over Time",
+    x = "Year (2010 - 2020)",
+    y = "Percent of Population",
+    fill = "Age Group"
+  )+
+theme(aspect.ratio = 0.6,
+      plot.margin = margin(10, 10, 10, 10),
+      legend.position = "bottom")
+
+```
+
+
+
 
 
 # Political Movments and Trends
@@ -330,6 +413,9 @@ CensusDesc <- CensusFull |>
 ## Veterans Voting Patterns
 
 
+```{r}
+
+```
 
 
 
