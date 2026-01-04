@@ -1,0 +1,15 @@
+{
+  "hash": "f9cc6c56a0fe8df9d717eb9aa86bba04",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"VizCode\"\nexecute:\n  freeze: auto\n---\n\n\n::: {.cell}\n\n:::\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# PresJobApprovalD <- PresJobApproval |>\n#   slice(rep(1:n(), each = 2))|>\n#   filter(!is.na(X.1))\n# \n# \n# \n# bandsadmin <- data.frame(\n#   start = c(1950, 1953, 1961,1969, 1977, 1981, 1993, 2001, 2009, 2017, 2021),\n#   end = c(1953, 1961, 1969,1977, 1981, 1993, 2001, 2009, 2017, 2021, 2025),\n#   period = c(\"Democratic\", \"Republican\", \"Democratic\",\"Republican\", \"Democratic\", \"Republican\",\"Democratic\",\"Republican\", \"Democratic\", \"Republican\", \"Democratic\"),\n#   color = c(\"#1313F7\", \"#F7000D\", \"#1313F7\",\"#F7000D\",\"#1313F7\",\"#F7000D\", \"#1313F7\", \"#F7000D\", \"#1313F7\", \"#F7000D\",\"#1313F7\"))\n# \n# \n# ggplot(PresJobApproval, aes(x = YEAR, y = Fertility)) +\n#   geom_rect(\n#     data = bandsadmin,\n#     aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = period),\n#     alpha = 0.5,\n#     inherit.aes = FALSE)+\n#   geom_line(color = \"#460001\", size = 1) +\n#   geom_hline(yintercept = 2.1, linetype = \"dashed\", color = \"blue\") +\n#   annotate(\"text\", x = 1955, y = 2.15, label = \"Replacement Level (2.1)\", color = \"black\", hjust = -.75, vjust = .25) +\n#   scale_fill_manual(values = bands$color) +\n#   labs(\n#     y = \"National Average Birthrate (Births Per Woman)\",\n#     x = \"Year\",\n#     fill = \"Historical Periods\",\n#     title = \"American Birthrates, (1950-2024)\",\n#     subtitle = \"Births per individual woman\")+\n# theme_minimal()+\n# theme(plot.margin = margin(10, 10, 10, 10),\n#       aspect.ratio = 0.6,\n#       legend.position = \"bottom\")\n```\n:::\n\n\n\n\n::: {.cell}\n\n:::\n\n\n\n\n::: {.cell}\n\n:::\n\n\n\n\n\n::: {.cell}\n\n:::\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

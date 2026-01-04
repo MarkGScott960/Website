@@ -1,0 +1,36 @@
+---
+title: "About Me"
+about:
+  id: me
+  template: jolla
+  image: img/profile.jpg
+format:
+  html:
+    link-external-newwindow: true
+---
+
+:::{#me}
+
+## Goals
+*I view life as one long learning experience. I love gathering knowledge from all disparate fields of study, ranging from engineering to political science. As part of this, I cannot help but focus on uncovering the mechanisms that form our world before our very eyes - politics. My aim is to become a researcher and professor of political science, incorporating data analytics with all its beauty to such a philosophical science.*
+
+## Education
+
+***Bachelors*** *- Political Science, received 2024 from Montclair State University.*
+
+***Masters*** *- Data Analytics, Expected 2026 from University of Massachusetts.*
+
+## Experience
+
+***2025 - Current:*** *Office Administrator - [Green Collar LLC](https://www.greencollarma.com/)*
+
+***2024 - 2025:*** *Research Assistant - [APPRISE INC](https://www.appriseinc.org/)*
+
+***2023 - 2024:*** *Research Assistant - [Montclair State University](https://www.montclair.edu/)*
+
+***2018 - 2024:*** *Shift Leader - [Qdoba](https://www.qdoba.com/)*
+
+:::
+
+
+

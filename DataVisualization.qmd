@@ -1,0 +1,577 @@
+---
+title: "Welcome to some of my data visualization projects"
+format:
+  html:
+    embed-resources: true
+    link-external-newwindow: true
+    page-layout: full
+    toc-depth: 2
+    theme: quartz
+    css: styles.css
+engine: knitr
+---
+::: {.lead}
+This page highlights my ability to design clear, professional, and analytically useful data visualizations.  
+The figures presented here are not intended solely as final results, but as demonstrations of methodological choices—such as data transformation, visual encoding, annotation, and layout—that support accurate interpretation and effective communication.  
+
+Together, these examples reflect my emphasis on clarity, accessibility, and reproducibility in data-driven work.
+:::
+
+# Visulization of American Housing
+## The Homelessness Crisis
+::: {layout-ncol=2} 
+::: {layout-cell}
+<div style="padding-right: .25rem;">
+### Individual Emergency Shelter Beds Per Homeless Individual
+When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data[^1] and a yearly report created by the World Population review.[^2] 
+</div>
+:::
+
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+```{r}
+#| label: ReadEm
+#| echo: false
+#| message: false
+#| warning: false
+
+packages <- c("tidyverse", "ggplot2", "plotly", "usmap", "scales", "readxl")
+invisible(lapply(packages, library, character.only = TRUE))
+rm(packages)
+
+HomeState <- read.csv("VizCode/HomPopState.csv")
+```
+
+```{r}
+#| label: HomeState
+#| echo: false
+#| message: false
+#| warning: false
+
+
+HomeStateUse <- HomeState |>
+  mutate(total = rowSums(across(4:11), na.rm = TRUE),
+         BedPer = total / HPop,
+         region = tolower(State))
+
+states_map <- map_data("state") |>
+  left_join(HomeStateUse, by = "region")
+
+p <- ggplotly(
+  ggplot(states_map, aes(
+    long, lat, group = group,
+    fill = BedPer,
+    text = paste0(
+      "State: ", tools::toTitleCase(region),
+      "<br>Emergency Shelter Beds per Homeless Individual: ",
+      round(BedPer, 2)
+    )
+  )) +
+    geom_polygon(color = "black", linewidth = 0.3) +
+    coord_fixed(1.3) +
+    scale_fill_gradient2(
+      low = "#570C18",
+      high = "#000087",
+      midpoint = 1,
+      labels = scales::number_format(accuracy = 0.01),
+      name = "Beds per Individual"
+    ) +
+    labs(
+      title = "Emergency Shelter Beds per Homeless Individual (2024)",
+    ) +
+    theme_void()+
+  theme(
+    panel.background = element_rect(fill = "lightblue", colour = "lightblue"),
+    plot.background = element_rect(fill = "lightblue"),
+    legend.position = "bottom"
+  ),
+  tooltip = "text") 
+  
+
+# Find the trace that has a marker color scale
+trace_id <- which(
+  sapply(p$x$data, function(x) !is.null(x$marker$colorbar)))
+# Fix the Color Bar
+##Change Colorbar Limits and midpoint
+p$x$data[[trace_id]]$marker$cmin <- 0
+p$x$data[[trace_id]]$marker$cmax <- 2
+p$x$data[[trace_id]]$marker$cmid <- 1
+##Fix the scaling on colorbar (Without this the map and colorbar scaling do not match)
+p$x$data[[trace_id]]$marker$colorscale <- list(
+  list(0,   "#570C18"),  # red
+  list(0.5, "#FFFFFF"),  # white midpoint
+  list(1,   "#000087")   # blue
+)
+##Modify the colorbar 
+p$x$data[[trace_id]]$marker$colorbar <- list(
+  orientation = "h",
+  x = 0.5,
+  xanchor = "center",
+  y = -0.15,
+  thickness = 15,
+  title = list(
+    text = "Beds per Individual",
+    side = "bottom"))
+
+p
+
+
+ rm(HomeState,HomeStateUse,states_map, trace_id)
+
+```
+</div>
+:::
+:::
+
+# Visulization of The American Healthcare Crisis
+
+## The Medical Debt Crisis
+### Medicaid Adult Coverage Expansion and Debt
+In this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt.
+
+::: {layout-ncol=2} 
+::: {layout-cell}
+<div style="padding-right: .25rem;">
+```{r}
+#| label: MedicadeExpansion
+#| echo: false
+#| message: false
+#| warning: false
+MDEdf <- read.csv("VizCode/MedicalDebtExpansion.csv")
+MDEdf <- MDEdf |>
+  mutate(region = state, .before = time_period) |> 
+  select(!state & !time_period & !cohort &!population) |> 
+  mutate(Expanded = as.character(Expanded),
+  Expanded = case_when(
+    Expanded == 1 ~ "Medicaid Expanded",
+    Expanded == 0 ~ "Medicaid Not Expanded",
+    TRUE ~ Expanded
+  ))
+
+MDEdesc <- MDEdf |> 
+  group_by(Expanded) |>
+  filter(!is.na(point_estimate)) |> 
+  summarize(
+    Count = n(),
+    `Mean` = mean(point_estimate),
+    `Standard Deviation` = sd(point_estimate),
+    Range =str_c(min(point_estimate)," : ",(max(point_estimate)))
+  ) |> 
+  na.omit()
+
+ggplot(MDEdesc, aes(x = Expanded, y = Mean, fill = Expanded)) +
+  
+  # Bars
+  geom_col(width = 0.55, alpha = 0.9) +
+  
+  # National average reference line
+  geom_hline(
+    yintercept = 5.04,
+    linetype = "dashed",
+    linewidth = 0.5,
+    color = "gray30"
+  ) +
+  
+  # Annotation for national average (to the right)
+  annotate(
+    "text",
+    x = Inf,
+    y = 5.04,
+    label = "National Average: 5.04%",
+    hjust = 3.35,
+    vjust = -0.6,
+    size = 4,
+    color = "gray30"
+  ) +
+  
+  # Labels
+  labs(
+    title = "Medical Debt in Collections by Medicaid Expansion",
+    subtitle = "Share of individuals with a credit bureau record (%)",
+    x = NULL,
+    y = "Percent with Medical Debt in Collections (2023)",
+    caption = "Source: The Commonwealth Fund & Medicaid.gov (2023)"
+  ) +
+  
+  # Color palette
+  scale_fill_manual(
+    values = c(
+      "Medicaid Expanded" = "#2C7FB8",
+      "Medicaid Not Expanded" = "#D95F02"
+    )
+  ) +
+  
+  # Percent formatting
+  scale_y_continuous(
+    labels = function(x) paste0(x, "%"),
+    expand = expansion(mult = c(0, 0.1))
+  ) +
+  
+  # THIS fixes clipping
+  coord_cartesian(clip = "off") +
+  
+  # Theme tuning for Quarto/web
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold", size = 18),
+    plot.subtitle = element_text(size = 13, color = "gray40"),
+    axis.text.x = element_text(face = "bold"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(size = 10, color = "gray50"),
+    plot.margin = margin(10, 45, 10, 10)
+  )
+
+rm(MDEdesc)
+```
+</div>
+:::
+
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+This bar chart compares medical debt collection rates across U.S. states by Medicaid expansion status in 2023, using data from Medicaid.com[^1] and The Commonwealth Fund[^2]. States are grouped by expansion status and benchmarked against the national average.
+
+States that did not expand Medicaid show higher rates of medical debt in collections relative to both the national average and expansion states. While this does not provide causal evidence, this figure provides a quick, illustrative snapshot that highlights disparities linked to health care access and motivates deeper policy analysis.
+</div>
+:::
+
+:::
+## Do We Respect Our Elders?
+As the average American ages, increased expenditures into elderly care have been experienced. But this raises the question, what is our care capacity and what are our healthcare outcomes?
+
+
+
+
+### General Population Trends
+
+Before tackling if an elder care crisis exists, one must first ask, what have the general population trends been in the United States.
+
+```{r}
+#| label: Loadem
+#| echo: false
+#| message: false
+#| warning: false
+
+USAPOPCount <- read_csv("VizCode/Census/USAPOPCount.csv")
+PresJobApproval <- read.csv("VizCode/Politics/PresJobApproval.csv")
+
+```
+
+  
+::: {layout-ncol=2} 
+::: {layout-cell}
+
+
+```{r}
+#| label: AgeGrps
+#| echo: false
+#| message: false
+#| warning: false
+
+
+USAPOPCount <- USAPOPCount |>
+  filter(AgeGroup != "0-9") |>
+  mutate(
+    age_group = case_when(
+      AgeGroup == "10-19" ~ "10 -19 Years",
+      AgeGroup == "20-29" ~ "20 -29 Years",
+      AgeGroup == "30-39" ~ "30 -39 Years",
+      AgeGroup == "40-49" ~ "40 -49 Years",
+      AgeGroup == "50-59" ~ "50 -59 Years",
+      AgeGroup == "60-69" ~ "60 - 69 Years",
+      AgeGroup %in% c(
+        "70-79", "80-89", "90-99",
+        "100-109", "110-119", "120-129", "130-139") ~ "70 And Above",
+      TRUE ~ NA_character_),
+  population = Count) |> 
+  select(!AgeGroup) |> 
+  select(!Count)
+
+Census2020 <- read_csv("VizCode/Census/Census2020.csv") |> 
+  select(3,4,6,contains("TOT")) |> 
+  rename(age_under_5   = UNDER5_TOT,
+    rrr1      = AGE513_TOT,
+    rrr2     = AGE1417_TOT,
+    rrr3     = AGE1824_TOT,
+    rrr4   = AGE16PLUS_TOT,
+    rrr5   = AGE18PLUS_TOT,
+    rrr6     = AGE1544_TOT,
+    rrr8     = AGE2544_TOT,
+    rrr9     = AGE4564_TOT,
+    rrr0   = AGE65PLUS_TOT,
+    rrr01 = MEDIAN_AGE_TOT) |> 
+  select(!contains("rrr")) |>
+  mutate(YEAR = case_when(
+    YEAR == 1 ~ 2020,
+    YEAR == 4 ~ 2022,
+    YEAR == 6 ~ 2024,
+    TRUE ~ NA_real_
+  )) |> 
+  filter(!is.na(YEAR))
+  
+Census2010 <- read_csv("VizCode/Census/Census2010.csv") |> 
+  select(3,4,6,contains("TOT")) |> 
+  rename(age_under_5   = UNDER5_TOT,
+    rrr1      = AGE513_TOT,
+    rrr2     = AGE1417_TOT,
+    rrr3     = AGE1824_TOT,
+    rrr4   = AGE16PLUS_TOT,
+    rrr5   = AGE18PLUS_TOT,
+    rrr6     = AGE1544_TOT,
+    rrr8     = AGE2544_TOT,
+    rrr9     = AGE4564_TOT,
+    rrr0   = AGE65PLUS_TOT,
+    rrr01 = MEDIAN_AGE_TOT) |> 
+  select(!contains("rrr")) |> 
+  mutate(YEAR = case_when(
+    YEAR == 3 ~ 2010,
+    YEAR == 4 ~ 2011,
+    YEAR == 5 ~ 2012,
+    YEAR == 6 ~ 2013,
+    YEAR == 7 ~ 2014,
+    YEAR == 8 ~ 2015,
+    YEAR == 9 ~ 2016,
+    YEAR == 10 ~ 2017,
+    YEAR == 11 ~ 2018,
+    YEAR == 12 ~ 2019,
+    TRUE ~ NA_real_
+  ),
+  COUNTY = as.character(COUNTY)) |> 
+  filter(!is.na(YEAR))
+
+Census2000 <-  read_xlsx("VizCode/Census/Census2000.xlsx")|> 
+   mutate(age_group= case_when(
+    age_group %in% c("10 to 14 years","15 to 19 years" ) ~ "10 -19 Years",
+    age_group %in% c("20 to 24 years", "25 to 29 years") ~ "20 -29 Years",
+    age_group %in% c("30 to 34 years", "35 to 39 years") ~ "30 -39 Years",
+    age_group %in% c("40 to 44 years", "45 to 49 years") ~ "40 -49 Years",
+    age_group %in% c("50 to 54 years", "55 to 59 years") ~ "50 -59 Years",
+    age_group %in% c("60 to 64 years", "65 to 69 years") ~ "60 - 69 Years",
+    age_group %in% c("70 to 74 years", "75 to 79 years", "80 to 84 years", "AGE8084_TOT", "85 years and over") ~ "70 And Above",
+    TRUE ~ NA_character_))|> 
+filter(!is.na(age_group))
+
+Census1980 <-  read.csv("Vizcode/Census/Census1980.csv") |> 
+    rename(YEAR = "Year.of.Estimate")
+
+#cleaning 1980 sep. because of delins
+
+Census1980 <- Census1980 |> pivot_longer(
+    cols = starts_with("AGE"),
+    names_to = "age_group",
+    values_to = "population")|> 
+  mutate(age_group= case_when(
+    age_group %in% c("AGE1014_TOT", "AGE1519_TOT") ~ "10 -19 Years",
+    age_group %in% c("AGE2024_TOT", "AGE2529_TOT") ~ "20 -29 Years",
+    age_group %in% c("AGE3034_TOT", "AGE3539_TOT") ~ "30 -39 Years",
+    age_group %in% c("AGE4044_TOT", "AGE4549_TOT") ~ "40 -49 Years",
+    age_group %in% c("AGE5054_TOT", "AGE5559_TOT") ~ "50 -59 Years",
+    age_group %in% c("AGE6064_TOT", "AGE6569_TOT") ~ "60 - 69 Years",
+    age_group %in% c("AGE7074_TOT", "AGE7579_TOT", "AGE8084_TOT", "AGE85PLUS_TOT") ~ "70 And Above",
+    TRUE ~ NA_character_)) |> 
+  select(1,6,7,3) |> 
+  na.omit() |> 
+  group_by(YEAR, age_group) |> 
+  summarize(population = sum(population))
+
+
+BirthRates <- read_csv("VizCode/Census/births.csv") |> 
+  rename(YEAR = Year, 
+         Fertility = `Fertility Rate (Births Per Woman)`) |> 
+  mutate(YEAR = as.double(YEAR),
+         FertilityA =  (Fertility - 1.62) / (3.65 - 1.62))
+
+CensusFull <- bind_rows(
+  Census2010,
+  Census2020) |> 
+  pivot_longer(
+    cols = starts_with("AGE"),
+    names_to = "age_group",
+    values_to = "population")|> 
+  mutate(age_group= case_when(
+    age_group %in% c("AGE1014_TOT", "AGE1519_TOT") ~ "10 -19 Years",
+    age_group %in% c("AGE2024_TOT", "AGE2529_TOT") ~ "20 -29 Years",
+    age_group %in% c("AGE3034_TOT", "AGE3539_TOT") ~ "30 -39 Years",
+    age_group %in% c("AGE4044_TOT", "AGE4549_TOT") ~ "40 -49 Years",
+    age_group %in% c("AGE5054_TOT", "AGE5559_TOT") ~ "50 -59 Years",
+    age_group %in% c("AGE6064_TOT", "AGE6569_TOT") ~ "60 - 69 Years",
+    age_group %in% c("AGE7074_TOT", "AGE7579_TOT", "AGE8084_TOT", "AGE85PLUS_TOT") ~ "70 And Above",
+    TRUE ~ NA_character_)) |> 
+select(3:5) |> 
+filter(!is.na(age_group))
+
+#Make 1980-2024
+CensusFull <- bind_rows(
+  CensusFull,
+  Census2000,
+  Census1980,
+  USAPOPCount)
+
+#Median Age
+
+year <- c(1850, 1860, 1870, 1880, 1890, 1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010,2020)
+
+MedAge <- c(18.9, 19.4, 20.2, 20.9, 22.0, 22.9, 24.1, 25.3, 26.5, 29.0, 30.2, 29.5, 28.1, 30.0, 32.9, 35.3, 37.2, 38.8)
+
+
+MedAgeDF <- data.frame(year, MedAge) |> 
+  mutate(MedAgeScaled = (MedAge- min(MedAge))/ (max(MedAge)-min(MedAge)))
+
+
+
+rm(Census2000, Census2010, Census2020, Census1980, MedAge, year, USAPOPCount)
+
+
+CensusStack <- CensusFull |>
+  na.omit() |> 
+  group_by(YEAR, age_group) |>
+  summarize(
+    population = sum(population, na.rm = TRUE),
+    .groups = "drop_last") |>
+  mutate(
+    year_total = sum(population),
+    Percentage = (population / year_total)) |>
+  ungroup() 
+
+
+CensusStackPlot <- ggplot(CensusStack, aes(x = YEAR, y = Percentage, fill = age_group)) +
+  geom_area(alpha = 0.9, color = "white", linewidth = 0.2) +
+  theme_minimal()+
+  scale_x_continuous(
+    limits = c(1850, 2024),
+    breaks = seq(1850, 2024, 20)) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(0,1)) +
+labs(
+    title = "U.S. Population by Age Group Over Time",
+    x = "Year (2000 - 2020)",
+    y = "Percent of Population",
+    fill = "Age Group")+
+theme(aspect.ratio = 0.6,
+      plot.margin = margin(10, 10, 10, 10),
+      legend.position = "bottom")
+
+CensusStackPlot
+
+#rm(CensusStackPlot)
+
+```
+
+
+:::
+
+::: {layout-cell}
+
+```{r}
+#| label: AvAgeViz
+#| echo: false
+#| message: false
+#| warning: false
+
+bands <- data.frame(
+  start = c(1946, 1973, 2007, 2020),
+  end   = c(1964, 1975, 2009, 2023),
+  period = c("Baby Boom", "Oil Crisis / Recession", "Great Recession", "COVID-19 Pandemic"),
+  color = c("#85C9E8", "#F6762A", "#630031", "#171717"))
+
+
+
+AvAgePlot <- ggplot(MedAgeDF, aes(x = year, y = MedAge))+
+  geom_line(linewidth = 1)+
+  theme_minimal()+
+  scale_x_continuous(
+    limits = c(1850, 2020),
+    breaks = seq(1850, 2020, 15))+
+  ylim(0,40)+
+  labs(
+    title = "Average Age (1850-2020)",
+    y = "Median Age",
+    x = "Year",
+    subtitle = "Data sourced from the Decennial Census")
+
+AvAgePlot
+
+#rm(AvAgePlot)
+```
+
+
+:::
+:::
+
+
+::: {layout-ncol=2} 
+::: {layout-cell}
+
+```{r}
+#| label: Birth&MeanAge
+#| echo: false
+#| message: false
+#| warning: false
+
+
+#BrtAge <- invisible(full_join(MedAgeDF, BirthRates))
+
+bands <- data.frame(
+  start = c(1946, 1973, 2007, 2020),
+  end   = c(1964, 1975, 2009, 2023),
+  period = c("Baby Boom", "Oil Crisis / Recession", "Great Recession", "COVID-19 Pandemic"),
+  color = c("#85C9E8", "#F6762A", "#630031", "#171717"))
+
+BirthRatePlot <- ggplot(BirthRates, aes(x = YEAR, y = Fertility)) +
+  geom_rect(
+    data = bands,
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = period),
+    alpha = 0.5,
+    inherit.aes = FALSE)+
+  geom_line(color = "#460001", size = 1) +
+  geom_hline(yintercept = 2.1, linetype = "dashed", color = "blue") +
+  annotate("text", x = 1955, y = 2.20, label = "Replacement Level (2.1)", color = "black", hjust = -.75, vjust = .25) +
+  scale_y_continuous(limits = c(0,4))+
+  scale_x_continuous(limits= c(1950, 2025), breaks = seq(1050, 2025, 15))+
+  scale_fill_manual(values = bands$color) +
+  labs(
+    y = "National Average Birthrate (Births Per Woman)",
+    x = "Year",
+    fill = "Historical Periods",
+    title = "American Birthrates, (1950-2024)",
+    subtitle = "Births per individual woman")+
+theme_minimal()+
+theme(plot.margin = margin(10, 10, 10, 10),
+      aspect.ratio = 0.6,
+      legend.position = "bottom")
+BirthRatePlot
+
+```
+
+:::
+
+::: {layout-cell}
+
+<div style="padding-left: .25rem;">
+These three plots demonstrate how the American population has been aging continuously since 1850. The mean age has increased from 18.9 to 38.8 years. Further sections will investigate how an aging population has created areas of policy innovation and policy failure. The data for these three plots were obtained from the US Decennial Census[^5] via the IPUMS USA database[^6].
+</div>
+
+:::
+:::
+
+# Political Movments and Trends
+
+## Veterans Voting Patterns
+
+
+```{r}
+
+```
+
+
+
+
+
+
+[^1]: [HUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)](https://files.hudexchange.info/reports/published/CoC_HIC_NatlTerrDC_2024.pdf)
+[^2]: [World Population Review - Homeless Population By State (2025)](https://worldpopulationreview.com/state-rankings/homeless-population-by-state)
+[^3]: [Medicaid Expansion Program Data (2023)](https://www.medicaid.gov/medicaid/program-information/downloads/medicaid-expansion-state-map.pdf)
+[^4]: [The Commonwealth Fund - People With Medical Debt in Collections (2023)](https://www.commonwealthfund.org/datacenter/people-medical-debt-collections)
+[^5]:[US Deciennial Census](https://www.census.gov/programs-surveys/decennial-census.html)
+[^6]: [IPUMS USA](https://usa.ipums.org/usa/)

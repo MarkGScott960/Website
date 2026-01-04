@@ -1,0 +1,19 @@
+---
+title: ""
+format:
+  html:
+    embed-resources: true
+    toc: false
+page-layout: article
+---
+::: {layout-ncol=2}
+Content for first column.
+
+::: {layout-cell}
+More content here.
+:::
+
+::: {layout-cell}
+This will stack below on mobile.
+:::
+:::

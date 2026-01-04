@@ -1,0 +1,86 @@
+---
+title: "VizCode"
+execute:
+  freeze: auto
+---
+
+```{r}
+#| label: LibnLoad
+#| echo: false
+#| message: false
+#| warning: false
+
+packages <- c("tidyverse", "ggplot2", "plotly", "usmap", "scales", "readxl", "arrow")
+invisible(lapply(packages, library, character.only = TRUE))
+rm(packages)
+
+
+```
+
+
+```{r}
+#| label: ApprovalRating
+
+# PresJobApprovalD <- PresJobApproval |>
+#   slice(rep(1:n(), each = 2))|>
+#   filter(!is.na(X.1))
+# 
+# 
+# 
+# bandsadmin <- data.frame(
+#   start = c(1950, 1953, 1961,1969, 1977, 1981, 1993, 2001, 2009, 2017, 2021),
+#   end = c(1953, 1961, 1969,1977, 1981, 1993, 2001, 2009, 2017, 2021, 2025),
+#   period = c("Democratic", "Republican", "Democratic","Republican", "Democratic", "Republican","Democratic","Republican", "Democratic", "Republican", "Democratic"),
+#   color = c("#1313F7", "#F7000D", "#1313F7","#F7000D","#1313F7","#F7000D", "#1313F7", "#F7000D", "#1313F7", "#F7000D","#1313F7"))
+# 
+# 
+# ggplot(PresJobApproval, aes(x = YEAR, y = Fertility)) +
+#   geom_rect(
+#     data = bandsadmin,
+#     aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = period),
+#     alpha = 0.5,
+#     inherit.aes = FALSE)+
+#   geom_line(color = "#460001", size = 1) +
+#   geom_hline(yintercept = 2.1, linetype = "dashed", color = "blue") +
+#   annotate("text", x = 1955, y = 2.15, label = "Replacement Level (2.1)", color = "black", hjust = -.75, vjust = .25) +
+#   scale_fill_manual(values = bands$color) +
+#   labs(
+#     y = "National Average Birthrate (Births Per Woman)",
+#     x = "Year",
+#     fill = "Historical Periods",
+#     title = "American Birthrates, (1950-2024)",
+#     subtitle = "Births per individual woman")+
+# theme_minimal()+
+# theme(plot.margin = margin(10, 10, 10, 10),
+#       aspect.ratio = 0.6,
+#       legend.position = "bottom")
+
+```
+
+
+```{r}
+#| label: GenerationPercentPlot
+```
+
+
+```{r}
+#| echo: false
+# USAPOPCount <- USAPOP|>
+#   mutate(
+#     AgeGroup = paste0(
+#       (AGE %/% 10) * 10,
+#       " -",
+#       (AGE %/% 10) * 10 + 9), " Years")|>
+#   group_by(YEAR, AgeGroup) |>
+#   summarise(
+#     Count = n(),
+#     .groups = "drop")
+# 
+# 
+# write.csv(USAPOPCount, "VizCode/Census/USAPOPCount.csv", row.names = FALSE)
+```
+
+
+
+
+

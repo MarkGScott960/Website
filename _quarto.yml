@@ -1,0 +1,34 @@
+project:
+  type: website
+  output-dir: docs
+  
+website:
+  title: "Mark G Scott"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - projects.qmd
+      - href: DataVisualization.qmd
+        text: Data Visualization
+      - href: contactme.qmd
+        text: Contact Me
+    tools:
+        - icon: substack
+          text: Substack
+          href: https://substack.com/@brethroanalysis
+        - icon: tiktok
+          text: TikTok
+          href: https://www.tiktok.com/@thegarlicpeel 
+  page-footer:
+    right: "Built with [Quarto](https://quarto.org/)"
+    left: "&copy; Copyright 2025, Mark G Scott"
+
+format:
+  html:
+    theme: minty
+    toc: true
+    toc-depth: 1
+
+editor: source
+
