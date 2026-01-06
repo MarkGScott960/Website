@@ -11,14 +11,77 @@
     "href": "VizCode/HomePopStateCode.html",
     "title": "HomePopStateCode",
     "section": "",
-    "text": "── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.2\n✔ ggplot2   4.0.0     ✔ tibble    3.3.0\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.1.0     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layout\n\n\nWarning: package 'usmap' was built under R version 4.5.2\n\n\n[[1]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[2]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[3]]\n [1] \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"    \n [7] \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"    \n[13] \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[4]]\n [1] \"usmap\"     \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"    \n [7] \"purrr\"     \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\"\n[13] \"stats\"     \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"  \n[19] \"base\"     \n\n\nRows: 52 Columns: 11\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (1): State\ndbl (10): HPop, HpopP10k, HPChange2007to2024, Family Units, Family Beds, Adu...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nHomeStateUse &lt;- HomeState |&gt;\n  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |&gt;\n  mutate(BedPer = total/HPop,\n         region = tolower(State))\n\nstates_map &lt;- map_data(\"state\")\nstates_map &lt;- states_map |&gt;\n  left_join(HomeStateUse, by = \"region\")\n\n\n# {{&lt; embed Data&Code/HomePopStateCode.qmd#ColGraph &gt;}} -To call in other document\n\nggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer &gt; 1)) +\n  geom_col(width = .6) +\n  coord_flip() +\n  scale_fill_manual(\n    values = c(\"TRUE\" = \"blue\", \"FALSE\" = \"red\"),\n    labels = c(\"FALSE\" = \"&lt;= 1\", \"TRUE\" = \"&gt; 1\"),\n    guide = FALSE  # hides the legend; remove if you want legend\n  ) +\n  labs(\n    title = \"Individual Emergency Shelter Beds per Homeless Individual by State (2024)\",\n    x = \"State\",\n    y = \"Beds per Homeless Individual\"\n  ) +\n  theme_minimal() +\n  theme(\n    axis.text.y = element_text(angle = 45, hjust = 1)  # slant y-axis labels\n  )\n\nWarning: The `guide` argument in `scale_*()` cannot be `FALSE`. This was deprecated in\nggplot2 3.3.4.\nℹ Please use \"none\" instead."
+    "text": "── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.3.0\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.1.0     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layout\n\n\nWarning: package 'usmap' was built under R version 4.5.2\n\n\n[[1]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[2]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[3]]\n [1] \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"    \n [7] \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"    \n[13] \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[4]]\n [1] \"usmap\"     \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"    \n [7] \"purrr\"     \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\"\n[13] \"stats\"     \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"  \n[19] \"base\"     \n\n\nRows: 52 Columns: 11\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (1): State\ndbl (10): HPop, HpopP10k, HPChange2007to2024, Family Units, Family Beds, Adu...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nHomeStateUse &lt;- HomeState |&gt;\n  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |&gt;\n  mutate(BedPer = total/HPop,\n         region = tolower(State))\n\nstates_map &lt;- map_data(\"state\")\nstates_map &lt;- states_map |&gt;\n  left_join(HomeStateUse, by = \"region\")\n\n\n# {{&lt; embed Data&Code/HomePopStateCode.qmd#ColGraph &gt;}} -To call in other document\n\nggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer &gt; 1)) +\n  geom_col(width = .6) +\n  coord_flip() +\n  scale_fill_manual(\n    values = c(\"TRUE\" = \"blue\", \"FALSE\" = \"red\"),\n    labels = c(\"FALSE\" = \"&lt;= 1\", \"TRUE\" = \"&gt; 1\"),\n    guide = FALSE  # hides the legend; remove if you want legend\n  ) +\n  labs(\n    title = \"Individual Emergency Shelter Beds per Homeless Individual by State (2024)\",\n    x = \"State\",\n    y = \"Beds per Homeless Individual\"\n  ) +\n  theme_minimal() +\n  theme(\n    axis.text.y = element_text(angle = 45, hjust = 1)  # slant y-axis labels\n  )\n\nWarning: The `guide` argument in `scale_*()` cannot be `FALSE`. This was deprecated in\nggplot2 3.3.4.\nℹ Please use \"none\" instead."
   },
   {
-    "objectID": "thank-you.html",
-    "href": "thank-you.html",
-    "title": "Mark G Scott",
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Projects",
     "section": "",
-    "text": "Content for first column.\n\n\nMore content here.\n\n\n\n\nThis will stack below on mobile."
+    "text": "As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuum of Cares to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.\nYou can find the full chapter here: Paterson City Mayor’s Office Collaboration (PDF)"
+  },
+  {
+    "objectID": "projects.html#paterson-city-mayors-office-collaboration",
+    "href": "projects.html#paterson-city-mayors-office-collaboration",
+    "title": "Projects",
+    "section": "",
+    "text": "As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuum of Cares to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.\nYou can find the full chapter here: Paterson City Mayor’s Office Collaboration (PDF)"
+  },
+  {
+    "objectID": "projects.html#an-exploratory-study-of-end-of-life-planning-among-unsheltered-and-unhoused-individuals",
+    "href": "projects.html#an-exploratory-study-of-end-of-life-planning-among-unsheltered-and-unhoused-individuals",
+    "title": "Projects",
+    "section": "An Exploratory Study of End-of-Life Planning Among Unsheltered and Unhoused Individuals",
+    "text": "An Exploratory Study of End-of-Life Planning Among Unsheltered and Unhoused Individuals\nThis project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life’s end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.\nYou can find the full proposal here: Research Proposal (PDF)"
+  },
+  {
+    "objectID": "DataVisualization.html",
+    "href": "DataVisualization.html",
+    "title": "Welcome to some of my data visualization projects",
+    "section": "",
+    "text": "This page highlights my ability to design clear, professional, and analytically useful data visualizations.\nThe figures presented here are not intended solely as final results, but as demonstrations of methodological choices—such as data transformation, visual encoding, annotation, and layout—that support accurate interpretation and effective communication.\nTogether, these examples reflect my emphasis on clarity, accessibility, and reproducibility in data-driven work."
+  },
+  {
+    "objectID": "DataVisualization.html#the-homelessness-crisis",
+    "href": "DataVisualization.html#the-homelessness-crisis",
+    "title": "Welcome to some of my data visualization projects",
+    "section": "The Homelessness Crisis",
+    "text": "The Homelessness Crisis\n\n\n\n\nIndividual Emergency Shelter Beds Per Homeless Individual\nWhen looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data1 and a yearly report created by the World Population review.2"
+  },
+  {
+    "objectID": "DataVisualization.html#the-medical-debt-crisis",
+    "href": "DataVisualization.html#the-medical-debt-crisis",
+    "title": "Welcome to some of my data visualization projects",
+    "section": "The Medical Debt Crisis",
+    "text": "The Medical Debt Crisis\n\nMedicaid Adult Coverage Expansion and Debt\nIn this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThis bar chart compares medical debt collection rates across U.S. states by Medicaid expansion status in 2023, using data from Medicaid.com3 and The Commonwealth Fund4. States are grouped by expansion status and benchmarked against the national average.\nStates that did not expand Medicaid show higher rates of medical debt in collections relative to both the national average and expansion states. While this does not provide causal evidence, this figure provides a quick, illustrative snapshot that highlights disparities linked to health care access and motivates deeper policy analysis."
+  },
+  {
+    "objectID": "DataVisualization.html#do-we-respect-our-elders",
+    "href": "DataVisualization.html#do-we-respect-our-elders",
+    "title": "Welcome to some of my data visualization projects",
+    "section": "Do We Respect Our Elders?",
+    "text": "Do We Respect Our Elders?\nAs the average American ages, increased expenditures into elderly care have been experienced. But this raises the question, what is our care capacity and what are our healthcare outcomes?\n\nGeneral Population Trends\nBefore tackling if an elder care crisis exists, one must first ask, what have the general population trends been in the United States.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThese three plots demonstrate how the American population has been aging nearly continuously since 1850. The mean age has increased from 18.9 to 38.8 years from 1850 to 2024. Further sections will investigate how an aging population has created areas of policy innovation and policy failure. For example, do we have the infrastructure to care for more elders with less workers? The data for these three plots were obtained from the US Decennial Census5 via the IPUMS USA database6."
+  },
+  {
+    "objectID": "DataVisualization.html#veterans-voting-patterns",
+    "href": "DataVisualization.html#veterans-voting-patterns",
+    "title": "Welcome to some of my data visualization projects",
+    "section": "Veterans Voting Patterns",
+    "text": "Veterans Voting Patterns"
+  },
+  {
+    "objectID": "DataVisualization.html#footnotes",
+    "href": "DataVisualization.html#footnotes",
+    "title": "Welcome to some of my data visualization projects",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nHUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)↩︎\nWorld Population Review - Homeless Population By State (2025)↩︎\nHUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)↩︎\nWorld Population Review - Homeless Population By State (2025)↩︎\nUS Deciennial Census↩︎\nIPUMS USA↩︎"
+  },
+  {
+    "objectID": "contactme.html",
+    "href": "contactme.html",
+    "title": "Contact Me",
+    "section": "",
+    "text": "If you would like to contact me regarding my research, data visualizations, collaboration opportunities, or any other opportunity please use the form below.\n\n\n  \n \nYour Email \nSubject \nMessage\n\nSend Message"
   },
   {
     "objectID": "index.html",
@@ -49,81 +112,11 @@
     "text": "2025 - Current: Office Administrator - Green Collar LLC\n2024 - 2025: Research Assistant - APPRISE INC\n2023 - 2024: Research Assistant - Montclair State University\n2018 - 2024: Shift Leader - Qdoba"
   },
   {
-    "objectID": "contactme.html",
-    "href": "contactme.html",
-    "title": "Contact Me",
+    "objectID": "thank-you.html",
+    "href": "thank-you.html",
+    "title": "Mark G Scott",
     "section": "",
-    "text": "If you would like to contact me regarding my research, data visualizations, collaboration opportunities, or any other opportunity please use the form below.\n\n\n  \n \nYour Email \nSubject \nMessage\n\nSend Message"
-  },
-  {
-    "objectID": "DataVisualization.html",
-    "href": "DataVisualization.html",
-    "title": "Welcome to some of my data visualization projects",
-    "section": "",
-    "text": "This page highlights my ability to design clear, professional, and analytically useful data visualizations.\nThe figures presented here are not intended solely as final results, but as demonstrations of methodological choices—such as data transformation, visual encoding, annotation, and layout—that support accurate interpretation and effective communication.\nTogether, these examples reflect my emphasis on clarity, accessibility, and reproducibility in data-driven work."
-  },
-  {
-    "objectID": "DataVisualization.html#the-homelessness-crisis",
-    "href": "DataVisualization.html#the-homelessness-crisis",
-    "title": "Welcome to some of my data visualization projects",
-    "section": "The Homelessness Crisis",
-    "text": "The Homelessness Crisis\n\n\n\n\nIndividual Emergency Shelter Beds Per Homeless Individual\nWhen looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data1 and a yearly report created by the World Population review.2"
-  },
-  {
-    "objectID": "DataVisualization.html#the-medical-debt-crisis",
-    "href": "DataVisualization.html#the-medical-debt-crisis",
-    "title": "Welcome to some of my data visualization projects",
-    "section": "The Medical Debt Crisis",
-    "text": "The Medical Debt Crisis\n\nMedicaid Adult Coverage Expansion and Debt\nIn this next section I will be investigating the differences in the COVID-19 Medicaid subsidies expansion and medical debt.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThis bar chart compares medical debt collection rates across U.S. states by Medicaid expansion status in 2023, using data from Medicaid.com3 and The Commonwealth Fund4. States are grouped by expansion status and benchmarked against the national average.\nStates that did not expand Medicaid show higher rates of medical debt in collections relative to both the national average and expansion states. While this does not provide causal evidence, this figure provides a quick, illustrative snapshot that highlights disparities linked to health care access and motivates deeper policy analysis."
-  },
-  {
-    "objectID": "DataVisualization.html#do-we-respect-our-elders",
-    "href": "DataVisualization.html#do-we-respect-our-elders",
-    "title": "Welcome to some of my data visualization projects",
-    "section": "Do We Respect Our Elders?",
-    "text": "Do We Respect Our Elders?\nAs the average American ages, increased expenditures into elderly care have been experienced. But this raises the question, what is our care capacity and what are our healthcare outcomes?\n\nGeneral Population Trends\nBefore tackling if an elder care crisis exists, one must first ask, what have the general population trends been in the United States.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThese three plots demonstrate how the American population has been aging continuously since 1850. The mean age has increased from ~20 to ~39 years. Further sections will investigate how an aging population has created areas of policy innovation and policy failure. The data for these three plots were obtained from the US Decennial Census5 via the IPUMS USA database6."
-  },
-  {
-    "objectID": "DataVisualization.html#veterans-voting-patterns",
-    "href": "DataVisualization.html#veterans-voting-patterns",
-    "title": "Welcome to some of my data visualization projects",
-    "section": "Veterans Voting Patterns",
-    "text": "Veterans Voting Patterns"
-  },
-  {
-    "objectID": "DataVisualization.html#footnotes",
-    "href": "DataVisualization.html#footnotes",
-    "title": "Welcome to some of my data visualization projects",
-    "section": "Footnotes",
-    "text": "Footnotes\n\n\nHUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)↩︎\nWorld Population Review - Homeless Population By State (2025)↩︎\nHUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)↩︎\nWorld Population Review - Homeless Population By State (2025)↩︎\nUS Deciennial Census↩︎\nIPUMS USA↩︎"
-  },
-  {
-    "objectID": "projects.html",
-    "href": "projects.html",
-    "title": "Projects",
-    "section": "",
-    "text": "As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuum of Cares to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.\nYou can find the full chapter here: Paterson City Mayor’s Office Collaboration (PDF)"
-  },
-  {
-    "objectID": "projects.html#paterson-city-mayors-office-collaboration",
-    "href": "projects.html#paterson-city-mayors-office-collaboration",
-    "title": "Projects",
-    "section": "",
-    "text": "As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuum of Cares to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.\nYou can find the full chapter here: Paterson City Mayor’s Office Collaboration (PDF)"
-  },
-  {
-    "objectID": "projects.html#an-exploratory-study-of-end-of-life-planning-among-unsheltered-and-unhoused-individuals",
-    "href": "projects.html#an-exploratory-study-of-end-of-life-planning-among-unsheltered-and-unhoused-individuals",
-    "title": "Projects",
-    "section": "An Exploratory Study of End-of-Life Planning Among Unsheltered and Unhoused Individuals",
-    "text": "An Exploratory Study of End-of-Life Planning Among Unsheltered and Unhoused Individuals\nThis project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life’s end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.\nYou can find the full proposal here: Research Proposal (PDF)"
-  },
-  {
-    "objectID": "VizCode/HomePopStateCode.embed.html",
-    "href": "VizCode/HomePopStateCode.embed.html",
-    "title": "HomePopStateCode",
-    "section": "",
-    "text": "── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.3.0\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.1.0     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layoutWarning: package 'usmap' was built under R version 4.5.2\n\n\n[[1]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[2]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[3]]\n [1] \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"    \n [7] \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"    \n[13] \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[4]]\n [1] \"usmap\"     \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"    \n [7] \"purrr\"     \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\"\n[13] \"stats\"     \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"  \n[19] \"base\"     \n\n\n\nHomeStateUse &lt;- HomeState |&gt;\n  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |&gt;\n  mutate(BedPer = total/HPop,\n         region = tolower(State))\n\nstates_map &lt;- map_data(\"state\")\nstates_map &lt;- states_map |&gt;\n  left_join(HomeStateUse, by = \"region\")\n\n\nggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer &gt; 1)) +\n  geom_col(width = .6) +\n  coord_flip() +\n  scale_fill_manual(\n    values = c(\"TRUE\" = \"blue\", \"FALSE\" = \"red\"),\n    labels = c(\"FALSE\" = \"&lt;= 1\", \"TRUE\" = \"&gt; 1\"),\n    guide = FALSE  # hides the legend; remove if you want legend\n  ) +\n  labs(\n    title = \"Individual Shelter Beds per Homeless Individual by State\",\n    x = \"State\",\n    y = \"Beds per Homeless Individual\"\n  ) +\n  theme_minimal() +\n  theme(\n    axis.text.y = element_text(angle = 45, hjust = 1)  # slant y-axis labels\n  )\n\nWarning: The `guide` argument in `scale_*()` cannot be `FALSE`. This was deprecated in\nggplot2 3.3.4.\nℹ Please use \"none\" instead.\n\n\n\n\n\n\n\n\n\n\nggplotly(\n  ggplot(states_map, aes(\n    x = long,\n    y = lat,\n    group = group,\n    fill = BedPer,\n    text = paste0(\n      \"State: \", tools::toTitleCase(region),\n      \"&lt;br&gt;Emergency Shelter Beds per Homeless Individual: \",\n      round(BedPer, 2)\n    )\n  )) +\n    geom_polygon(color = \"white\", linewidth = 0.2) +\n    coord_fixed(1.3) +\n    scale_fill_gradient2(\n      name = \"Beds per\\nHomeless Individual\",\n      low = \"#570C18\",\n      \n      high = \"#000087\",\n      midpoint = 1,\n      labels = scales::number_format(accuracy = 0.01)\n    ) +\n    labs(\n      title = \"Shelter Bed Availability by State\",\n      subtitle = \"Red = shortage (&lt; 1), Blue = surplus (&gt; 1)\"\n    ) +\n    theme_void() +\n    theme(\n      legend.position = \"right\"\n    ),\n  tooltip = \"text\"\n)"
+    "text": "Content for first column.\n\n\nMore content here.\n\n\n\n\nThis will stack below on mobile."
   },
   {
     "objectID": "VizCodes.embed.html",

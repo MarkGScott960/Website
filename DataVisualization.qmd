@@ -23,7 +23,7 @@ Together, these examples reflect my emphasis on clarity, accessibility, and repr
 ::: {layout-cell}
 <div style="padding-right: .25rem;">
 ### Individual Emergency Shelter Beds Per Homeless Individual
-When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data[^1] and a yearly report created by the World Population review.[^2] 
+When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data[^1] and a yearly report created by the World Population review.[^2]  
 </div>
 :::
 
@@ -469,20 +469,35 @@ CensusStackPlot
 #| message: false
 #| warning: false
 
+
+period = c("Civl War","Baby Boom", "Oil Crisis / Recession", "Great Recession", "COVID-19 Pandemic")
 bands <- data.frame(
-  start = c(1946, 1973, 2007, 2020),
-  end   = c(1964, 1975, 2009, 2023),
-  period = c("Baby Boom", "Oil Crisis / Recession", "Great Recession", "COVID-19 Pandemic"),
-  color = c("#85C9E8", "#F6762A", "#630031", "#171717"))
+  start = c(1861, 1946, 1973, 2007, 2020),
+  end   = c(1865, 1964, 1975, 2009, 2023),
+  period = factor(period, levels = period),
+  color = c("#838383","#85C9E8", "#F6762A", "#630031", "#171717"))
 
+Data2024 <- data.frame(
+  year = c(2024, 2025),
+  MedAge = c(39.1,391)
+)
 
+MedAgeDF <- bind_rows(
+  Data2024,
+  MedAgeDF
+)
 
 AvAgePlot <- ggplot(MedAgeDF, aes(x = year, y = MedAge))+
   geom_line(linewidth = 1)+
+  # geom_rect(
+  #   data = bands,
+  #   aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = period),
+  #   alpha = 0.5,
+  #   inherit.aes = FALSE)+
   theme_minimal()+
   scale_x_continuous(
-    limits = c(1850, 2020),
-    breaks = seq(1850, 2020, 15))+
+    limits = c(1850, 2025),
+    breaks = seq(1850, 2025, 15))+
   ylim(0,40)+
   labs(
     title = "Average Age (1850-2020)",
@@ -512,11 +527,6 @@ AvAgePlot
 
 #BrtAge <- invisible(full_join(MedAgeDF, BirthRates))
 
-bands <- data.frame(
-  start = c(1946, 1973, 2007, 2020),
-  end   = c(1964, 1975, 2009, 2023),
-  period = c("Baby Boom", "Oil Crisis / Recession", "Great Recession", "COVID-19 Pandemic"),
-  color = c("#85C9E8", "#F6762A", "#630031", "#171717"))
 
 BirthRatePlot <- ggplot(BirthRates, aes(x = YEAR, y = Fertility)) +
   geom_rect(
@@ -549,7 +559,7 @@ BirthRatePlot
 ::: {layout-cell}
 
 <div style="padding-left: .25rem;">
-These three plots demonstrate how the American population has been aging continuously since 1850. The mean age has increased from 18.9 to 38.8 years. Further sections will investigate how an aging population has created areas of policy innovation and policy failure. The data for these three plots were obtained from the US Decennial Census[^5] via the IPUMS USA database[^6].
+These three plots demonstrate how the American population has been aging nearly continuously since 1850. The mean age has increased from 18.9 to 38.8 years from 1850 to 2024. Further sections will investigate how an aging population has created areas of policy innovation and policy failure. For example, do we have the infrastructure to care for more elders with less workers? The data for these three plots were obtained from the US Decennial Census[^5] via the IPUMS USA database[^6].
 </div>
 
 :::
