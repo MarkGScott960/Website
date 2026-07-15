@@ -13,7 +13,7 @@ website:
         text: Home
       - projects.qmd
       - href: DataVisualization.qmd
-        text: Data Visualization
+        text: Data Exploration
       - href: contactme.qmd
         text: Contact Me
     tools:
