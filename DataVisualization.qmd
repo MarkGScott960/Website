@@ -8,10 +8,324 @@ engine: knitr
 ---
 ::: {.lead}
 This page highlights my ability to design clear, professional, and analytically useful data visualizations.  
-The figures presented here are not intended solely as final results, but as demonstrations of methodological choices—such as data transformation, visual encoding, annotation, and layout—that support accurate interpretation and effective communication.  
+The figures presented here are not intended solely as final results, but as demonstrations of methodological choices-such as data transformation, visual encoding, annotation, and layout-that support accurate interpretation and effective communication.  
 
 Together, these examples reflect my emphasis on clarity, accessibility, and reproducibility in data-driven work.
 :::
+
+# Epstein Network Analysis
+
+The full write-up — model specification, nesting strategy, diagnostics, and replication details — is available upon request via the **Contact Me** tab.
+
+```{r}
+#| label: EpsteinSetup
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(network)
+library(igraph)
+library(tidygraph)
+library(ggraph)
+library(betareg)
+library(scales)
+
+
+nets          <- readRDS("VizCode/Epstein/networks.rds")
+mod_final     <- readRDS("VizCode/Epstein/mod_final.rds")
+gof_final     <- readRDS("VizCode/Epstein/gof_mod_final.rds")
+constraint_df <- readRDS("VizCode/Epstein/constraint_df.rds")
+
+# ---- GOF tie-prediction values (same accessors as Summary.qmd) -------------
+roc_auc  <- round(gof_final[["Tie prediction"]]$auc.roc[1], 3)
+pr_auc   <- round(gof_final[["Tie prediction"]]$auc.pr[1], 3)
+roc_base <- round(gof_final[["Tie prediction"]]$auc.roc.rgraph, 3)
+pr_base  <- round(gof_final[["Tie prediction"]]$auc.pr.rgraph, 3)
+
+# ---- Standardize the sex attribute (M / F / U coding) -----------------------
+sex_std <- function(x) {
+  case_when(
+    str_to_lower(x) %in% c("m", "male")   ~ "Male",
+    str_to_lower(x) %in% c("f", "female") ~ "Female",
+    TRUE                                  ~ "Unknown"   # includes "U" and NA
+  )
+}
+
+sex_cols <- c(Female = "#C2185B", Male = "#1565C0", Unknown = "gray70")
+
+# ---- Aggregate the 21 yearly networks into one weighted directed graph -----
+# Inactive nodes are stored as NA in the yearly adjacency matrices (so btergm
+# excludes them from the likelihood); for the pooled descriptive graph those
+# NAs simply mean "no tie", so they are zeroed before summing.
+mats <- map(nets, function(net) {
+  m <- network::as.matrix.network(net, matrix.type = "adjacency")
+  m[is.na(m)] <- 0
+  m
+})
+
+A     <- reduce(mats, `+`)
+g_agg <- graph_from_adjacency_matrix(A, mode = "directed", weighted = TRUE)
+V(g_agg)$sex <- sex_std(network::get.vertex.attribute(nets[[1]], "sex"))
+
+n_nodes   <- gorder(g_agg)
+n_dyads   <- gsize(g_agg)
+n_periods <- length(nets)
+
+# ---- Bootstrap CIs and odds ratios from the btergm object ------------------
+cfs      <- mod_final@coef
+boot_mat <- mod_final@boot$t
+ci       <- apply(boot_mat, 2, quantile, probs = c(0.025, 0.975), na.rm = TRUE)
+
+coef_df <- tibble(
+  term = names(cfs),
+  est  = as.numeric(cfs),
+  lo   = ci[1, ],
+  hi   = ci[2, ]
+) |>
+  filter(term != "edges") |>   # baseline density term; dominates the axis
+  mutate(
+    OR    = exp(est),
+    or_lo = exp(lo),
+    or_hi = exp(hi),
+    label = case_when(
+      str_detect(term, "nodeocov.*constraint") ~ "Sender constraint (H1)",
+      str_detect(term, "nodeicov.*constraint") ~ "Receiver constraint (H1)",
+      str_detect(term, "nodematch.*sex")       ~ "Same-sex tie (H2)",
+      str_detect(term, "nodeofactor.*sex")     ~ "Male sender",
+      str_detect(term, "nodeifactor.*sex")     ~ "Male receiver",
+      str_detect(term, "mutual")               ~ "Reciprocity",
+      str_detect(term, "gwideg")               ~ "GW in-degree (0.5)",
+      str_detect(term, "gwodeg")               ~ "GW out-degree (0.5)",
+      str_detect(term, "gwesp")                ~ "GWESP (transitivity)",
+      str_detect(term, "memory")               ~ "Tie memory (t \u2212 1)",
+      str_detect(term, "timecov")              ~ "Linear time trend",
+      TRUE                                     ~ term
+    ),
+    hyp = case_when(
+      str_detect(term, "constraint")     ~ "H1: Brokerage",
+      str_detect(term, "nodematch.*sex") ~ "H2: Homophily",
+      TRUE                               ~ "Structural control"
+    )
+  )
+
+# ---- Inline helpers (mirrors Summary.qmd conventions) -----------------------
+or_val  <- function(t) round(exp(cfs[t]), 2)
+pct_val <- function(t) round((exp(cfs[t]) - 1) * 100, 1)
+or_ci   <- function(t) sprintf("[%.2f, %.2f]", exp(ci[1, t]), exp(ci[2, t]))
+
+# ---- Beta regression: who occupies brokerage positions? ---------------------
+# Matches the Summary.qmd specification: lagged Burt's constraint on sex with
+# year fixed effects, active nodes only, pooled node-years, restricted to the
+# 2009-2019 estimation window of M-Final.
+breg_df <- constraint_df |>
+  mutate(sex = sex_std(sex)) |>
+  filter(
+    sex %in% c("Male", "Female"),
+    active,
+    !is.na(constraint),
+    year >= 2009, year <= 2019
+  ) |>
+  # isolates carry constraint = 1 exactly; squeeze onto (0, 1) for the
+  # beta likelihood
+  mutate(cons_sq = (pmin(constraint, 1) * (n() - 1) + 0.5) / n())
+
+bmod   <- betareg(cons_sq ~ sex + factor(year), data = breg_df)
+b_tab  <- summary(bmod)$coefficients$mean
+b_coef <- round(b_tab["sexMale", "Estimate"], 3)
+b_se   <- b_tab["sexMale", "Std. Error"]
+b_ci   <- sprintf("[%.3f, %.3f]",
+                  b_tab["sexMale", "Estimate"] - 1.96 * b_se,
+                  b_tab["sexMale", "Estimate"] + 1.96 * b_se)
+b_z    <- round(b_tab["sexMale", "z value"], 2)
+
+gap_sd <- breg_df |>
+  summarise(
+    d = (mean(constraint[sex == "Male"]) - mean(constraint[sex == "Female"])) /
+        sd(constraint)
+  ) |>
+  pull(d) |>
+  round(2)
+```
+
+The Department of Justice's release of the Epstein email records[^E1] offers a rare chance to observe an elite communication network directly rather than through court testimony or journalistic reconstruction. With two collaborators, I built a Python pipeline that extracts headers from roughly 1.4 million released email records — classifying pages with dual OCR engines, locating redactions with a fine-tuned Mask R-CNN, and recovering sender and recipient fields — then resolved names in R through a six-pass matching pipeline (exact, substring, middle-initial, reversal, Jaro-Winkler fuzzy, and curated regex) into a longitudinal directed network of `r comma(n_nodes)` confirmed unique individuals across `r n_periods` yearly waves, 2000–2020 (`r comma(n_dyads)` unique communication ties). Two hypotheses drawn from the literature on brokerage and gendered social capital[^E2] structure the analysis: **H1**, that actors in structural brokerage positions — operationalized as low lagged Burt's constraint[^E3] — are disproportionately active in tie formation, with a supplementary question of *who* occupies those positions; and **H2**, that ties form disproportionately between individuals of the same sex.
+
+::: {layout-ncol=2}
+::: {layout-cell}
+
+```{r}
+#| label: EpsteinNetworkGraph
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 7
+
+set.seed(42)
+g_plot <- delete_vertices(g_agg, degree(g_agg) == 0)
+
+ggraph(g_plot, layout = "fr") +
+  geom_edge_link(alpha = 0.04, colour = "gray35") +
+  geom_node_point(aes(colour = sex), size = 1.2, alpha = 0.85) +
+  scale_colour_manual(values = sex_cols, name = "Sex") +
+  labs(
+    title    = "The Aggregated Email Network",
+    subtitle = paste0(comma(gorder(g_plot)), " non-isolate nodes, ",
+                      n_periods, " yearly waves pooled"),
+    caption  = "Node identities intentionally suppressed."
+  ) +
+  theme_void(base_size = 13) +
+  theme(
+    legend.position = "bottom",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+:::
+
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+The pooled network shows the classic core–periphery shape of an ego-anchored corpus: a dense communicative core surrounded by hundreds of low-degree contacts. Nodes are colored by sex; all names and identifying labels are deliberately withheld — the analysis concerns the *structure* of the network, not the identification of individuals. Activity is far from uniform in time: the network is sparse before Epstein's 2008 plea agreement and peaks between roughly 2013 and 2018, which motivates estimating the final model on the 2009–2019 window rather than the full panel.
+</div>
+:::
+:::
+
+::: {layout-ncol=2}
+::: {layout-cell}
+<div style="padding-right: .25rem;">
+A descriptive first pass at H2: row-normalizing ties by sender sex shows how each group distributes its emails across recipient sexes. Descriptives like this cannot distinguish genuine homophily from confounding structure — reciprocity, degree heterogeneity, and the strong tendency of past ties to persist all shape raw same-sex proportions — which is exactly what the temporal ERGM below is for.
+</div>
+:::
+
+::: {layout-cell}
+
+```{r}
+#| label: EpsteinMixingMatrix
+#| echo: false
+#| message: false
+#| warning: false
+
+el <- as_edgelist(g_agg, names = FALSE)
+
+mix <- tibble(
+  Sender    = V(g_agg)$sex[el[, 1]],
+  Recipient = V(g_agg)$sex[el[, 2]],
+  w         = E(g_agg)$weight
+) |>
+  filter(Sender != "Unknown", Recipient != "Unknown") |>
+  count(Sender, Recipient, wt = w, name = "ties") |>
+  group_by(Sender) |>
+  mutate(prop = ties / sum(ties)) |>
+  ungroup()
+
+ggplot(mix, aes(x = Recipient, y = Sender, fill = prop)) +
+  geom_tile(colour = "white", linewidth = 1) +
+  geom_text(aes(label = percent(prop, accuracy = 1)),
+            size = 5, colour = "white", fontface = "bold") +
+  scale_fill_gradient(low = "#9FB4CC", high = "#1A1A2E", guide = "none") +
+  labs(
+    title    = "Who Emails Whom?",
+    subtitle = "Share of each sender group's ties, by recipient sex",
+    x = "Recipient sex", y = "Sender sex"
+  ) +
+  coord_fixed() +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+```
+
+:::
+:::
+
+## Modeling Tie Formation Over Time
+
+Because ties are interdependent — an email begets a reply, shared contacts beget introductions — standard regression is inappropriate. I instead estimate a Bootstrapped Temporal Exponential Random Graph Model (btergm)[^E4] on the 2009–2019 window, with structural controls for reciprocity, geometrically weighted degree distributions, transitive closure (GWESP), a linear time trend, and a one-year tie-memory term (R = 1,000 bootstrap resamples). H1 enters as sender- and receiver-side effects of Burt's constraint, computed on the *prior* year's network so the predictor is not endogenous to the ties being modeled; H2 enters as a same-sex match term alongside sender and receiver sex main effects. Out-of-sample tie prediction is strong (ROC AUC = `r roc_auc` vs. a `r roc_base` random baseline; precision–recall AUC = `r pr_auc` vs. `r pr_base`), though a substantial share of that performance is carried by the memory term — persistence, not novelty, dominates elite email networks.
+
+::: {layout-ncol=2}
+::: {layout-cell}
+
+```{r}
+#| label: EpsteinForest
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 5.5
+
+ggplot(coef_df, aes(x = OR, y = fct_reorder(label, OR), colour = hyp)) +
+  geom_vline(xintercept = 1, linetype = "dashed", colour = "gray50") +
+  geom_pointrange(aes(xmin = or_lo, xmax = or_hi), linewidth = 0.8) +
+  scale_x_log10(labels = label_number(drop0trailing = TRUE)) +
+  scale_colour_manual(values = c(
+    "H1: Brokerage"      = "#E65100",
+    "H2: Homophily"      = "#C2185B",
+    "Structural control" = "gray45"
+  )) +
+  labs(
+    title    = "Odds Ratios, Final Temporal ERGM (2009\u20132019)",
+    subtitle = "95% bootstrap CIs (R = 1,000); baseline density (edges) term omitted",
+    x = "Odds Ratio (log scale)", y = NULL, colour = NULL,
+    caption  = "Values above 1 increase tie odds; below 1 decrease them."
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position     = "bottom",
+    plot.title          = element_text(face = "bold"),
+    plot.title.position = "plot"
+  )
+```
+
+:::
+
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+**H1 is supported.** A one-unit increase in constraint cuts the odds of receiving a tie by `r abs(pct_val("nodeicov.constraint"))`% (OR = `r or_val("nodeicov.constraint")`, 95% CI `r or_ci("nodeicov.constraint")`) and of sending one by `r abs(pct_val("nodeocov.constraint"))`% (OR = `r or_val("nodeocov.constraint")`, 95% CI `r or_ci("nodeocov.constraint")`) — low-constraint brokers are the network's most active participants. **H2 is supported.** Same-sex dyads are `r pct_val("nodematch.sex")`% more likely to form a tie than mixed-sex dyads (OR = `r or_val("nodematch.sex")`, 95% CI `r or_ci("nodematch.sex")`), net of reciprocity (OR = `r or_val("mutual")`), popularity, transitivity, and tie persistence (memory OR = `r or_val("edgecov.memory[[i]]")`). The sex main effects reveal an unhypothesized asymmetry: male *senders* are `r abs(pct_val("nodeofactor.sex.M"))`% less likely to initiate a tie (OR = `r or_val("nodeofactor.sex.M")`), while male *receivers* are `r pct_val("nodeifactor.sex.M")`% more likely to receive one (OR = `r or_val("nodeifactor.sex.M")`) — women disproportionately write, men are disproportionately written to.
+</div>
+:::
+:::
+
+::: {layout-ncol=2}
+::: {layout-cell}
+<div style="padding-right: .25rem;">
+H1's supplementary question — *who* occupies the brokerage positions? Burt's constraint is bounded on [0, 1]: high values mean an ego's contacts are densely interconnected (little brokerage opportunity), low values mark brokers bridging otherwise disconnected groups. Because the outcome is bounded, it is modeled with a beta regression (logit link) rather than OLS, whose residual diagnostics failed here — a specification choice that materially changed the conclusion. Controlling for year fixed effects among active nodes, men have significantly higher constraint than women (β = `r b_coef`, 95% CI `r b_ci`, z = `r b_z`), meaning women disproportionately occupy the broker-like positions — though the gap is modest in practical terms (about `r gap_sd` SD).
+</div>
+:::
+
+::: {layout-cell}
+
+```{r}
+#| label: EpsteinConstraintDist
+#| echo: false
+#| message: false
+#| warning: false
+
+mean_df <- breg_df |>
+  group_by(sex) |>
+  summarise(m = mean(constraint), .groups = "drop")
+
+ggplot(breg_df, aes(x = constraint, fill = sex, colour = sex)) +
+  geom_density(alpha = 0.35, linewidth = 0.8) +
+  geom_vline(data = mean_df, aes(xintercept = m, colour = sex),
+             linetype = "dashed", linewidth = 0.7) +
+  scale_fill_manual(values = sex_cols, name = "Sex") +
+  scale_colour_manual(values = sex_cols, name = "Sex") +
+  labs(
+    title    = "Brokerage by Sex",
+    subtitle = "Lagged Burt's constraint, active node-years 2009\u20132019 (lower = more broker-like);\ndashed lines mark group means",
+    x = "Burt's constraint", y = "Density"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+:::
+:::
+
+The picture that emerges is of an elite network whose most active participants are its brokers, that clusters strongly by sex in *who talks to whom*, and in which women both initiate more communication and — modestly — occupy more of the structurally advantageous positions. Three caveats travel with these results: the corpus is the product of a federal investigation and is therefore an inherently selected sample of the true communication network; predictive performance leans heavily on tie persistence; and an MCMC-based mtergm robustness check proved computationally infeasible at this network size, leaving coefficient stability across bootstrap seeds as the primary robustness evidence. Full details, diagnostics, and replication materials are available upon request via the **Contact Me** tab.
+
 
 # Visualization of American Housing
 ## The Homelessness Crisis
@@ -553,7 +867,7 @@ By virtue of studying political science, it is an inescapable truth that in our 
 ::: {layout-ncol=2} 
 ::: {layout-cell}
 <div style="padding-left: .25rem;">
-My first question when thinking about how power may be translated into wealth is how individual presidents may have grown this wealth in office. While this graph may look clean and authoritative, there are several challenges that came in procuring the data. The main issue with the data is that the wealth start and end figures are calculated estimates sourced from the USOGE.[^7] What is interesting to see is that, at first brush, there are large percentage swings—but these largely reflect each president's starting wealth: modest absolute gains appear enormous when starting wealth is small, while billion-dollar fortunes can swing sharply on valuation alone. Note that figures for the current administration are projections rather than final estimates.
+My first question when thinking about how power may be translated into wealth is how individual presidents may have grown this wealth in office. While this graph may look clean and authoritative, there are several challenges that came in procuring the data. The main issue with the data is that the wealth start and end figures are calculated estimates sourced from the USOGE.[^7] What is interesting to see is that, at first brush, there are large percentage swings-but these largely reflect each president's starting wealth: modest absolute gains appear enormous when starting wealth is small, while billion-dollar fortunes can swing sharply on valuation alone. Note that figures for the current administration are projections rather than final estimates.
 </div>
 
 
@@ -760,7 +1074,7 @@ lr_chisq <- round(lr_2v3$Deviance[2], 2)
 lr_p     <- fmt_p(lr_2v3$`Pr(>Chi)`[2])
 ```
 
-Deterrence theory predicts that states with greater military capability should be attacked less often, and therefore participate in less conflict. As part of my graduate coursework I tested this against `r scales::comma(n_sy)` state-years spanning `r yr_min`–`r yr_max`, combining the Correlates of War project's conflict and material capabilities data[^8] with the Varieties of Democracy project's liberal democracy index[^9]. Military capability is measured by the Composite Index of National Capability (CINC), a 0–1 index aggregating military, demographic, and industrial resources. Conflict is rare—only `r pct_conf`% of state-years involve participation—which shapes every modeling decision that follows.
+Deterrence theory predicts that states with greater military capability should be attacked less often, and therefore participate in less conflict. As part of my graduate coursework I tested this against `r scales::comma(n_sy)` state-years spanning `r yr_min`–`r yr_max`, combining the Correlates of War project's conflict and material capabilities data[^8] with the Varieties of Democracy project's liberal democracy index[^9]. Military capability is measured by the Composite Index of National Capability (CINC), a 0–1 index aggregating military, demographic, and industrial resources. Conflict is rare-only `r pct_conf`% of state-years involve participation-which shapes every modeling decision that follows.
 
 ::: {layout-ncol=2}
 ::: {layout-cell}
@@ -804,7 +1118,7 @@ Every key variable shifts substantially across the two-century span. Conflict ra
 ::: {layout-ncol=2}
 ::: {layout-cell}
 <div style="padding-right: .25rem;">
-Grouping state-years by capability quartile previews the central finding: conflict participation *rises* with military capability—the opposite of the deterrence prediction. States in the highest CINC quartile participated in conflict in `r q4_rate`% of state-years, versus `r q1_rate`% for the lowest quartile. Notably, the pattern holds even for defenders: more capable states are attacked *more*, not less.
+Grouping state-years by capability quartile previews the central finding: conflict participation *rises* with military capability-the opposite of the deterrence prediction. States in the highest CINC quartile participated in conflict in `r q4_rate`% of state-years, versus `r q1_rate`% for the lowest quartile. Notably, the pattern holds even for defenders: more capable states are attacked *more*, not less.
 </div>
 :::
 
@@ -836,7 +1150,7 @@ cincsum |>
 
 ### Testing Deterrence Formally
 
-Three nested logistic regressions estimate conflict participation: a bivariate baseline (CINC only), a controlled specification adding log-trade, democracy, log-population, and year, and a full model adding a centered democracy × trade interaction to test the liberal peace thesis. Because the same states are observed repeatedly, standard errors are clustered by state. The likelihood ratio test favors the interaction model (χ² = `r lr_chisq`, p = `r lr_p`) and AIC agrees (`r aic3` vs `r aic2`), but BIC penalizes the extra parameter (`r bic3` vs `r bic2`) and the interaction fails under clustering—so the simpler controlled model is preferred for inference, with the full model shown below as the most complete specification.
+Three nested logistic regressions estimate conflict participation: a bivariate baseline (CINC only), a controlled specification adding log-trade, democracy, log-population, and year, and a full model adding a centered democracy × trade interaction to test the liberal peace thesis. Because the same states are observed repeatedly, standard errors are clustered by state. The likelihood ratio test favors the interaction model (χ² = `r lr_chisq`, p = `r lr_p`) and AIC agrees (`r aic3` vs `r aic2`), but BIC penalizes the extra parameter (`r bic3` vs `r bic2`) and the interaction fails under clustering-so the simpler controlled model is preferred for inference, with the full model shown below as the most complete specification.
 
 ::: {layout-ncol=2}
 ::: {layout-cell}
@@ -882,7 +1196,7 @@ logit3_clustered |>
 
 ::: {layout-cell}
 <div style="padding-left: .25rem;">
-CINC is positive and strongly significant (z = `r h1_z`, p = `r h1_p`)—the null is rejected, but in the direction *opposite* the deterrence prediction. The full-range odds ratio (`r h1_or`) is misleading since no state traverses the whole 0–1 scale; a one-standard-deviation increase in CINC corresponds to an odds ratio of `r or_1sd`. Trade is protective (OR below 1), population strongly aggravating, both consistent with the literature. Democracy and the democracy × trade interaction lose significance once within-state correlation is accounted for: the interaction is significant unclustered (p = `r h2_p_unc`) but fails clustering (p = `r h2_p_cl`), so the liberal peace interaction is not supported here.
+CINC is positive and strongly significant (z = `r h1_z`, p = `r h1_p`)-the null is rejected, but in the direction *opposite* the deterrence prediction. The full-range odds ratio (`r h1_or`) is misleading since no state traverses the whole 0–1 scale; a one-standard-deviation increase in CINC corresponds to an odds ratio of `r or_1sd`. Trade is protective (OR below 1), population strongly aggravating, both consistent with the literature. Democracy and the democracy × trade interaction lose significance once within-state correlation is accounted for: the interaction is significant unclustered (p = `r h2_p_unc`) but fails clustering (p = `r h2_p_cl`), so the liberal peace interaction is not supported here.
 </div>
 :::
 :::
@@ -912,7 +1226,7 @@ tibble(
   knitr::kable(caption = "Summary of Hypothesis Tests (state-clustered standard errors)")
 ```
 
-The role-specific models sharpen the story. Even restricted to whether a state is *attacked*, capability associates positively with conflict (defender β = `r def_coef`, p = `r def_p`), though the estimate is imprecise. The aggressor coefficient (β = `r agg_coef`, p = `r agg_p`) is roughly `r round(agg_clustered["cinc", "Estimate"] / def_clustered["cinc", "Estimate"], 1)` times larger and precisely estimated, pointing to conflict *initiation* as the dominant channel: hard power appears to enable force projection at least as much as it deters attack. Whether that reflects opportunity, selection into capability by conflict-prone states, deterrence operating at the dyadic rather than state level, or unresolved endogeneity is an open question—the full write-up linked above works through each mechanism, the model diagnostics, and cross-validated performance.
+The role-specific models sharpen the story. Even restricted to whether a state is *attacked*, capability associates positively with conflict (defender β = `r def_coef`, p = `r def_p`), though the estimate is imprecise. The aggressor coefficient (β = `r agg_coef`, p = `r agg_p`) is roughly `r round(agg_clustered["cinc", "Estimate"] / def_clustered["cinc", "Estimate"], 1)` times larger and precisely estimated, pointing to conflict *initiation* as the dominant channel: hard power appears to enable force projection at least as much as it deters attack. Whether that reflects opportunity, selection into capability by conflict-prone states, deterrence operating at the dyadic rather than state level, or unresolved endogeneity is an open question-the full write-up linked above works through each mechanism, the model diagnostics, and cross-validated performance.
 
 
 [^1]: [HUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)](https://files.hudexchange.info/reports/published/CoC_HIC_NatlTerrDC_2024.pdf)
@@ -924,3 +1238,7 @@ The role-specific models sharpen the story. Even restricted to whether a state i
 [^7]: [United States Office of Government Ethics](https://www.oge.gov/web/oge.nsf/Officials%20Individual%20Disclosures%20Search%20Collection?OpenForm=)
 [^8]: [The Correlates of War Project - Militarized Interstate Disputes (v5.0) & National Material Capabilities](https://correlatesofwar.org/)
 [^9]: [Varieties of Democracy (V-Dem) Project](https://v-dem.net/)
+[^E1]: U.S. Department of Justice, release of the Epstein email records (2025). <!-- add link to the release page when finalized -->
+[^E2]: Burt, R. S. (1998). "The Gender of Social Capital." *Rationality and Society*, 10(1), 5–46.
+[^E3]: Burt, R. S. (1992). *Structural Holes: The Social Structure of Competition.* Harvard University Press.
+[^E4]: Leifeld, P., Cranmer, S. J., & Desmarais, B. A. (2018). "Temporal Exponential Random Graph Models with btergm." *Journal of Statistical Software*, 83(6).
