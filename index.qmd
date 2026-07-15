@@ -4,9 +4,6 @@ about:
   id: me
   template: jolla
   image: img/profile.jpg
-format:
-  html:
-    link-external-newwindow: true
 ---
 
 :::{#me}
@@ -16,9 +13,9 @@ format:
 
 ## Education
 
-***Bachelors*** *- Political Science, received 2024 from Montclair State University.*
+***Bachelor's*** *- Political Science, received 2024 from Montclair State University.*
 
-***Masters*** *- Data Analytics, Expected 2026 from University of Massachusetts.*
+***Master's*** *- Data Analytics, Expected 2026 from University of Massachusetts.*
 
 ## Experience
 
@@ -31,6 +28,3 @@ format:
 ***2018 - 2024:*** *Shift Leader - [Qdoba](https://www.qdoba.com/)*
 
 :::
-
-
-

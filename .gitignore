@@ -4,5 +4,7 @@
 .Ruserdata
 
 /.quarto/
-VizCode/Census/USAPOP.csv 
-VizCode/Census/USAPOP.csv 
+VizCode/Census/USAPOP.csv
+VizCode/Census/USAPOP.csv
+
+**/*.quarto_ipynb

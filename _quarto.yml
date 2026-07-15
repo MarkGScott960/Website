@@ -1,7 +1,10 @@
 project:
   type: website
   output-dir: docs
-  
+  render:
+    - "*.qmd"
+    - "!VizCodes.qmd"
+
 website:
   title: "Mark G Scott"
   navbar:
@@ -14,21 +17,22 @@ website:
       - href: contactme.qmd
         text: Contact Me
     tools:
-        - icon: substack
-          text: Substack
-          href: https://substack.com/@brethroanalysis
-        - icon: tiktok
-          text: TikTok
-          href: https://www.tiktok.com/@thegarlicpeel 
+      - icon: substack
+        text: Substack
+        href: https://substack.com/@brethroanalysis
+      - icon: tiktok
+        text: TikTok
+        href: https://www.tiktok.com/@thegarlicpeel
   page-footer:
     right: "Built with [Quarto](https://quarto.org/)"
     left: "&copy; Copyright 2025, Mark G Scott"
 
 format:
   html:
-    theme: minty
+    theme: journal
+    css: styles.css
     toc: true
     toc-depth: 1
+    link-external-newwindow: true
 
 editor: source
-

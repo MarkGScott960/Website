@@ -1,19 +1,12 @@
 ---
-title: ""
+title: "Thank You"
 format:
   html:
-    embed-resources: true
     toc: false
-page-layout: article
 ---
-::: {layout-ncol=2}
-Content for first column.
 
-::: {layout-cell}
-More content here.
-:::
+Your message has been sent. I read every message personally and will get back to you as soon as I can, typically within a few business days.
 
-::: {layout-cell}
-This will stack below on mobile.
-:::
-:::
+In the meantime, feel free to browse my [data visualization work](DataVisualization.qmd) or [current projects](projects.qmd).
+
+[Return to the home page](index.qmd)

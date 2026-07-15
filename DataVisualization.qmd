@@ -2,12 +2,8 @@
 title: "Welcome to some of my data visualization projects"
 format:
   html:
-    embed-resources: true
-    link-external-newwindow: true
     page-layout: full
     toc-depth: 2
-    theme: quartz
-    css: styles.css
 engine: knitr
 ---
 ::: {.lead}
@@ -17,13 +13,13 @@ The figures presented here are not intended solely as final results, but as demo
 Together, these examples reflect my emphasis on clarity, accessibility, and reproducibility in data-driven work.
 :::
 
-# Visulization of American Housing
+# Visualization of American Housing
 ## The Homelessness Crisis
 ::: {layout-ncol=2} 
 ::: {layout-cell}
 <div style="padding-right: .25rem;">
 ### Individual Emergency Shelter Beds Per Homeless Individual
-When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relative higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data[^1] and a yearly report created by the World Population review.[^2]  
+When looking at emergency shelter capacity relative to the homeless population, clear regional disparities emerge. States shown in red face shortages, with fewer than one shelter bed per homeless individual, while blue states indicate relatively higher capacity. This visualization highlights structural differences in how states address homelessness and emergency housing needs. The data used for this visualization was gathered from HUD data[^1] and a yearly report created by the World Population Review.[^2] Note that the map displays the contiguous United States; Alaska and Hawaii are excluded.
 </div>
 :::
 
@@ -35,7 +31,7 @@ When looking at emergency shelter capacity relative to the homeless population, 
 #| message: false
 #| warning: false
 
-packages <- c("tidyverse", "ggplot2", "plotly", "usmap", "scales", "readxl")
+packages <- c("tidyverse", "plotly", "scales", "readxl")
 invisible(lapply(packages, library, character.only = TRUE))
 rm(packages)
 
@@ -116,14 +112,14 @@ p$x$data[[trace_id]]$marker$colorbar <- list(
 p
 
 
- rm(HomeState,HomeStateUse,states_map, trace_id)
+rm(HomeState, HomeStateUse, states_map, trace_id)
 
 ```
 </div>
 :::
 :::
 
-# Visulization of The American Healthcare Crisis
+# Visualization of The American Healthcare Crisis
 
 ## The Medical Debt Crisis
 ### Medicaid Adult Coverage Expansion and Debt
@@ -133,7 +129,7 @@ In this next section I will be investigating the differences in the COVID-19 Med
 ::: {layout-cell}
 <div style="padding-right: .25rem;">
 ```{r}
-#| label: MedicadeExpansion
+#| label: MedicaidExpansion
 #| echo: false
 #| message: false
 #| warning: false
@@ -230,7 +226,7 @@ rm(MDEdesc)
 
 ::: {layout-cell}
 <div style="padding-left: .25rem;">
-This bar chart compares medical debt collection rates across U.S. states by Medicaid expansion status in 2023, using data from Medicaid.com[^1] and The Commonwealth Fund[^2]. States are grouped by expansion status and benchmarked against the national average.
+This bar chart compares medical debt collection rates across U.S. states by Medicaid expansion status in 2023, using data from Medicaid.gov[^3] and The Commonwealth Fund[^4]. States are grouped by expansion status and benchmarked against the national average.
 
 States that did not expand Medicaid show higher rates of medical debt in collections relative to both the national average and expansion states. While this does not provide causal evidence, this figure provides a quick, illustrative snapshot that highlights disparities linked to health care access and motivates deeper policy analysis.
 </div>
@@ -254,7 +250,6 @@ Before tackling if an elder care crisis exists, one must first ask, what have th
 #| warning: false
 
 USAPOPCount <- read_csv("VizCode/Census/USAPOPCount.csv")
-PresJobApproval <- read.csv("VizCode/Politics/PresJobApproval.csv")
 
 ```
 
@@ -352,7 +347,7 @@ Census2000 <-  read_xlsx("VizCode/Census/Census2000.xlsx")|>
     TRUE ~ NA_character_))|> 
 filter(!is.na(age_group))
 
-Census1980 <-  read.csv("Vizcode/Census/Census1980.csv") |> 
+Census1980 <-  read.csv("VizCode/Census/Census1980.csv") |> 
     rename(YEAR = "Year.of.Estimate")
 
 #cleaning 1980 sep. because of delins
@@ -410,9 +405,9 @@ CensusFull <- bind_rows(
 
 #Median Age
 
-year <- c(1850, 1860, 1870, 1880, 1890, 1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010,2020)
+year <- c(1850, 1860, 1870, 1880, 1890, 1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2024)
 
-MedAge <- c(18.9, 19.4, 20.2, 20.9, 22.0, 22.9, 24.1, 25.3, 26.5, 29.0, 30.2, 29.5, 28.1, 30.0, 32.9, 35.3, 37.2, 38.8)
+MedAge <- c(18.9, 19.4, 20.2, 20.9, 22.0, 22.9, 24.1, 25.3, 26.5, 29.0, 30.2, 29.5, 28.1, 30.0, 32.9, 35.3, 37.2, 38.8, 39.1)
 
 
 MedAgeDF <- data.frame(year, MedAge) |> 
@@ -445,7 +440,7 @@ CensusStackPlot <- ggplot(CensusStack, aes(x = YEAR, y = Percentage, fill = age_
                      limits = c(0,1)) +
 labs(
     title = "U.S. Population by Age Group Over Time",
-    x = "Year (2000 - 2020)",
+    x = "Year",
     y = "Percent of Population",
     fill = "Age Group")+
 theme(aspect.ratio = 0.6,
@@ -454,7 +449,7 @@ theme(aspect.ratio = 0.6,
 
 CensusStackPlot
 
-#rm(CensusStackPlot)
+rm(CensusStackPlot)
 
 ```
 
@@ -470,44 +465,22 @@ CensusStackPlot
 #| warning: false
 
 
-period = c("Civl War","Baby Boom", "Oil Crisis / Recession", "Great Recession", "COVID-19 Pandemic")
-bands <- data.frame(
-  start = c(1861, 1946, 1973, 2007, 2020),
-  end   = c(1865, 1964, 1975, 2009, 2023),
-  period = factor(period, levels = period),
-  color = c("#838383","#85C9E8", "#F6762A", "#630031", "#171717"))
-
-Data2024 <- data.frame(
-  year = c(2024, 2025),
-  MedAge = c(39.1,391)
-)
-
-MedAgeDF <- bind_rows(
-  Data2024,
-  MedAgeDF
-)
-
 AvAgePlot <- ggplot(MedAgeDF, aes(x = year, y = MedAge))+
   geom_line(linewidth = 1)+
-  # geom_rect(
-  #   data = bands,
-  #   aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = period),
-  #   alpha = 0.5,
-  #   inherit.aes = FALSE)+
   theme_minimal()+
   scale_x_continuous(
     limits = c(1850, 2025),
     breaks = seq(1850, 2025, 15))+
   ylim(0,40)+
   labs(
-    title = "Average Age (1850-2020)",
+    title = "Median Age (1850-2024)",
     y = "Median Age",
     x = "Year",
     subtitle = "Data sourced from the Decennial Census")
 
 AvAgePlot
 
-#rm(AvAgePlot)
+rm(AvAgePlot)
 ```
 
 
@@ -519,13 +492,18 @@ AvAgePlot
 ::: {layout-cell}
 
 ```{r}
-#| label: Birth&MeanAge
+#| label: BirthMeanAge
 #| echo: false
 #| message: false
 #| warning: false
 
 
-#BrtAge <- invisible(full_join(MedAgeDF, BirthRates))
+period = c("Baby Boom", "Oil Crisis / Recession", "Great Recession", "COVID-19 Pandemic")
+bands <- data.frame(
+  start = c(1950, 1973, 2007, 2020),
+  end   = c(1964, 1975, 2009, 2023),
+  period = factor(period, levels = period),
+  color = c("#85C9E8", "#F6762A", "#630031", "#171717"))
 
 
 BirthRatePlot <- ggplot(BirthRates, aes(x = YEAR, y = Fertility)) +
@@ -534,11 +512,11 @@ BirthRatePlot <- ggplot(BirthRates, aes(x = YEAR, y = Fertility)) +
     aes(xmin = start, xmax = end, ymin = -Inf, ymax = Inf, fill = period),
     alpha = 0.5,
     inherit.aes = FALSE)+
-  geom_line(color = "#460001", size = 1) +
+  geom_line(color = "#460001", linewidth = 1) +
   geom_hline(yintercept = 2.1, linetype = "dashed", color = "blue") +
   annotate("text", x = 1955, y = 2.20, label = "Replacement Level (2.1)", color = "black", hjust = -.75, vjust = .25) +
   scale_y_continuous(limits = c(0,4))+
-  scale_x_continuous(limits= c(1950, 2025), breaks = seq(1050, 2025, 15))+
+  scale_x_continuous(limits= c(1950, 2025), breaks = seq(1950, 2025, 15))+
   scale_fill_manual(values = bands$color) +
   labs(
     y = "National Average Birthrate (Births Per Woman)",
@@ -559,29 +537,112 @@ BirthRatePlot
 ::: {layout-cell}
 
 <div style="padding-left: .25rem;">
-These three plots demonstrate how the American population has been aging nearly continuously since 1850. The mean age has increased from 18.9 to 38.8 years from 1850 to 2024. Further sections will investigate how an aging population has created areas of policy innovation and policy failure. For example, do we have the infrastructure to care for more elders with less workers? The data for these three plots were obtained from the US Decennial Census[^5] via the IPUMS USA database[^6].
+These three plots demonstrate how the American population has been aging nearly continuously since 1850. The median age has increased from 18.9 to 39.1 years between 1850 and 2024. Further sections will investigate how an aging population has created areas of policy innovation and policy failure. For example, do we have the infrastructure to care for more elders with fewer workers? The data for these three plots were obtained from the US Decennial Census[^5] via the IPUMS USA database[^6].
 </div>
 
 :::
 :::
 
-# Political Movments and Trends
+# Political Movements and Trends
 
-## Veterans Voting Patterns
+## How Does High Office Affect Wealth?
 
 
+By virtue of studying political science, it is an inescapable truth that in our political-economic system power often acts as a wealth generation tool, and vice versa. This subsection will mostly look at wealth and power relying on public data.
+
+::: {layout-ncol=2} 
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+My first question when thinking about how power may be translated into wealth is how individual presidents may have grown this wealth in office. While this graph may look clean and authoritative, there are several challenges that came in procuring the data. The main issue with the data is that the wealth start and end figures are calculated estimates sourced from the USOGE.[^7] What is interesting to see is that, at first brush, there are large percentage swings—but these largely reflect each president's starting wealth: modest absolute gains appear enormous when starting wealth is small, while billion-dollar fortunes can swing sharply on valuation alone. Note that figures for the current administration are projections rather than final estimates.
+</div>
+
+
+:::
+
+::: {layout-cell}
 ```{r}
+#| label: PresWealth
+#| echo: false
+#| message: false
+#| warning: false
+
+
+start <- c(1977, 1981, 1989, 1993, 2001, 2009, 2017, 2021, 2025)
+end <- c(1981, 1989, 1993, 2001, 2009, 2017, 2021, 2025, 2028)
+wealth_start <- c(3482302, 10600000, 4000000, 600000, 20000000, 3600000, 3500000000, 9000000, 5010000000)
+wealth_end <- c(7000000, 15400000, 23000000, -6000000, 40000000, 12200000, 2500000000, 10000000, 7080000000)
+president <- c("Jimmy Carter", "Ronald Reagan", "George H. W. Bush", "Bill Clinton", "George W. Bush", "Barack Obama", "Donald Trump", "Joe Biden", "Donald Trump - Second Term*")
+party <- c("Democratic", "Republican","Republican", "Democratic", "Republican", "Democratic", "Republican", "Democratic", "Republican")
+inflation <- c(.10, .048, .041, .027225, .028375, .0168, .0244, .0448, .038)
+
+WealthGrowthPrezi <- data.frame(
+  start, 
+  end, 
+  wealth_start, 
+  wealth_end, 
+  president,
+  party, 
+  inflation
+) |> 
+  mutate(
+    years_in_office = end - start,
+    NomGrowth  = (wealth_end / wealth_start - 1) * 100,
+    # Deflate end wealth by the average annual inflation rate
+    # compounded over the full term, not a single year
+    RealGrowth = ((wealth_end / (1 + inflation)^years_in_office) / wealth_start - 1) * 100
+  )
+
+ggplot(
+  WealthGrowthPrezi,
+  aes(
+    x = factor(president, president),
+    y = RealGrowth,
+    fill = party
+  )
+) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(
+      label = paste0(round(RealGrowth, 1), "%"),
+      hjust = ifelse(RealGrowth > 0, -0.1, 1.1)
+    ),
+    size = 3.5
+  ) +
+  coord_flip(clip = "off") +
+  scale_y_continuous(
+    labels = scales::percent_format(scale = 1),
+    expand = expansion(mult = c(0.25, 0.15))
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Democratic" = "#2b6cb0",
+      "Republican" = "#c53030"
+    )
+  ) +
+  labs(
+    title = "Inflation-Adjusted Wealth Growth of U.S. Presidents",
+    subtitle = "Percentage change in net worth during time in office",
+    x = NULL,
+    y = "Real Wealth Growth (%)",
+    fill = "Party",
+    caption = "*Second-term figures are projections, not final estimates."
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    legend.position = "top",
+    plot.caption = element_text(size = 9, color = "gray50")
+  )
 
 ```
-
-
-
-
+:::
+:::
 
 
 [^1]: [HUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)](https://files.hudexchange.info/reports/published/CoC_HIC_NatlTerrDC_2024.pdf)
 [^2]: [World Population Review - Homeless Population By State (2025)](https://worldpopulationreview.com/state-rankings/homeless-population-by-state)
 [^3]: [Medicaid Expansion Program Data (2023)](https://www.medicaid.gov/medicaid/program-information/downloads/medicaid-expansion-state-map.pdf)
 [^4]: [The Commonwealth Fund - People With Medical Debt in Collections (2023)](https://www.commonwealthfund.org/datacenter/people-medical-debt-collections)
-[^5]:[US Deciennial Census](https://www.census.gov/programs-surveys/decennial-census.html)
+[^5]: [US Decennial Census](https://www.census.gov/programs-surveys/decennial-census.html)
 [^6]: [IPUMS USA](https://usa.ipums.org/usa/)
+[^7]: [United States Office of Government Ethics](https://www.oge.gov/web/oge.nsf/Officials%20Individual%20Disclosures%20Search%20Collection?OpenForm=)
