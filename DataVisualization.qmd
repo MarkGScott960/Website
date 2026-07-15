@@ -649,6 +649,271 @@ ggplot(
 :::
 :::
 
+## Does Military Might Deter Conflict?
+
+Full write-up: <a href="DeterenceProject.html" target="_blank">Deterrence Project (Full Project Analysis)</a>
+
+```{r}
+#| label: COWPrep
+#| echo: false
+#| message: false
+#| warning: false
+
+library(sandwich)
+library(lmtest)
+
+COWData <- read_csv("VizCode/Politics/COWData.csv")
+
+AnalysisData <- COWData |>
+  mutate(
+    ConflictParticipation = ifelse(!is.na(conflict_status), 1, 0),
+    IsDefender  = replace_na(ifelse(conflict_status == "Defender",  1, 0), 0),
+    IsAggressor = replace_na(ifelse(conflict_status == "Aggressor", 1, 0), 0),
+    LogTrade  = log1p(imports + exports),
+    LogPop    = log1p(tpop),
+    democracy = VD1_LiberalDem,
+    YearCentered      = year      - mean(year,      na.rm = TRUE),
+    LogTradeCentered  = LogTrade  - mean(LogTrade,  na.rm = TRUE),
+    DemocracyCentered = democracy - mean(democracy, na.rm = TRUE)
+  ) |>
+  filter(!is.na(cinc), !is.na(democracy), !is.na(LogTrade))
+
+# ---- Summary values used inline in the prose (nothing hard-coded) ----
+fmt_p <- function(p) format.pval(p, digits = 3, eps = 0.001)
+
+n_sy     <- nrow(AnalysisData)
+yr_min   <- min(AnalysisData$year)
+yr_max   <- max(AnalysisData$year)
+pct_conf <- round(mean(AnalysisData$ConflictParticipation) * 100, 2)
+cor_yr_trade <- round(cor(AnalysisData$year, AnalysisData$LogTrade), 2)
+
+# ---- Conflict rates by capability quartile ----
+cincsum <- AnalysisData |>
+  mutate(cinc_quartile = cut(cinc,
+    breaks = quantile(cinc, probs = c(0, 0.25, 0.5, 0.75, 1)),
+    labels = c("Q1 (Lowest)", "Q2", "Q3", "Q4 (Highest)"),
+    include.lowest = TRUE)) |>
+  group_by(cinc_quartile) |>
+  summarise(
+    `Conflict Rate`  = round(mean(ConflictParticipation) * 100, 2),
+    `Defender Rate`  = round(mean(IsDefender)            * 100, 2),
+    `Aggressor Rate` = round(mean(IsAggressor)           * 100, 2),
+    .groups = "drop")
+
+q1_rate <- cincsum |> filter(cinc_quartile == "Q1 (Lowest)")  |> pull(`Conflict Rate`)
+q4_rate <- cincsum |> filter(cinc_quartile == "Q4 (Highest)") |> pull(`Conflict Rate`)
+
+# ---- Nested logistic models ----
+logitMOD1 <- glm(ConflictParticipation ~ cinc,
+                 data = AnalysisData, family = binomial(link = "logit"))
+logitMOD2 <- glm(ConflictParticipation ~ cinc + LogTradeCentered + DemocracyCentered +
+                   LogPop + YearCentered,
+                 data = AnalysisData, family = binomial(link = "logit"))
+logitMOD3 <- glm(ConflictParticipation ~ cinc + LogTradeCentered + DemocracyCentered +
+                   LogPop + YearCentered + DemocracyCentered:LogTradeCentered,
+                 data = AnalysisData, family = binomial(link = "logit"))
+
+defenderMOD  <- glm(IsDefender ~ cinc + LogTradeCentered + DemocracyCentered +
+                      LogPop + YearCentered + DemocracyCentered:LogTradeCentered,
+                    data = AnalysisData, family = binomial(link = "logit"))
+aggressorMOD <- glm(IsAggressor ~ cinc + LogTradeCentered + DemocracyCentered +
+                      LogPop + YearCentered + DemocracyCentered:LogTradeCentered,
+                    data = AnalysisData, family = binomial(link = "logit"))
+
+# ---- Standard errors clustered by state (panel structure) ----
+logit3_clustered <- coeftest(logitMOD3,
+                             vcov = vcovCL(logitMOD3, cluster = ~StateNme))
+def_clustered    <- coeftest(defenderMOD,
+                             vcov = vcovCL(defenderMOD, cluster = ~StateNme))
+agg_clustered    <- coeftest(aggressorMOD,
+                             vcov = vcovCL(aggressorMOD, cluster = ~StateNme))
+
+# Locate the interaction row by pattern rather than hard-coding its name
+int_term <- grep(":", rownames(logit3_clustered), value = TRUE)
+
+# H1: total deterrence
+h1_coef <- round(logit3_clustered["cinc", "Estimate"], 2)
+h1_z    <- round(logit3_clustered["cinc", "z value"], 2)
+h1_p    <- fmt_p(logit3_clustered["cinc", "Pr(>|z|)"])
+h1_or   <- round(exp(logit3_clustered["cinc", "Estimate"]), 0)
+sd_cinc <- sd(AnalysisData$cinc)
+or_1sd  <- round(exp(logit3_clustered["cinc", "Estimate"] * sd_cinc), 2)
+
+# H1b / exploratory: role-specific
+def_coef <- round(def_clustered["cinc", "Estimate"], 2)
+def_or   <- round(exp(def_clustered["cinc", "Estimate"]), 1)
+def_p    <- fmt_p(def_clustered["cinc", "Pr(>|z|)"])
+agg_coef <- round(agg_clustered["cinc", "Estimate"], 2)
+agg_or   <- round(exp(agg_clustered["cinc", "Estimate"]), 1)
+agg_p    <- fmt_p(agg_clustered["cinc", "Pr(>|z|)"])
+
+# H2: democracy x trade interaction, unclustered vs clustered
+h2_or    <- round(exp(logit3_clustered[int_term, "Estimate"]), 2)
+h2_p_unc <- fmt_p(summary(logitMOD3)$coefficients[int_term, "Pr(>|z|)"])
+h2_p_cl  <- fmt_p(logit3_clustered[int_term, "Pr(>|z|)"])
+
+# Model comparison
+aic2 <- round(AIC(logitMOD2), 1); aic3 <- round(AIC(logitMOD3), 1)
+bic2 <- round(BIC(logitMOD2), 1); bic3 <- round(BIC(logitMOD3), 1)
+lr_2v3   <- anova(logitMOD2, logitMOD3, test = "LRT")
+lr_chisq <- round(lr_2v3$Deviance[2], 2)
+lr_p     <- fmt_p(lr_2v3$`Pr(>Chi)`[2])
+```
+
+Deterrence theory predicts that states with greater military capability should be attacked less often, and therefore participate in less conflict. As part of my graduate coursework I tested this against `r scales::comma(n_sy)` state-years spanning `r yr_min`–`r yr_max`, combining the Correlates of War project's conflict and material capabilities data[^8] with the Varieties of Democracy project's liberal democracy index[^9]. Military capability is measured by the Composite Index of National Capability (CINC), a 0–1 index aggregating military, demographic, and industrial resources. Conflict is rare—only `r pct_conf`% of state-years involve participation—which shapes every modeling decision that follows.
+
+::: {layout-ncol=2}
+::: {layout-cell}
+
+```{r}
+#| label: COWTemporalTrends
+#| echo: false
+#| message: false
+#| warning: false
+
+AnalysisData |>
+  mutate(decade = floor(year / 10) * 10) |>
+  group_by(decade) |>
+  summarise(
+    `Conflict Rate`  = mean(ConflictParticipation) * 100,
+    `Mean CINC`      = mean(cinc) * 100,
+    `Mean Democracy` = mean(democracy),
+    .groups = "drop"
+  ) |>
+  pivot_longer(cols = c(`Conflict Rate`, `Mean CINC`, `Mean Democracy`),
+               names_to = "Variable", values_to = "Value") |>
+  ggplot(aes(x = decade, y = Value, color = Variable)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  facet_wrap(~Variable, scales = "free_y", ncol = 1) +
+  labs(title = "Temporal Trends in Key Variables by Decade",
+       x = "Decade", y = "Value") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "none")
+```
+
+:::
+
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+Every key variable shifts substantially across the two-century span. Conflict rates spike around the World Wars and decline after the Cold War, democracy rises sharply after 1990, and average capability tracks the rise and fall of major powers. These trends are why year enters every model as a control: trade alone correlates with year at r = `r cor_yr_trade`, so without the control other predictors would absorb temporal drift.
+</div>
+:::
+:::
+
+::: {layout-ncol=2}
+::: {layout-cell}
+<div style="padding-right: .25rem;">
+Grouping state-years by capability quartile previews the central finding: conflict participation *rises* with military capability—the opposite of the deterrence prediction. States in the highest CINC quartile participated in conflict in `r q4_rate`% of state-years, versus `r q1_rate`% for the lowest quartile. Notably, the pattern holds even for defenders: more capable states are attacked *more*, not less.
+</div>
+:::
+
+::: {layout-cell}
+
+```{r}
+#| label: COWQuartiles
+#| echo: false
+#| message: false
+#| warning: false
+
+cincsum |>
+  pivot_longer(cols = ends_with("Rate"), names_to = "Type", values_to = "Rate") |>
+  mutate(Type = str_remove(Type, " Rate"),
+         Type = factor(Type, levels = c("Defender", "Aggressor", "Conflict"))) |>
+  ggplot(aes(x = cinc_quartile, y = Rate, fill = Type)) +
+  geom_col(position = "dodge") +
+  geom_text(aes(label = paste0(Rate, "%")),
+            position = position_dodge(width = 0.9), vjust = -0.5, size = 3) +
+  labs(title = "Conflict Participation by Military Capability Quartile",
+       x = "CINC Quartile", y = "Rate (%)", fill = "Role") +
+  theme_minimal(base_size = 14) +
+  scale_fill_brewer(palette = "Set2") +
+  ylim(0, 12)
+```
+
+:::
+:::
+
+### Testing Deterrence Formally
+
+Three nested logistic regressions estimate conflict participation: a bivariate baseline (CINC only), a controlled specification adding log-trade, democracy, log-population, and year, and a full model adding a centered democracy × trade interaction to test the liberal peace thesis. Because the same states are observed repeatedly, standard errors are clustered by state. The likelihood ratio test favors the interaction model (χ² = `r lr_chisq`, p = `r lr_p`) and AIC agrees (`r aic3` vs `r aic2`), but BIC penalizes the extra parameter (`r bic3` vs `r bic2`) and the interaction fails under clustering—so the simpler controlled model is preferred for inference, with the full model shown below as the most complete specification.
+
+::: {layout-ncol=2}
+::: {layout-cell}
+
+```{r}
+#| label: COWForest
+#| echo: false
+#| message: false
+#| warning: false
+
+logit3_clustered |>
+  unclass() |>
+  as.data.frame() |>
+  tibble::rownames_to_column("Term") |>
+  filter(Term != "(Intercept)") |>
+  mutate(
+    OR = exp(Estimate),
+    lo = exp(Estimate - 1.96 * `Std. Error`),
+    hi = exp(Estimate + 1.96 * `Std. Error`),
+    Term = case_when(
+      Term == "cinc"              ~ "CINC (full 0-1 range)",
+      Term == "LogTradeCentered"  ~ "Trade (log, centered)",
+      Term == "DemocracyCentered" ~ "Democracy (centered)",
+      Term == "LogPop"            ~ "Population (log)",
+      Term == "YearCentered"      ~ "Year (centered)",
+      str_detect(Term, ":")       ~ "Democracy \u00d7 Trade",
+      TRUE                        ~ Term
+    )
+  ) |>
+  ggplot(aes(x = OR, y = fct_reorder(Term, OR))) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "gray50") +
+  geom_pointrange(aes(xmin = lo, xmax = hi), color = "#2b6cb0", linewidth = 0.8) +
+  scale_x_log10(labels = scales::label_number(drop0trailing = TRUE)) +
+  labs(title = "Odds Ratios, Full Model",
+       subtitle = "95% CIs, standard errors clustered by state",
+       x = "Odds Ratio (log scale)", y = NULL,
+       caption = "Values above 1 increase conflict odds; below 1 decrease them.") +
+  theme_minimal(base_size = 13) +
+  theme(plot.title.position = "plot")
+```
+
+:::
+
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+CINC is positive and strongly significant (z = `r h1_z`, p = `r h1_p`)—the null is rejected, but in the direction *opposite* the deterrence prediction. The full-range odds ratio (`r h1_or`) is misleading since no state traverses the whole 0–1 scale; a one-standard-deviation increase in CINC corresponds to an odds ratio of `r or_1sd`. Trade is protective (OR below 1), population strongly aggravating, both consistent with the literature. Democracy and the democracy × trade interaction lose significance once within-state correlation is accounted for: the interaction is significant unclustered (p = `r h2_p_unc`) but fails clustering (p = `r h2_p_cl`), so the liberal peace interaction is not supported here.
+</div>
+:::
+:::
+
+```{r}
+#| label: COWHypSummary
+#| echo: false
+#| message: false
+#| warning: false
+
+tibble(
+  Hypothesis = c(
+    "H1: Deterrence (any conflict)",
+    "H1b: Deterrence (defender)",
+    "Exploratory: capability enables offense (aggressor)",
+    "H2: Democracy \u00d7 Trade interaction"
+  ),
+  `Odds Ratio` = c(h1_or, def_or, agg_or, h2_or),
+  `p-value (clustered)` = c(h1_p, def_p, agg_p, h2_p_cl),
+  Supported = c(
+    "No - positive direction",
+    "No - positive direction",
+    "NA - exploratory",
+    "No - fails clustering"
+  )
+) |>
+  knitr::kable(caption = "Summary of Hypothesis Tests (state-clustered standard errors)")
+```
+
+The role-specific models sharpen the story. Even restricted to whether a state is *attacked*, capability associates positively with conflict (defender β = `r def_coef`, p = `r def_p`), though the estimate is imprecise. The aggressor coefficient (β = `r agg_coef`, p = `r agg_p`) is roughly `r round(agg_clustered["cinc", "Estimate"] / def_clustered["cinc", "Estimate"], 1)` times larger and precisely estimated, pointing to conflict *initiation* as the dominant channel: hard power appears to enable force projection at least as much as it deters attack. Whether that reflects opportunity, selection into capability by conflict-prone states, deterrence operating at the dyadic rather than state level, or unresolved endogeneity is an open question—the full write-up linked above works through each mechanism, the model diagnostics, and cross-validated performance.
+
 
 [^1]: [HUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)](https://files.hudexchange.info/reports/published/CoC_HIC_NatlTerrDC_2024.pdf)
 [^2]: [World Population Review - Homeless Population By State (2025)](https://worldpopulationreview.com/state-rankings/homeless-population-by-state)
@@ -657,3 +922,5 @@ ggplot(
 [^5]: [US Decennial Census](https://www.census.gov/programs-surveys/decennial-census.html)
 [^6]: [IPUMS USA](https://usa.ipums.org/usa/)
 [^7]: [United States Office of Government Ethics](https://www.oge.gov/web/oge.nsf/Officials%20Individual%20Disclosures%20Search%20Collection?OpenForm=)
+[^8]: [The Correlates of War Project - Militarized Interstate Disputes (v5.0) & National Material Capabilities](https://correlatesofwar.org/)
+[^9]: [Varieties of Democracy (V-Dem) Project](https://v-dem.net/)
