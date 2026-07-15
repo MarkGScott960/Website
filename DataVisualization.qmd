@@ -589,14 +589,19 @@ WealthGrowthPrezi <- data.frame(
     NomGrowth  = (wealth_end / wealth_start - 1) * 100,
     # Deflate end wealth by the average annual inflation rate
     # compounded over the full term, not a single year
-    RealGrowth = ((wealth_end / (1 + inflation)^years_in_office) / wealth_start - 1) * 100
+    RealGrowth = ((wealth_end / (1 + inflation)^years_in_office) / wealth_start - 1) * 100,
+    # Clinton's net worth crossed below $0 (legal debt), so his percent
+    # change exceeds -100% and would stretch the axis to ~-1000%,
+    # flattening every other bar. Cap the DRAWN bar at -150% but keep
+    # the true value in the text label.
+    RealGrowthPlot = pmax(RealGrowth, -150)
   )
 
 ggplot(
   WealthGrowthPrezi,
   aes(
     x = factor(president, president),
-    y = RealGrowth,
+    y = RealGrowthPlot,
     fill = party
   )
 ) +
@@ -620,18 +625,24 @@ ggplot(
     )
   ) +
   labs(
-    title = "Inflation-Adjusted Wealth Growth of U.S. Presidents",
-    subtitle = "Percentage change in net worth during time in office",
+    title = "Real Wealth Growth of U.S. Presidents",
+    subtitle = "Inflation-adjusted change in net worth while in office",
     x = NULL,
     y = "Real Wealth Growth (%)",
     fill = "Party",
-    caption = "*Second-term figures are projections, not final estimates."
+    caption = paste0(
+      "*Second-term figures are projections, not final estimates.\n",
+      "Clinton's bar is truncated at -150%: his net worth fell below $0\n",
+      "(legal debts), so the true decline (-906.6%) exceeds -100%."
+    )
   ) +
   theme_minimal(base_size = 13) +
   theme(
     panel.grid.major.y = element_blank(),
     legend.position = "top",
-    plot.caption = element_text(size = 9, color = "gray50")
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.title.position = "plot",
+    plot.caption = element_text(size = 9, color = "gray50", hjust = 0)
   )
 
 ```
