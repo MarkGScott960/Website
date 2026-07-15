@@ -15,7 +15,7 @@ Together, these examples reflect my emphasis on clarity, accessibility, and repr
 
 # Epstein Network Analysis
 
-The full write-up — model specification, nesting strategy, diagnostics, and replication details — is available upon request via the **Contact Me** tab.
+The full write-up - model specification, nesting strategy, diagnostics, and replication details - is available upon request via the **Contact Me** tab.
 
 ```{r}
 #| label: EpsteinSetup
@@ -148,7 +148,7 @@ gap_sd <- breg_df |>
   round(2)
 ```
 
-The Department of Justice's release of the Epstein email records[^E1] offers a rare chance to observe an elite communication network directly rather than through court testimony or journalistic reconstruction. With two collaborators, I built a Python pipeline that extracts headers from roughly 1.4 million released email records — classifying pages with dual OCR engines, locating redactions with a fine-tuned Mask R-CNN, and recovering sender and recipient fields — then resolved names in R through a six-pass matching pipeline (exact, substring, middle-initial, reversal, Jaro-Winkler fuzzy, and curated regex) into a longitudinal directed network of `r comma(n_nodes)` confirmed unique individuals across `r n_periods` yearly waves, 2000–2020 (`r comma(n_dyads)` unique communication ties). Two hypotheses drawn from the literature on brokerage and gendered social capital[^E2] structure the analysis: **H1**, that actors in structural brokerage positions — operationalized as low lagged Burt's constraint[^E3] — are disproportionately active in tie formation, with a supplementary question of *who* occupies those positions; and **H2**, that ties form disproportionately between individuals of the same sex.
+The Department of Justice's release of the Epstein records[^E1] offers a rare chance to observe an elite communication network directly rather than through court testimony or journalistic reconstruction. With two collaborators, I built a Python pipeline that extracts headers from roughly 1.4 million released email records - classifying pages with dual OCR engines, locating redactions with a fine-tuned Mask R-CNN, and recovering sender and recipient fields - then resolved names in R through a six-pass matching pipeline (exact, substring, middle-initial, reversal, Jaro-Winkler fuzzy, and curated regex) into a longitudinal directed network of `r comma(n_nodes)` confirmed unique individuals across `r n_periods` yearly waves, 2000–2020 (`r comma(n_dyads)` unique communication ties). Two hypotheses drawn from the literature on brokerage and gendered social capital[^E2] structure the analysis: **H1**, that actors in structural brokerage positions - operationalized as low lagged Burt's constraint[^E3] - are disproportionately active in tie formation, with a supplementary question of *who* occupies those positions; and **H2**, that ties form disproportionately between individuals of the same sex.
 
 ::: {layout-ncol=2}
 ::: {layout-cell}
@@ -184,7 +184,7 @@ ggraph(g_plot, layout = "fr") +
 
 ::: {layout-cell}
 <div style="padding-left: .25rem;">
-The pooled network shows the classic core–periphery shape of an ego-anchored corpus: a dense communicative core surrounded by hundreds of low-degree contacts. Nodes are colored by sex; all names and identifying labels are deliberately withheld — the analysis concerns the *structure* of the network, not the identification of individuals. Activity is far from uniform in time: the network is sparse before Epstein's 2008 plea agreement and peaks between roughly 2013 and 2018, which motivates estimating the final model on the 2009–2019 window rather than the full panel.
+The pooled network shows the classic core–periphery shape of an ego-anchored corpus: a dense communicative core surrounded by hundreds of low-degree contacts. Nodes are colored by sex; all names and identifying labels are deliberately withheld - the analysis concerns the *structure* of the network, not the identification of individuals. Activity is far from uniform in time: the network is sparse before Epstein's 2008 plea agreement and peaks between roughly 2013 and 2018, which motivates estimating the final model on the 2009–2019 window rather than the full panel.
 </div>
 :::
 :::
@@ -192,7 +192,7 @@ The pooled network shows the classic core–periphery shape of an ego-anchored c
 ::: {layout-ncol=2}
 ::: {layout-cell}
 <div style="padding-right: .25rem;">
-A descriptive first pass at H2: row-normalizing ties by sender sex shows how each group distributes its emails across recipient sexes. Descriptives like this cannot distinguish genuine homophily from confounding structure — reciprocity, degree heterogeneity, and the strong tendency of past ties to persist all shape raw same-sex proportions — which is exactly what the temporal ERGM below is for.
+A descriptive first pass at H2: row-normalizing ties by sender sex shows how each group distributes its emails across recipient sexes. Descriptives like this cannot distinguish genuine homophily from confounding structure - reciprocity, degree heterogeneity, and the strong tendency of past ties to persist all shape raw same-sex proportions - which is exactly what the temporal ERGM below is for.
 </div>
 :::
 
@@ -240,7 +240,7 @@ ggplot(mix, aes(x = Recipient, y = Sender, fill = prop)) +
 
 ## Modeling Tie Formation Over Time
 
-Because ties are interdependent — an email begets a reply, shared contacts beget introductions — standard regression is inappropriate. I instead estimate a Bootstrapped Temporal Exponential Random Graph Model (btergm)[^E4] on the 2009–2019 window, with structural controls for reciprocity, geometrically weighted degree distributions, transitive closure (GWESP), a linear time trend, and a one-year tie-memory term (R = 1,000 bootstrap resamples). H1 enters as sender- and receiver-side effects of Burt's constraint, computed on the *prior* year's network so the predictor is not endogenous to the ties being modeled; H2 enters as a same-sex match term alongside sender and receiver sex main effects. Out-of-sample tie prediction is strong (ROC AUC = `r roc_auc` vs. a `r roc_base` random baseline; precision–recall AUC = `r pr_auc` vs. `r pr_base`), though a substantial share of that performance is carried by the memory term — persistence, not novelty, dominates elite email networks.
+Because ties are interdependent - an email begets a reply, shared contacts beget introductions - standard regression is inappropriate. We instead estimate a Bootstrapped Temporal Exponential Random Graph Model (btergm)[^E4] on the 2009–2019 window, with structural controls for reciprocity, geometrically weighted degree distributions, transitive closure (GWESP), a linear time trend, and a one-year tie-memory term (R = 1,000 bootstrap resamples). H1 enters as sender- and receiver-side effects of Burt's constraint, computed on the *prior* year's network so the predictor is not endogenous to the ties being modeled; H2 enters as a same-sex match term alongside sender and receiver sex main effects. Out-of-sample tie prediction is strong (ROC AUC = `r roc_auc` vs. a `r roc_base` random baseline; precision–recall AUC = `r pr_auc` vs. `r pr_base`), though a substantial share of that performance is carried by the memory term - persistence, not novelty, dominates elite email networks.
 
 ::: {layout-ncol=2}
 ::: {layout-cell}
@@ -279,7 +279,7 @@ ggplot(coef_df, aes(x = OR, y = fct_reorder(label, OR), colour = hyp)) +
 
 ::: {layout-cell}
 <div style="padding-left: .25rem;">
-**H1 is supported.** A one-unit increase in constraint cuts the odds of receiving a tie by `r abs(pct_val("nodeicov.constraint"))`% (OR = `r or_val("nodeicov.constraint")`, 95% CI `r or_ci("nodeicov.constraint")`) and of sending one by `r abs(pct_val("nodeocov.constraint"))`% (OR = `r or_val("nodeocov.constraint")`, 95% CI `r or_ci("nodeocov.constraint")`) — low-constraint brokers are the network's most active participants. **H2 is supported.** Same-sex dyads are `r pct_val("nodematch.sex")`% more likely to form a tie than mixed-sex dyads (OR = `r or_val("nodematch.sex")`, 95% CI `r or_ci("nodematch.sex")`), net of reciprocity (OR = `r or_val("mutual")`), popularity, transitivity, and tie persistence (memory OR = `r or_val("edgecov.memory[[i]]")`). The sex main effects reveal an unhypothesized asymmetry: male *senders* are `r abs(pct_val("nodeofactor.sex.M"))`% less likely to initiate a tie (OR = `r or_val("nodeofactor.sex.M")`), while male *receivers* are `r pct_val("nodeifactor.sex.M")`% more likely to receive one (OR = `r or_val("nodeifactor.sex.M")`) — women disproportionately write, men are disproportionately written to.
+**H1 is supported.** A one-unit increase in constraint cuts the odds of receiving a tie by `r abs(pct_val("nodeicov.constraint"))`% (OR = `r or_val("nodeicov.constraint")`, 95% CI `r or_ci("nodeicov.constraint")`) and of sending one by `r abs(pct_val("nodeocov.constraint"))`% (OR = `r or_val("nodeocov.constraint")`, 95% CI `r or_ci("nodeocov.constraint")`) - low-constraint brokers are the network's most active participants. **H2 is supported.** Same-sex dyads are `r pct_val("nodematch.sex")`% more likely to form a tie than mixed-sex dyads (OR = `r or_val("nodematch.sex")`, 95% CI `r or_ci("nodematch.sex")`), net of reciprocity (OR = `r or_val("mutual")`), popularity, transitivity, and tie persistence (memory OR = `r or_val("edgecov.memory[[i]]")`). The sex main effects reveal an unhypothesized asymmetry: male *senders* are `r abs(pct_val("nodeofactor.sex.M"))`% less likely to initiate a tie (OR = `r or_val("nodeofactor.sex.M")`), while male *receivers* are `r pct_val("nodeifactor.sex.M")`% more likely to receive one (OR = `r or_val("nodeifactor.sex.M")`) - women disproportionately write, men are disproportionately written to.
 </div>
 :::
 :::
@@ -287,7 +287,7 @@ ggplot(coef_df, aes(x = OR, y = fct_reorder(label, OR), colour = hyp)) +
 ::: {layout-ncol=2}
 ::: {layout-cell}
 <div style="padding-right: .25rem;">
-H1's supplementary question — *who* occupies the brokerage positions? Burt's constraint is bounded on [0, 1]: high values mean an ego's contacts are densely interconnected (little brokerage opportunity), low values mark brokers bridging otherwise disconnected groups. Because the outcome is bounded, it is modeled with a beta regression (logit link) rather than OLS, whose residual diagnostics failed here — a specification choice that materially changed the conclusion. Controlling for year fixed effects among active nodes, men have significantly higher constraint than women (β = `r b_coef`, 95% CI `r b_ci`, z = `r b_z`), meaning women disproportionately occupy the broker-like positions — though the gap is modest in practical terms (about `r gap_sd` SD).
+H1's supplementary question - *who* occupies the brokerage positions? Burt's constraint is bounded on [0, 1]: high values mean an ego's contacts are densely interconnected (little brokerage opportunity), low values mark brokers bridging otherwise disconnected groups. Because the outcome is bounded, it is modeled with a beta regression (logit link) rather than OLS, whose residual diagnostics failed here - a specification choice that materially changed the conclusion. Controlling for year fixed effects among active nodes, men have significantly higher constraint than women (β = `r b_coef`, 95% CI `r b_ci`, z = `r b_z`), meaning women disproportionately occupy the broker-like positions - though the gap is modest in practical terms (about `r gap_sd` SD).
 </div>
 :::
 
@@ -324,7 +324,7 @@ ggplot(breg_df, aes(x = constraint, fill = sex, colour = sex)) +
 :::
 :::
 
-The picture that emerges is of an elite network whose most active participants are its brokers, that clusters strongly by sex in *who talks to whom*, and in which women both initiate more communication and — modestly — occupy more of the structurally advantageous positions. Three caveats travel with these results: the corpus is the product of a federal investigation and is therefore an inherently selected sample of the true communication network; predictive performance leans heavily on tie persistence; and an MCMC-based mtergm robustness check proved computationally infeasible at this network size, leaving coefficient stability across bootstrap seeds as the primary robustness evidence. Full details, diagnostics, and replication materials are available upon request via the **Contact Me** tab.
+The picture that emerges is of an elite network whose most active participants are its brokers, that clusters strongly by sex in *who talks to whom*, and in which women both initiate more communication and - modestly - occupy more of the structurally advantageous positions. Three caveats travel with these results: the corpus is the product of a federal investigation and is therefore an inherently selected sample of the true communication network; predictive performance leans heavily on tie persistence; and an MCMC-based mtergm robustness check proved computationally infeasible at this network size, leaving coefficient stability across bootstrap seeds as the primary robustness evidence. Full details, diagnostics, and replication materials are available upon request via the **Contact Me** tab.
 
 
 # Visualization of American Housing
