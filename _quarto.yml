@@ -17,12 +17,9 @@ website:
       - href: contactme.qmd
         text: Contact Me
     tools:
-      - icon: substack
-        text: Substack
-        href: https://substack.com/@brethroanalysis
-      - icon: tiktok
-        text: TikTok
-        href: https://www.tiktok.com/@thegarlicpeel
+      - icon: linkedin
+        text: Linkedin
+        href: https://www.linkedin.com/in/mark-scott-bb6ab4329/?isSelfProfile=true
   page-footer:
     right: "Built with [Quarto](https://quarto.org/)"
     left: "&copy; Copyright 2025, Mark G Scott"
