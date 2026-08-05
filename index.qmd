@@ -9,7 +9,7 @@ about:
 :::{#me}
 
 ## Goals
-*I view life as one long learning experience. I love gathering knowledge from all disparate fields of study, ranging from engineering to political science. As part of this, I cannot help but focus on uncovering the mechanisms that form our world before our very eyes - politics. My aim is to become a researcher and professor of political science, incorporating data analytics with all its beauty to such a philosophical science.*
+*I view life as one long learning experience. I love gathering knowledge from all disparate fields of study, ranging from engineering to political science. As part of this, I cannot help but focus on uncovering the mechanisms that form our world before our very eyes. My aim is to become a researcher and professor of political science, incorporating data analytics with all its beauty to such a philosophical science.*
 
 ## Education
 
@@ -17,7 +17,7 @@ about:
 
 ***Master's*** *- Data Analytics, Expected May 2027 from University of Massachusetts.*
 
-## Experience
+## Experience 
 
 ***2025 - Current:*** *System and Ops Engineer - [Green Collar LLC](https://www.greencollarma.com/)*
 
@@ -26,5 +26,7 @@ about:
 ***2023 - 2024:*** *Research Assistant - [Montclair State University](https://www.montclair.edu/)*
 
 ***2018 - 2024:*** *Shift Leader - [Qdoba](https://www.qdoba.com/)*
+
+<a href="docs/mark-scott-resume.pdf" target="_blank">Full Résumé (PDF)</a>
 
 :::
