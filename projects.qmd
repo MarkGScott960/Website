@@ -9,14 +9,14 @@ title: "Projects"
 
 As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor's Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuums of Care to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.
 
-You can find the full chapter here: <a href="PassaicCoC.pdf" target="_blank">Paterson City Mayor's Office Collaboration (PDF)</a>
+You can find the full chapter here: <a href="docs/PassaicCoC.pdf" target="_blank">Paterson City Mayor's Office Collaboration (PDF)</a>
 
 ## Planned Projects
 ### An Exploratory Study of End-of-Life Planning Among Unsheltered and Unhoused Individuals
 
 This project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life's end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.
 
-You can find the full proposal here: <a href="ResearchProposal.pdf" target="_blank">Research Proposal (PDF)</a>
+You can find the full proposal here: <a href="docs/ResearchProposal.pdf" target="_blank">Research Proposal (PDF)</a>
 
 # Personal Projects
 
@@ -30,4 +30,4 @@ For the full analysis please use the contact me page, or for a short synopsis pl
 
 ### Deterence Theory Analysis
 
-This project examined deterrence theory using state-year data from the Correlates of War (COW) and Varieties of Democracy (V-Dem) projects. Deterrence theory posits that States with greater military capability are less likely to be attacked and, therefore, to participate in conflict. This is closely related to Realist theories, which argue that the distribution of relative power in the international system is the primary influence on the probability of conflict. This yields a straightforward, testable hypothesis: as military capability increases, does the probability of participation in interstate conflict decrease? **Research Question**: Does greater military capability reduce the probability that a state participates in interstate conflict? You can find an abbreviated summary on the `Data Visualization` tab, or find the full text here: <a href="DeterenceProject.html" target="_blank">Deterence Project (HTML)</a>
+This project examined deterrence theory using state-year data from the Correlates of War (COW) and Varieties of Democracy (V-Dem) projects. Deterrence theory posits that States with greater military capability are less likely to be attacked and, therefore, to participate in conflict. This is closely related to Realist theories, which argue that the distribution of relative power in the international system is the primary influence on the probability of conflict. This yields a straightforward, testable hypothesis: as military capability increases, does the probability of participation in interstate conflict decrease? **Research Question**: Does greater military capability reduce the probability that a state participates in interstate conflict? You can find an abbreviated summary on the `Data Visualization` tab, or find the full text here: <a href="docs/DeterenceProject.html" target="_blank">Deterence Project (HTML)</a>
