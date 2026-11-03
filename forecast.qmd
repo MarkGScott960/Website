@@ -1,0 +1,220 @@
+---
+title: "2026 Midterm Forecasts"
+subtitle: "Final pre-election forecasts of the U.S. Senate and House, as of 9:00 AM ET on November 3, 2026"
+format:
+  html:
+    page-layout: full
+    toc: true
+    toc-depth: 2
+engine: knitr
+---
+
+```{r}
+#| label: forecast-setup
+#| echo: false
+#| message: false
+#| warning: false
+
+# Everything on this page is read from the frozen 9:00 AM snapshot in forecast/,
+# copied from the 2026_Midterm_Forecast repo. No numbers are typed in by hand.
+library(jsonlite)
+library(knitr)
+
+sen      <- read_json("forecast/senate/data/headline.json")
+hou      <- read_json("forecast/house/data/headline.json")
+sen_race <- read.csv("forecast/senate/data/races.csv")
+hou_race <- read.csv("forecast/house/data/races.csv")
+
+pct  <- function(x, d = 1) paste0(formatC(100 * x, format = "f", digits = d), "%")
+num  <- function(x, d = 1) formatC(x, format = "f", digits = d)
+marg <- function(m) ifelse(abs(m) < 0.05, "Even",
+                       ifelse(m > 0, paste0("D+", num(m)), paste0("R+", num(-m))))
+
+# Closest races: sorted by how far the model's P(Dem win) sits from a coin flip
+closest <- function(df, n) {
+  df <- df[order(abs(df$p_dem - 0.5)), ]
+  head(df, n)
+}
+
+repo <- "https://github.com/MarkGScott960/2026_Midterm_Forecast"
+```
+
+::: {.lead}
+Two chambers, one family of models, and 100,000 simulated election nights apiece. These are the final forecasts from a polling-plus-fundamentals model of the 2026 midterms: the Senate model was built by Team 5 in UMass Amherst's DACSS program, and the House model is my own extension of it to all 435 districts. Both ran every three hours in the final days of the campaign and made their last call at 9:00 AM on Election Day.
+:::
+
+::: {.callout-note appearance="simple"}
+These are frozen pre-election snapshots. A comparison against the certified results will be added here once the votes are counted.
+:::
+
+# Senate
+
+```{=html}
+<div class="forecast-buttons">
+  <a class="btn btn-dark btn-sm" href="forecast/senate/dashboard.html" target="_blank">Full interactive dashboard</a>
+  <a class="btn btn-outline-dark btn-sm" href="forecast/senate/dashboard.pdf" target="_blank">Dashboard (PDF)</a>
+  <a class="btn btn-outline-dark btn-sm" href="forecast/senate/writeup.pdf" target="_blank">Team write-up (PDF)</a>
+  <a class="btn btn-outline-dark btn-sm" href="https://github.com/MarkGScott960/2026_Midterm_Forecast/tree/main/Senate%20Forecast/Final%20Model" target="_blank">Code on GitHub</a>
+</div>
+```
+
+::: {.forecast-stats}
+::: {.forecast-stat}
+[`r pct(sen$p_d_51)`]{.stat-value}
+[Chance Democrats win at least 51 seats]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r num(sen$exp_d_seats)`]{.stat-value}
+[Expected Democratic seats]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r sen$p10` to `r sen$p90`]{.stat-value}
+[80% range of Democratic seats]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r marg(sen$national$env)`]{.stat-value}
+[National environment (generic ballot and approval)]{.stat-label}
+:::
+:::
+
+For comparison, Kalshi's Senate-control market gave Democrats `r pct(sen$kalshi_p_control)` at the same moment.
+
+**Model.** *Most_Magnificent_Model* is Team 5's final model, chosen from seven competing versions the team built and tested against one another. Each state's forecast blends three sources by their precision:
+
+- **Polls** from VoteHub, weighted by recency (7-day half-life), sample size, voter screen (likely 1.0, registered 0.85, adults 0.7), pollster grade, and an in-cycle house-effect correction, with a penalty for pollsters that flood a single race.
+- **Fundamentals**, built from each state's partisan lean and a national environment (75% generic ballot, 25% presidential approval), plus incumbency and candidate effects.
+- **Kalshi** race prices, corrected for longshot bias and used as one more input, not the answer.
+
+The 100,000 simulations draw correlated national, regional, and state-level polling errors. Their sizes were calibrated against every Senate, governor, and presidential polling miss in FiveThirtyEight's archive since 1998.
+
+## Seat distribution
+
+```{=html}
+<iframe class="forecast-fig" src="forecast/senate/figures/seat_distribution.html" style="height:470px;" loading="lazy" title="Senate seat distribution"></iframe>
+```
+
+## Map
+
+```{=html}
+<iframe class="forecast-fig" src="forecast/senate/figures/race_map.html" style="height:560px;" loading="lazy" title="Senate race map"></iframe>
+```
+
+## Closest races
+
+```{r}
+#| label: senate-close
+#| echo: false
+s <- closest(sen_race, 10)
+kable(
+  data.frame(
+    State                 = s$state,
+    `P(Dem win)`          = pct(s$p_dem),
+    `Projected margin`    = marg(s$margin),
+    `Kalshi P(Dem)`       = ifelse(is.na(s$kalshi_p), "-", pct(s$kalshi_p)),
+    Polls                 = s$n_polls,
+    check.names = FALSE
+  ),
+  align = "lrrrr"
+)
+```
+
+## Model vs. Kalshi, race by race
+
+```{=html}
+<iframe class="forecast-fig" src="forecast/senate/figures/races_vs_kalshi.html" style="height:980px;" loading="lazy" title="Senate races, model vs Kalshi"></iframe>
+```
+
+## How the forecast moved
+
+```{=html}
+<iframe class="forecast-fig" src="forecast/senate/figures/history_control.html" style="height:400px;" loading="lazy" title="Senate forecast history"></iframe>
+```
+
+*Team 5: Elizabeth Miller, Mark Scott, Ethan Verrone, Boaz Alkalay, Leo Westebbe.*
+
+# House
+
+```{=html}
+<div class="forecast-buttons">
+  <a class="btn btn-dark btn-sm" href="forecast/house/dashboard.html" target="_blank">Full interactive dashboard</a>
+  <a class="btn btn-outline-dark btn-sm" href="forecast/house/dashboard.pdf" target="_blank">Dashboard (PDF)</a>
+  <a class="btn btn-outline-dark btn-sm" href="https://github.com/MarkGScott960/2026_Midterm_Forecast/tree/main/House%20Forecast" target="_blank">Code on GitHub</a>
+</div>
+```
+
+::: {.forecast-stats}
+::: {.forecast-stat}
+[`r pct(hou$p_d_218)`]{.stat-value}
+[Chance Democrats win at least 218 seats]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r num(hou$exp_d_seats)`]{.stat-value}
+[Expected Democratic seats]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r hou$p10` to `r hou$p90`]{.stat-value}
+[80% range of Democratic seats]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r marg(hou$tipping_point_margin)`]{.stat-value}
+[Margin in the tipping-point district]{.stat-label}
+:::
+:::
+
+For comparison, Kalshi's House-control market gave Democrats `r pct(hou$kalshi_p_control)` at the same moment.
+
+**Model.** The House forecast is my solo extension of the Senate model: the same polls, national environment, weighting, and Kalshi treatment, stretched across all 435 districts. The settings that don't carry over from the Senate were re-measured on the 2018 and 2022 House midterms:
+
+- **Fundamentals** are 1.78 times each district's 2024 presidential lean, measured on the redrawn 2026 lines (the Senate model uses 2.0). House candidates run a little closer to the middle than the top of the ticket.
+- **Incumbency** is worth 4.5 points, applied only where an incumbent is running in that district.
+- **A state-level error** (2.4 points) is added on top of the national and regional errors, because districts in the same state share a top of the ticket, turnout, and redistricting quirks.
+- **Edge cases** are handled one by one: uncontested and same-party top-two seats are counted as certain, independents in AK-AL and CA-06 are treated individually, and Louisiana's all-party primary is forecast by party and lean.
+
+## Seat distribution
+
+```{=html}
+<iframe class="forecast-fig" src="forecast/house/figures/seat_distribution.html" style="height:470px;" loading="lazy" title="House seat distribution"></iframe>
+```
+
+## Map
+
+```{=html}
+<iframe class="forecast-fig" src="forecast/house/figures/state_map.html" style="height:540px;" loading="lazy" title="House forecast map"></iframe>
+```
+
+## Closest districts
+
+```{r}
+#| label: house-close
+#| echo: false
+h <- closest(hou_race, 15)
+kable(
+  data.frame(
+    District              = h$district,
+    Democrat              = h$dem_candidate,
+    Republican            = h$rep_candidate,
+    `P(Dem win)`          = pct(h$p_dem),
+    `Projected margin`    = marg(h$margin),
+    `Kalshi P(Dem)`       = ifelse(is.na(h$kalshi_p), "-", pct(h$kalshi_p)),
+    Polls                 = h$n_polls,
+    check.names = FALSE
+  ),
+  align = "lllrrrr"
+)
+```
+
+## Tipping-point districts
+
+```{=html}
+<iframe class="forecast-fig" src="forecast/house/figures/tipping_point.html" style="height:500px;" loading="lazy" title="House tipping-point districts"></iframe>
+```
+
+## Swing from 2024
+
+```{=html}
+<iframe class="forecast-fig" src="forecast/house/figures/swing.html" style="height:540px;" loading="lazy" title="House swing from 2024"></iframe>
+```
+
+# Forecast vs. results
+
+Coming once the votes are counted: how each chamber's call, seat count, and race-by-race probabilities held up against the certified results.

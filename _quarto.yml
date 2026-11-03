@@ -4,6 +4,8 @@ project:
   render:
     - "*.qmd"
     - "!VizCodes.qmd"
+  resources:
+    - "forecast/**"
 
 website:
   title: "Mark G Scott"

@@ -28,18 +28,18 @@
     "text": "Bachelor’s - Political Science, received 2024 from Montclair State University.\nMaster’s - Data Analytics, Expected May 2027 from University of Massachusetts."
   },
   {
-    "objectID": "index.html#experience-full-résumé-pdf",
-    "href": "index.html#experience-full-résumé-pdf",
+    "objectID": "index.html#experience",
+    "href": "index.html#experience",
     "title": "About Me",
     "section": "",
-    "text": "2025 - Current: System and Ops Engineer - Green Collar LLC\n2024 - 2025: Research Assistant - APPRISE INC\n2023 - 2024: Research Assistant - Montclair State University\n2018 - 2024: Shift Leader - Qdoba"
+    "text": "2025 - Current: System and Ops Engineer - Green Collar LLC\n2024 - 2025: Research Assistant - APPRISE INC\n2023 - 2024: Research Assistant - Montclair State University\n2018 - 2024: Shift Leader - Qdoba\nFull Résumé (PDF)"
   },
   {
-    "objectID": "VizCode/HomePopStateCode.html",
-    "href": "VizCode/HomePopStateCode.html",
-    "title": "HomePopStateCode",
+    "objectID": "contactme.html",
+    "href": "contactme.html",
+    "title": "Contact Me",
     "section": "",
-    "text": "── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.6\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.1     ✔ tibble    3.3.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layout\n\n\n[[1]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[2]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[3]]\n [1] \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"    \n [7] \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"    \n[13] \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[4]]\n [1] \"usmap\"     \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"    \n [7] \"purrr\"     \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\"\n[13] \"stats\"     \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"  \n[19] \"base\"     \n\n\nRows: 52 Columns: 11\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (1): State\ndbl (10): HPop, HpopP10k, HPChange2007to2024, Family Units, Family Beds, Adu...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nHomeStateUse &lt;- HomeState |&gt;\n  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |&gt;\n  mutate(BedPer = total/HPop,\n         region = tolower(State))\n\nstates_map &lt;- map_data(\"state\")\nstates_map &lt;- states_map |&gt;\n  left_join(HomeStateUse, by = \"region\")\n\n\n# {{&lt; embed Data&Code/HomePopStateCode.qmd#ColGraph &gt;}} -To call in other document\n\nggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer &gt; 1)) +\n  geom_col(width = .6) +\n  coord_flip() +\n  scale_fill_manual(\n    values = c(\"TRUE\" = \"blue\", \"FALSE\" = \"red\"),\n    labels = c(\"FALSE\" = \"&lt;= 1\", \"TRUE\" = \"&gt; 1\"),\n    guide = FALSE  # hides the legend; remove if you want legend\n  ) +\n  labs(\n    title = \"Individual Emergency Shelter Beds per Homeless Individual by State (2024)\",\n    x = \"State\",\n    y = \"Beds per Homeless Individual\"\n  ) +\n  theme_minimal() +\n  theme(\n    axis.text.y = element_text(angle = 45, hjust = 1)  # slant y-axis labels\n  )\n\nWarning: The `guide` argument in `scale_*()` cannot be `FALSE`. This was deprecated in\nggplot2 3.3.4.\nℹ Please use \"none\" instead."
+    "text": "If you would like to contact me regarding my research, data visualizations, collaboration opportunities, or any other opportunity please use the form below.\n\n \n\nYour Email \nSubject \nMessage\n\nSend message"
   },
   {
     "objectID": "DataVisualization.html",
@@ -98,25 +98,102 @@
     "text": "Footnotes\n\n\nU.S. Department of Justice, release of the Epstein email records (2025). ↩︎\nBurt, R. S. (1998). “The Gender of Social Capital.” Rationality and Society, 10(1), 5–46.↩︎\nBurt, R. S. (1992). Structural Holes: The Social Structure of Competition. Harvard University Press.↩︎\nLeifeld, P., Cranmer, S. J., & Desmarais, B. A. (2018). “Temporal Exponential Random Graph Models with btergm.” Journal of Statistical Software, 83(6).↩︎\nHUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)↩︎\nWorld Population Review - Homeless Population By State (2025)↩︎\nMedicaid Expansion Program Data (2023)↩︎\nThe Commonwealth Fund - People With Medical Debt in Collections (2023)↩︎\nUS Decennial Census↩︎\nIPUMS USA↩︎\nUnited States Office of Government Ethics↩︎\nThe Correlates of War Project - Militarized Interstate Disputes (v5.0) & National Material Capabilities↩︎\nVarieties of Democracy (V-Dem) Project↩︎"
   },
   {
-    "objectID": "contactme.html",
-    "href": "contactme.html",
-    "title": "Contact Me",
+    "objectID": "VizCode/HomePopStateCode.html",
+    "href": "VizCode/HomePopStateCode.html",
+    "title": "HomePopStateCode",
     "section": "",
-    "text": "If you would like to contact me regarding my research, data visualizations, collaboration opportunities, or any other opportunity please use the form below.\n\n \n\nYour Email \nSubject \nMessage\n\nSend message"
+    "text": "── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.6\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.1     ✔ tibble    3.3.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layout\n\n\n[[1]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[2]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[3]]\n [1] \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"    \n [7] \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"    \n[13] \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[4]]\n [1] \"usmap\"     \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"    \n [7] \"purrr\"     \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\"\n[13] \"stats\"     \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"  \n[19] \"base\"     \n\n\nRows: 52 Columns: 11\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (1): State\ndbl (10): HPop, HpopP10k, HPChange2007to2024, Family Units, Family Beds, Adu...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nHomeStateUse &lt;- HomeState |&gt;\n  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |&gt;\n  mutate(BedPer = total/HPop,\n         region = tolower(State))\n\nstates_map &lt;- map_data(\"state\")\nstates_map &lt;- states_map |&gt;\n  left_join(HomeStateUse, by = \"region\")\n\n\n# {{&lt; embed Data&Code/HomePopStateCode.qmd#ColGraph &gt;}} -To call in other document\n\nggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer &gt; 1)) +\n  geom_col(width = .6) +\n  coord_flip() +\n  scale_fill_manual(\n    values = c(\"TRUE\" = \"blue\", \"FALSE\" = \"red\"),\n    labels = c(\"FALSE\" = \"&lt;= 1\", \"TRUE\" = \"&gt; 1\"),\n    guide = FALSE  # hides the legend; remove if you want legend\n  ) +\n  labs(\n    title = \"Individual Emergency Shelter Beds per Homeless Individual by State (2024)\",\n    x = \"State\",\n    y = \"Beds per Homeless Individual\"\n  ) +\n  theme_minimal() +\n  theme(\n    axis.text.y = element_text(angle = 45, hjust = 1)  # slant y-axis labels\n  )\n\nWarning: The `guide` argument in `scale_*()` cannot be `FALSE`. This was deprecated in\nggplot2 3.3.4.\nℹ Please use \"none\" instead."
+  },
+  {
+    "objectID": "forecast.html",
+    "href": "forecast.html",
+    "title": "2026 Midterm Forecasts",
+    "section": "",
+    "text": "Two chambers, one family of models, and 100,000 simulated election nights apiece. These are the final forecasts from a polling-plus-fundamentals model of the 2026 midterms: the Senate model was built by Team 5 in UMass Amherst’s DACSS program, and the House model is my own extension of it to all 435 districts. Both ran every three hours in the final days of the campaign and made their last call at 9:00 AM on Election Day."
+  },
+  {
+    "objectID": "forecast.html#seat-distribution",
+    "href": "forecast.html#seat-distribution",
+    "title": "2026 Midterm Forecasts",
+    "section": "Seat distribution",
+    "text": "Seat distribution"
+  },
+  {
+    "objectID": "forecast.html#map",
+    "href": "forecast.html#map",
+    "title": "2026 Midterm Forecasts",
+    "section": "Map",
+    "text": "Map"
+  },
+  {
+    "objectID": "forecast.html#closest-races",
+    "href": "forecast.html#closest-races",
+    "title": "2026 Midterm Forecasts",
+    "section": "Closest races",
+    "text": "Closest races\n\n\n\n\n\nState\nP(Dem win)\nProjected margin\nKalshi P(Dem)\nPolls\n\n\n\n\nIowa\n47.4%\nR+0.3\n51.5%\n26\n\n\nAlaska\n59.6%\nD+1.1\n69.5%\n19\n\n\nSouth Carolina\n34.3%\nR+1.8\n30.5%\n5\n\n\nKansas\n72.3%\nD+2.5\n62.5%\n9\n\n\nNebraska\n25.6%\nR+3.1\n33.5%\n4\n\n\nTexas\n78.8%\nD+3.3\n71.5%\n54\n\n\nOhio\n79.3%\nD+3.5\n70.5%\n35\n\n\nMaine\n87.7%\nD+4.8\n71.5%\n21\n\n\nFlorida\n11.3%\nR+5.2\n12.5%\n18\n\n\nMississippi\n10.0%\nR+6.7\n13.5%\n3"
+  },
+  {
+    "objectID": "forecast.html#model-vs.-kalshi-race-by-race",
+    "href": "forecast.html#model-vs.-kalshi-race-by-race",
+    "title": "2026 Midterm Forecasts",
+    "section": "Model vs. Kalshi, race by race",
+    "text": "Model vs. Kalshi, race by race"
+  },
+  {
+    "objectID": "forecast.html#how-the-forecast-moved",
+    "href": "forecast.html#how-the-forecast-moved",
+    "title": "2026 Midterm Forecasts",
+    "section": "How the forecast moved",
+    "text": "How the forecast moved\n\nTeam 5: Elizabeth Miller, Mark Scott, Ethan Verrone, Boaz Alkalay, Leo Westebbe."
+  },
+  {
+    "objectID": "forecast.html#seat-distribution-1",
+    "href": "forecast.html#seat-distribution-1",
+    "title": "2026 Midterm Forecasts",
+    "section": "Seat distribution",
+    "text": "Seat distribution"
+  },
+  {
+    "objectID": "forecast.html#map-1",
+    "href": "forecast.html#map-1",
+    "title": "2026 Midterm Forecasts",
+    "section": "Map",
+    "text": "Map"
+  },
+  {
+    "objectID": "forecast.html#closest-districts",
+    "href": "forecast.html#closest-districts",
+    "title": "2026 Midterm Forecasts",
+    "section": "Closest districts",
+    "text": "Closest districts\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDistrict\nDemocrat\nRepublican\nP(Dem win)\nProjected margin\nKalshi P(Dem)\nPolls\n\n\n\n\nWI-01\nMitchell Berman\nBryan Steil\n49.9%\nEven\n52.0%\n2\n\n\nKY-06\nZach Dembo\nRalph Alvarado\n51.2%\nD+0.2\n-\n4\n\n\nAL-02\nShomari Figures\nRhett Marques\n52.2%\nD+0.3\n-\n1\n\n\nOH-10\nKristina Knickerbocker\nMike Turner\n46.5%\nR+0.5\n-\n1\n\n\nMO-02\nFred Wellman\nAnn Wagner\n46.4%\nR+0.5\n-\n3\n\n\nFL-22\nPia Dandiya\nCasey Askar\n55.5%\nD+0.7\n-\n1\n\n\nFL-09\nDarren Soto\nDan Green\n44.4%\nR+0.9\n-\n0\n\n\nSC-01\nNancy Lacore\nJenny Honeycutt\n42.2%\nR+1.0\n-\n2\n\n\nOH-07\nBrian Poindexter\nMax Miller\n58.6%\nD+1.2\n-\n3\n\n\nMI-04\nSean McCann\nBill Huizenga\n61.4%\nD+1.6\n60.9%\n2\n\n\nFL-07\nBale Dalton\nRyan Elijah\n38.6%\nR+1.6\n-\n1\n\n\nTX-15\nBobby Pulido\nMonica De La Cruz\n61.7%\nD+1.5\n88.1%\n5\n\n\nOH-15\nDon Leonard\nMike Carey\n37.8%\nR+1.7\n-\n3\n\n\nVA-01\nShannon Taylor\nRob Wittman\n62.3%\nD+1.6\n73.6%\n4\n\n\nCO-03\nDwayne Romero\nJeff Hurd\n36.9%\nR+1.7\n50.3%\n1"
+  },
+  {
+    "objectID": "forecast.html#tipping-point-districts",
+    "href": "forecast.html#tipping-point-districts",
+    "title": "2026 Midterm Forecasts",
+    "section": "Tipping-point districts",
+    "text": "Tipping-point districts"
+  },
+  {
+    "objectID": "forecast.html#swing-from-2024",
+    "href": "forecast.html#swing-from-2024",
+    "title": "2026 Midterm Forecasts",
+    "section": "Swing from 2024",
+    "text": "Swing from 2024"
   },
   {
     "objectID": "projects.html",
     "href": "projects.html",
     "title": "Projects",
     "section": "",
-    "text": "As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuums of Care to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.\nYou can find the full chapter here: Paterson City Mayor’s Office Collaboration (PDF)\n\n\n\n\n\n\nThis project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life’s end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.\nYou can find the full proposal here: Research Proposal (PDF)"
+    "text": "Forecasts of the 2026 U.S. Senate and House elections, each run as 100,000 simulations that blend VoteHub polling, partisan-lean fundamentals, and Kalshi prediction-market prices. The Senate model was built with Team 5 in UMass Amherst’s DACSS program, chosen from seven competing versions we built and tested against one another and calibrated against more than two decades of historical polling misses. I extended it on my own into a district-by-district House model covering all 435 seats, recalibrated on the 2018 and 2022 midterms. Both models ran on a schedule every three hours through the final week and made their last call at 9:00 AM on Election Day.\nYou can find the forecast summary here: 2026 Midterm Forecasts, or open the full dashboards directly: Senate Dashboard (HTML) | House Dashboard (HTML) | Code (GitHub)\n\n\n\nAs part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuums of Care to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.\nYou can find the full chapter here: Paterson City Mayor’s Office Collaboration (PDF)\n\n\n\n\n\n\nThis project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life’s end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.\nYou can find the full proposal here: Research Proposal (PDF)"
   },
   {
     "objectID": "projects.html#completed-projects",
     "href": "projects.html#completed-projects",
     "title": "Projects",
     "section": "",
-    "text": "As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuums of Care to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.\nYou can find the full chapter here: Paterson City Mayor’s Office Collaboration (PDF)"
+    "text": "Forecasts of the 2026 U.S. Senate and House elections, each run as 100,000 simulations that blend VoteHub polling, partisan-lean fundamentals, and Kalshi prediction-market prices. The Senate model was built with Team 5 in UMass Amherst’s DACSS program, chosen from seven competing versions we built and tested against one another and calibrated against more than two decades of historical polling misses. I extended it on my own into a district-by-district House model covering all 435 seats, recalibrated on the 2018 and 2022 midterms. Both models ran on a schedule every three hours through the final week and made their last call at 9:00 AM on Election Day.\nYou can find the forecast summary here: 2026 Midterm Forecasts, or open the full dashboards directly: Senate Dashboard (HTML) | House Dashboard (HTML) | Code (GitHub)\n\n\n\nAs part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuums of Care to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.\nYou can find the full chapter here: Paterson City Mayor’s Office Collaboration (PDF)"
   },
   {
     "objectID": "projects.html#planned-projects",
@@ -130,13 +207,6 @@
     "href": "projects.html#current-projects",
     "title": "Projects",
     "section": "Current Projects",
-    "text": "Current Projects\n\nEpstein Files Analysis\nThis ongoing project maps the social network embedded in the released Epstein corpus from the Epstein Transparency Act. A custom Python pipeline extracts email headers from tens of thousands of PDF pages, using a Mask R-CNN model to detect redactions and dual OCR engines to recover text, before a multi-pass name resolution process in R consolidates senders and recipients into a clean longitudinal network of roughly 1,000 individuals across 21 time periods. The network is then modeled using Bootstrapped Temporal Exponential Random Graph Models (BTERGM) to test two hypotheses drawn from the literature on gender and social capital. Research Questions: (1) Do ties form disproportionately between individuals of the same sex? (2) Are women more likely to occupy brokerage positions, as measured by lagged Burt’s constraint? Results support sex-based homophily in tie formation and offer weak support for the brokerage hypothesis-women exhibit marginally lower constraint (i.e., are slightly more broker-like), though the effect is small. A notable secondary finding is an asymmetric sex pattern in tie formation: men initiate fewer ties but receive more. This work was completed in collaboration with Boaz Alkalay and Elizabeth Miller.\nFor the full analysis please use the contact me page, or for a short synopsis please view the Data Exploraiton page.\n\n\nDeterence Theory Analysis\nThis project examined deterrence theory using state-year data from the Correlates of War (COW) and Varieties of Democracy (V-Dem) projects. Deterrence theory posits that States with greater military capability are less likely to be attacked and, therefore, to participate in conflict. This is closely related to Realist theories, which argue that the distribution of relative power in the international system is the primary influence on the probability of conflict. This yields a straightforward, testable hypothesis: as military capability increases, does the probability of participation in interstate conflict decrease? Research Question: Does greater military capability reduce the probability that a state participates in interstate conflict? You can find an abbreviated summary on the Data Visualization tab, or find the full text here: Deterence Project (HTML)"
-  },
-  {
-    "objectID": "index.html#experience",
-    "href": "index.html#experience",
-    "title": "About Me",
-    "section": "",
-    "text": "2025 - Current: System and Ops Engineer - Green Collar LLC\n2024 - 2025: Research Assistant - APPRISE INC\n2023 - 2024: Research Assistant - Montclair State University\n2018 - 2024: Shift Leader - Qdoba\nFull Résumé (PDF)"
+    "text": "Current Projects\n\nEpstein Files Analysis\nThis ongoing project maps the social network embedded in the released Epstein corpus from the Epstein Transparency Act. A custom Python pipeline extracts email headers from tens of thousands of PDF pages, using a Mask R-CNN model to detect redactions and dual OCR engines to recover text, before a multi-pass name resolution process in R consolidates senders and recipients into a clean longitudinal network of roughly 1,000 individuals across 21 time periods. The network is then modeled using Bootstrapped Temporal Exponential Random Graph Models (BTERGM) to test two hypotheses drawn from the literature on gender and social capital. Research Questions: (1) Do ties form disproportionately between individuals of the same sex? (2) Are women more likely to occupy brokerage positions, as measured by lagged Burt’s constraint? Results support sex-based homophily in tie formation and offer weak support for the brokerage hypothesis-women exhibit marginally lower constraint (i.e., are slightly more broker-like), though the effect is small. A notable secondary finding is an asymmetric sex pattern in tie formation: men initiate fewer ties but receive more. This work was completed in collaboration with Boaz Alkalay and Elizabeth Miller.\nFor the full analysis please use the contact me page, or for a short synopsis please view the Data Exploration page.\n\n\nDeterence Theory Analysis\nThis project examined deterrence theory using state-year data from the Correlates of War (COW) and Varieties of Democracy (V-Dem) projects. Deterrence theory posits that States with greater military capability are less likely to be attacked and, therefore, to participate in conflict. This is closely related to Realist theories, which argue that the distribution of relative power in the international system is the primary influence on the probability of conflict. This yields a straightforward, testable hypothesis: as military capability increases, does the probability of participation in interstate conflict decrease? Research Question: Does greater military capability reduce the probability that a state participates in interstate conflict? You can find an abbreviated summary on the Data Visualization tab, or find the full text here: Deterence Project (HTML)"
   }
 ]
