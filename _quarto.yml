@@ -6,6 +6,7 @@ project:
     - "!VizCodes.qmd"
   resources:
     - "forecast/**"
+    - "files/**"
 
 website:
   title: "Mark G Scott"

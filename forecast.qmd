@@ -44,7 +44,7 @@ Two chambers, one family of models, and 100,000 simulated election nights apiece
 :::
 
 ::: {.callout-note appearance="simple"}
-These are frozen pre-election snapshots. A comparison against the certified results will be added here once the votes are counted.
+These are frozen pre-election snapshots. For how they held up, see [Forecast vs. results](#forecast-vs-results) at the bottom of this page and the full [forecast scorecard](forecast-scorecard.qmd).
 :::
 
 # Senate
@@ -215,6 +215,51 @@ kable(
 <iframe class="forecast-fig" src="forecast/house/figures/swing.html" style="height:540px;" loading="lazy" title="House swing from 2024"></iframe>
 ```
 
-# Forecast vs. results
+# Forecast vs. results {#forecast-vs-results}
 
-Coming once the votes are counted: how each chamber's call, seat count, and race-by-race probabilities held up against the certified results.
+```{r}
+#| label: results-setup
+#| echo: false
+#| warning: false
+# Scores are computed by VizCode/Forecast/score_forecasts.R and read here;
+# nothing on this section is typed in by hand.
+sc <- readRDS("VizCode/Forecast/scores.rds")
+sc_sen <- sc$senate$chamber
+sc_hou <- sc$house$chamber
+comp   <- function(S, f) S$board[S$board$subset == "competitive" & S$board$forecaster == f, ]
+won    <- function(c_) ifelse(is.na(c_$control_side), "is still uncalled",
+                       ifelse(c_$control_side == "D", "went to Democrats", "went to Republicans"))
+seats_txt <- function(c_) ifelse(is.na(c_$seats_final), paste0(c_$seat_lo, " to ", c_$seat_hi),
+                         as.character(c_$seats_final))
+pending_txt <- function(c_) ifelse(c_$seats_pending == 0, "",
+                         paste0(" with ", c_$seats_pending, " races still uncalled"))
+sen_m <- comp(sc$senate, "model"); sen_k <- comp(sc$senate, "kalshi")
+hou_m <- comp(sc$house, "model");  hou_k <- comp(sc$house, "kalshi")
+```
+
+*Results as of `r sc$meta$scored_at`. Vote counts are still coming in, so these numbers will move until the results are certified.*
+
+::: {.forecast-stats}
+::: {.forecast-stat}
+[`r pct(sc_sen$p_control_model)`]{.stat-value}
+[Senate control for Democrats, which `r won(sc_sen)`]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r seats_txt(sc_sen)`]{.stat-value}
+[Democratic Senate seats`r pending_txt(sc_sen)`, against a forecast median of `r sc_sen$seats_median`]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r pct(sc_hou$p_control_model)`]{.stat-value}
+[House control for Democrats, which `r won(sc_hou)`]{.stat-label}
+:::
+::: {.forecast-stat}
+[`r num(sen_m$brier, 3)` vs. `r num(sen_k$brier, 3)`]{.stat-value}
+[Senate Brier score in competitive races, model vs. Kalshi (lower is better)]{.stat-label}
+:::
+:::
+
+**Senate.** Across the `r sen_m$n` competitive Senate races resolved so far, the Team 5 model's Brier score was `r num(sen_m$brier, 3)` against Kalshi's `r num(sen_k$brier, 3)`, a skill score of `r pct(sen_m$bss_vs_kalshi)` relative to the market, and it called `r pct(sen_m$accuracy, 0)` of those races correctly. `r if (sc_sen$ready_calls) "" else "These figures are provisional until more races are called."`
+
+**House.** `r if (sc_hou$ready_calls) paste0("Across the ", hou_m$n, " competitive districts, my model's Brier score was ", num(hou_m$brier, 3), " against Kalshi's ", num(hou_k$brier, 3), ", a skill score of ", pct(hou_m$bss_vs_kalshi), ", with ", pct(hou_m$accuracy, 0), " of those districts called correctly.") else paste0("District-level scoring starts once most races are resolved: so far ", sc_hou$n_resolved, " of ", sc_hou$n_scorable, " contested districts (", pct(sc_hou$coverage_calls, 0), ") have a recorded result.")`
+
+The [forecast scorecard](forecast-scorecard.qmd) has the full breakdown: calibration, margin errors, interval coverage, the seat distributions against the actual result, and every race.

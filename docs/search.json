@@ -35,11 +35,95 @@
     "text": "2025 - Current: System and Ops Engineer - Green Collar LLC\n2024 - 2025: Research Assistant - APPRISE INC\n2023 - 2024: Research Assistant - Montclair State University\n2018 - 2024: Shift Leader - Qdoba\nFull Résumé (PDF)"
   },
   {
-    "objectID": "contactme.html",
-    "href": "contactme.html",
-    "title": "Contact Me",
+    "objectID": "forecast-scorecard.html",
+    "href": "forecast-scorecard.html",
+    "title": "2026 Forecast Scorecard",
     "section": "",
-    "text": "If you would like to contact me regarding my research, data visualizations, collaboration opportunities, or any other opportunity please use the form below.\n\n \n\nYour Email \nSubject \nMessage\n\nSend message"
+    "text": "A forecast is only as good as its record. This page scores the final 9:00 AM Election Day forecasts from the forecast page against what actually happened, race by race and seat by seat, and holds them up against two benchmarks: the Kalshi prediction market and a fundamentals-only baseline built from each model’s own prior."
+  },
+  {
+    "objectID": "forecast-scorecard.html#the-chamber",
+    "href": "forecast-scorecard.html#the-chamber",
+    "title": "2026 Forecast Scorecard",
+    "section": "The chamber",
+    "text": "The chamber\n\n\n\n\n\n\n\n\n\n\nMeasure\nForecast\nResult\n\n\n\n\nControl\n84.8% D (Kalshi 76.5%)\nDemocrats\n\n\nDemocratic seats\nmedian 53, 80% range 50 to 56\n54 to 56 (2 races pending)\n\n\nSeat error (actual - median)\n-\npending\n\n\nInside 80% seat range\n-\npending\n\n\nForecast probability of the seat range still possible\n-\n36.3%\n\n\nSeat-distribution CRPS (lower is better)\n-\npending\n\n\n\n\n\n\n\n\n\n\nSimulated Democratic Senate seats. Blue bars are seat totals still possible given the races called so far; a black line marks the final total once every race is called."
+  },
+  {
+    "objectID": "forecast-scorecard.html#race-level-accuracy",
+    "href": "forecast-scorecard.html#race-level-accuracy",
+    "title": "2026 Forecast Scorecard",
+    "section": "Race-level accuracy",
+    "text": "Race-level accuracy\nForecasters are ranked by Brier score on the races all three covered, the ones with a Kalshi market; the score on all races is shown alongside.\nCompetitive races\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRank\nForecaster\nBrier, Kalshi races\nKalshi races\nBrier, all races\nAll races\nLog loss\nCorrect calls\nSkill vs. Kalshi\nReliability\nResolution\n\n\n\n\n1\nModel\n0.061\n16\n0.061\n16\n0.215\n88%\n26.1%\n0.034\n0.184\n\n\n2\nKalshi\n0.083\n16\n0.083\n16\n0.292\n94%\n-\n0.049\n0.184\n\n\n3\nFundamentals only\n0.166\n16\n0.166\n16\n0.483\n75%\n-99.9%\n0.072\n0.100\n\n\n\n\n\nAll contested races\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRank\nForecaster\nBrier, Kalshi races\nKalshi races\nBrier, all races\nAll races\nLog loss\nCorrect calls\nSkill vs. Kalshi\nReliability\nResolution\n\n\n\n\n1\nModel\n0.030\n33\n0.030\n33\n0.106\n94%\n26.5%\n0.016\n0.224\n\n\n2\nKalshi\n0.041\n33\n0.041\n33\n0.152\n97%\n-\n0.023\n0.224\n\n\n3\nFundamentals only\n0.081\n33\n0.081\n33\n0.238\n88%\n-98.9%\n0.028\n0.172\n\n\n\n\n\nRace by race, the Team 5 model had a lower Brier score than Kalshi in 15 of the 16 competitive races that had a market, and Kalshi was closer in 1."
+  },
+  {
+    "objectID": "forecast-scorecard.html#calibration",
+    "href": "forecast-scorecard.html#calibration",
+    "title": "2026 Forecast Scorecard",
+    "section": "Calibration",
+    "text": "Calibration\n\n\n\n\n\nReliability diagram. Points on the dashed line mean a forecaster’s probabilities came true as often as stated; point size is the number of races in the bin."
+  },
+  {
+    "objectID": "forecast-scorecard.html#margins",
+    "href": "forecast-scorecard.html#margins",
+    "title": "2026 Forecast Scorecard",
+    "section": "Margins",
+    "text": "Margins\nVote margins are not in yet. This section fills in automatically once results tables are published."
+  },
+  {
+    "objectID": "forecast-scorecard.html#largest-errors",
+    "href": "forecast-scorecard.html#largest-errors",
+    "title": "2026 Forecast Scorecard",
+    "section": "Largest errors",
+    "text": "Largest errors\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRace\nModel P(Dem)\nKalshi P(Dem)\nFundamentals P(Dem)\nWinner\nForecast margin\nActual margin\nModel Brier\nKalshi Brier\n\n\n\n\nSouth Carolina\n34.3%\n30.5%\n19.8%\nDemocrats\nR+1.8\n-\n0.432\n0.483\n\n\nIowa\n47.4%\n51.5%\n37.8%\nDemocrats\nR+0.3\n-\n0.276\n0.235\n\n\nKansas\n72.3%\n62.5%\n15.9%\nDemocrats\nD+2.5\n-\n0.077\n0.141\n\n\nNebraska\n25.6%\n33.5%\n11.3%\nRepublicans\nR+3.1\n-\n0.065\n0.112\n\n\nTexas\n78.8%\n71.5%\n37.8%\nDemocrats\nD+3.3\n-\n0.045\n0.081\n\n\nOhio\n79.3%\n70.5%\n53.0%\nDemocrats\nD+3.5\n-\n0.043\n0.087\n\n\nMaine\n87.7%\n71.5%\n81.8%\nDemocrats\nD+4.8\n-\n0.015\n0.081\n\n\nFlorida\n11.3%\n12.5%\n41.9%\nRepublicans\nR+5.2\n-\n0.013\n0.016"
+  },
+  {
+    "objectID": "forecast-scorecard.html#every-race",
+    "href": "forecast-scorecard.html#every-race",
+    "title": "2026 Forecast Scorecard",
+    "section": "Every race",
+    "text": "Every race\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRace\nModel P(Dem)\nKalshi P(Dem)\nWinner\nForecast margin\nActual margin\nCall source\n\n\n\n\nIowa\n47.4%\n51.5%\nDemocrats\nR+0.3\n-\nKalshi settlement\n\n\nAlaska\n59.6%\n69.5%\n-\nD+1.1\n-\nuncalled\n\n\nSouth Carolina\n34.3%\n30.5%\nDemocrats\nR+1.8\n-\nKalshi settlement\n\n\nKansas\n72.3%\n62.5%\nDemocrats\nD+2.5\n-\nKalshi settlement\n\n\nNebraska\n25.6%\n33.5%\nRepublicans\nR+3.1\n-\nKalshi settlement\n\n\nTexas\n78.8%\n71.5%\nDemocrats\nD+3.3\n-\nKalshi settlement\n\n\nOhio\n79.3%\n70.5%\nDemocrats\nD+3.5\n-\nKalshi settlement\n\n\nMaine\n87.7%\n71.5%\nDemocrats\nD+4.8\n-\nKalshi settlement\n\n\nFlorida\n11.3%\n12.5%\nRepublicans\nR+5.2\n-\nKalshi settlement\n\n\nMississippi\n10.0%\n13.5%\n-\nR+6.7\n-\nuncalled\n\n\nMinnesota\n92.1%\n90.1%\nDemocrats\nD+6.4\n-\nKalshi settlement\n\n\nMichigan\n92.5%\n78.5%\nDemocrats\nD+6.1\n-\nKalshi settlement\n\n\nMontana\n4.9%\n10.2%\nRepublicans\nR+9.2\n-\nKalshi settlement\n\n\nLouisiana\n3.9%\n13.5%\nRepublicans\nR+12.2\n-\nKalshi settlement\n\n\nGeorgia\n98.5%\n96.5%\nDemocrats\nD+10.2\n-\nKalshi settlement\n\n\nNew Jersey\n98.5%\n98.0%\nDemocrats\nD+20.9\n-\nKalshi settlement\n\n\nKentucky\n1.5%\n3.6%\nRepublicans\nR+20.9\n-\nKalshi settlement\n\n\nNew Hampshire\n98.6%\n93.2%\nDemocrats\nD+9.9\n-\nKalshi settlement\n\n\nIdaho\n0.9%\n3.3%\nRepublicans\nR+17.1\n-\nKalshi settlement\n\n\nOklahoma\n0.6%\n2.0%\nRepublicans\nR+24.9\n-\nKalshi settlement\n\n\nSouth Dakota\n0.5%\n5.2%\nRepublicans\nR+13.6\n-\nKalshi settlement\n\n\nIllinois\n99.7%\n98.5%\nDemocrats\nD+15.0\n-\nKalshi settlement\n\n\nAlabama\n0.3%\n2.0%\nRepublicans\nR+16.1\n-\nKalshi settlement\n\n\nDelaware\n99.7%\n98.6%\nDemocrats\nD+28.9\n-\nKalshi settlement\n\n\nNew Mexico\n99.7%\n98.7%\nDemocrats\nD+18.9\n-\nKalshi settlement\n\n\nOregon\n99.8%\n98.7%\nDemocrats\nD+28.9\n-\nKalshi settlement\n\n\nArkansas\n0.2%\n3.8%\nRepublicans\nR+14.4\n-\nKalshi settlement\n\n\nNorth Carolina\n99.8%\n96.8%\nDemocrats\nD+13.5\n-\nKalshi settlement\n\n\nColorado\n99.8%\n98.5%\nDemocrats\nD+19.1\n-\nKalshi settlement\n\n\nVirginia\n99.9%\n97.9%\nDemocrats\nD+18.8\n-\nKalshi settlement\n\n\nTennessee\n0.1%\n1.8%\nRepublicans\nR+22.6\n-\nKalshi settlement\n\n\nWest Virginia\n0.0%\n1.4%\nRepublicans\nR+36.7\n-\nKalshi settlement\n\n\nWyoming\n0.0%\n1.2%\nRepublicans\nR+36.9\n-\nKalshi settlement\n\n\nRhode Island\n100.0%\n98.9%\nDemocrats\nD+30.5\n-\nKalshi settlement\n\n\nMassachusetts\n100.0%\n98.9%\nDemocrats\nD+30.5\n-\nKalshi settlement"
+  },
+  {
+    "objectID": "forecast-scorecard.html#the-chamber-1",
+    "href": "forecast-scorecard.html#the-chamber-1",
+    "title": "2026 Forecast Scorecard",
+    "section": "The chamber",
+    "text": "The chamber\n\n\n\n\n\n\n\n\n\n\nMeasure\nForecast\nResult\n\n\n\n\nControl\n94.2% D (Kalshi 93.8%)\nDemocrats\n\n\nDemocratic seats\nmedian 242, 80% range 222 to 267\n76 to 430 (354 races pending)\n\n\nSeat error (actual - median)\n-\npending\n\n\nInside 80% seat range\n-\npending\n\n\nForecast probability of the seat range still possible\n-\n100.0%\n\n\nSeat-distribution CRPS (lower is better)\n-\npending\n\n\n\n\n\n\n\n\n\n\nSimulated Democratic House seats. Blue bars are seat totals still possible given the races called so far; a black line marks the final total once every race is called."
+  },
+  {
+    "objectID": "forecast-scorecard.html#race-level-accuracy-1",
+    "href": "forecast-scorecard.html#race-level-accuracy-1",
+    "title": "2026 Forecast Scorecard",
+    "section": "Race-level accuracy",
+    "text": "Race-level accuracy\nKalshi only listed markets for 54 of the resolved districts, so forecasters are ranked on those shared districts; the model and baseline scores on every resolved district are shown alongside.\nProvisional: only 15% of contested races are resolved so far, and the earliest calls are not a random sample, so treat these numbers with caution.\nCompetitive races\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRank\nForecaster\nBrier, Kalshi races\nKalshi races\nBrier, all races\nAll races\nLog loss\nCorrect calls\nSkill vs. Kalshi\nReliability\nResolution\n\n\n\n\n1\nKalshi\n0.029\n24\n0.029\n24\n0.156\n100%\n-\n0.027\n0.000\n\n\n2\nModel\n0.050\n24\n0.067\n30\n0.254\n97%\n-73.6%\n0.064\n0.000\n\n\n3\nFundamentals only\n0.131\n24\n0.140\n30\n0.449\n83%\n-353.1%\n0.135\n0.000\n\n\n\n\n\nAll contested races\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRank\nForecaster\nBrier, Kalshi races\nKalshi races\nBrier, all races\nAll races\nLog loss\nCorrect calls\nSkill vs. Kalshi\nReliability\nResolution\n\n\n\n\n1\nKalshi\n0.013\n54\n0.013\n54\n0.084\n100%\n-\n0.011\n0.018\n\n\n2\nModel\n0.022\n54\n0.031\n64\n0.121\n98%\n-68.3%\n0.029\n0.059\n\n\n3\nFundamentals only\n0.058\n54\n0.066\n64\n0.212\n92%\n-339.0%\n0.051\n0.046\n\n\n\n\n\nRace by race, my model had a lower Brier score than Kalshi in 11 of the 24 competitive districts that had a market, and Kalshi was closer in 13."
+  },
+  {
+    "objectID": "forecast-scorecard.html#calibration-1",
+    "href": "forecast-scorecard.html#calibration-1",
+    "title": "2026 Forecast Scorecard",
+    "section": "Calibration",
+    "text": "Calibration\n\n\n\n\n\nReliability diagram. Points on the dashed line mean a forecaster’s probabilities came true as often as stated; point size is the number of races in the bin."
+  },
+  {
+    "objectID": "forecast-scorecard.html#margins-1",
+    "href": "forecast-scorecard.html#margins-1",
+    "title": "2026 Forecast Scorecard",
+    "section": "Margins",
+    "text": "Margins\nVote margins are not in yet. This section fills in automatically once results tables are published."
+  },
+  {
+    "objectID": "forecast-scorecard.html#largest-errors-1",
+    "href": "forecast-scorecard.html#largest-errors-1",
+    "title": "2026 Forecast Scorecard",
+    "section": "Largest errors",
+    "text": "Largest errors\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRace\nModel P(Dem)\nKalshi P(Dem)\nFundamentals P(Dem)\nWinner\nForecast margin\nActual margin\nModel Brier\nKalshi Brier\n\n\n\n\nWI-01\n49.9%\n52.0%\n61.5%\nDemocrats\nEven\n-\n0.251\n0.230\n\n\nAL-02\n52.2%\n-\n63.0%\nDemocrats\nD+0.3\n-\n0.228\n-\n\n\nFL-22\n55.5%\n-\n57.8%\nDemocrats\nD+0.7\n-\n0.198\n-\n\n\nOH-07\n58.6%\n-\n27.5%\nDemocrats\nD+1.2\n-\n0.172\n-\n\n\nTX-15\n61.7%\n88.1%\n6.4%\nDemocrats\nD+1.5\n-\n0.147\n0.014\n\n\nIA-02\n63.4%\n-\n59.3%\nDemocrats\nD+1.9\n-\n0.134\n-\n\n\nPA-01\n65.7%\n63.5%\n82.9%\nDemocrats\nD+2.1\n-\n0.118\n0.133\n\n\nTX-35\n65.7%\n73.3%\n56.8%\nDemocrats\nD+2.0\n-\n0.118\n0.071"
+  },
+  {
+    "objectID": "VizCode/HomePopStateCode.html",
+    "href": "VizCode/HomePopStateCode.html",
+    "title": "HomePopStateCode",
+    "section": "",
+    "text": "── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.6\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.1     ✔ tibble    3.3.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layout\n\n\n[[1]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[2]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[3]]\n [1] \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"    \n [7] \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"    \n[13] \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[4]]\n [1] \"usmap\"     \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"    \n [7] \"purrr\"     \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\"\n[13] \"stats\"     \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"  \n[19] \"base\"     \n\n\nRows: 52 Columns: 11\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (1): State\ndbl (10): HPop, HpopP10k, HPChange2007to2024, Family Units, Family Beds, Adu...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nHomeStateUse &lt;- HomeState |&gt;\n  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |&gt;\n  mutate(BedPer = total/HPop,\n         region = tolower(State))\n\nstates_map &lt;- map_data(\"state\")\nstates_map &lt;- states_map |&gt;\n  left_join(HomeStateUse, by = \"region\")\n\n\n# {{&lt; embed Data&Code/HomePopStateCode.qmd#ColGraph &gt;}} -To call in other document\n\nggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer &gt; 1)) +\n  geom_col(width = .6) +\n  coord_flip() +\n  scale_fill_manual(\n    values = c(\"TRUE\" = \"blue\", \"FALSE\" = \"red\"),\n    labels = c(\"FALSE\" = \"&lt;= 1\", \"TRUE\" = \"&gt; 1\"),\n    guide = FALSE  # hides the legend; remove if you want legend\n  ) +\n  labs(\n    title = \"Individual Emergency Shelter Beds per Homeless Individual by State (2024)\",\n    x = \"State\",\n    y = \"Beds per Homeless Individual\"\n  ) +\n  theme_minimal() +\n  theme(\n    axis.text.y = element_text(angle = 45, hjust = 1)  # slant y-axis labels\n  )\n\nWarning: The `guide` argument in `scale_*()` cannot be `FALSE`. This was deprecated in\nggplot2 3.3.4.\nℹ Please use \"none\" instead."
   },
   {
     "objectID": "DataVisualization.html",
@@ -98,11 +182,11 @@
     "text": "Footnotes\n\n\nU.S. Department of Justice, release of the Epstein email records (2025). ↩︎\nBurt, R. S. (1998). “The Gender of Social Capital.” Rationality and Society, 10(1), 5–46.↩︎\nBurt, R. S. (1992). Structural Holes: The Social Structure of Competition. Harvard University Press.↩︎\nLeifeld, P., Cranmer, S. J., & Desmarais, B. A. (2018). “Temporal Exponential Random Graph Models with btergm.” Journal of Statistical Software, 83(6).↩︎\nHUD Continuum of Care Homeless Assistance Programs Housing Inventory Count Report (2024)↩︎\nWorld Population Review - Homeless Population By State (2025)↩︎\nMedicaid Expansion Program Data (2023)↩︎\nThe Commonwealth Fund - People With Medical Debt in Collections (2023)↩︎\nUS Decennial Census↩︎\nIPUMS USA↩︎\nUnited States Office of Government Ethics↩︎\nThe Correlates of War Project - Militarized Interstate Disputes (v5.0) & National Material Capabilities↩︎\nVarieties of Democracy (V-Dem) Project↩︎"
   },
   {
-    "objectID": "VizCode/HomePopStateCode.html",
-    "href": "VizCode/HomePopStateCode.html",
-    "title": "HomePopStateCode",
+    "objectID": "contactme.html",
+    "href": "contactme.html",
+    "title": "Contact Me",
     "section": "",
-    "text": "── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.6\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.1     ✔ tibble    3.3.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.2\n✔ purrr     1.2.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layout\n\n\n[[1]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[2]]\n [1] \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"     \"readr\"    \n [7] \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"     \"graphics\" \n[13] \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[3]]\n [1] \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"     \"purrr\"    \n [7] \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\" \"stats\"    \n[13] \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"   \"base\"     \n\n[[4]]\n [1] \"usmap\"     \"plotly\"    \"lubridate\" \"forcats\"   \"stringr\"   \"dplyr\"    \n [7] \"purrr\"     \"readr\"     \"tidyr\"     \"tibble\"    \"ggplot2\"   \"tidyverse\"\n[13] \"stats\"     \"graphics\"  \"grDevices\" \"utils\"     \"datasets\"  \"methods\"  \n[19] \"base\"     \n\n\nRows: 52 Columns: 11\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (1): State\ndbl (10): HPop, HpopP10k, HPChange2007to2024, Family Units, Family Beds, Adu...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nHomeStateUse &lt;- HomeState |&gt;\n  mutate(total = rowSums(across(4:11), na.rm = TRUE)) |&gt;\n  mutate(BedPer = total/HPop,\n         region = tolower(State))\n\nstates_map &lt;- map_data(\"state\")\nstates_map &lt;- states_map |&gt;\n  left_join(HomeStateUse, by = \"region\")\n\n\n# {{&lt; embed Data&Code/HomePopStateCode.qmd#ColGraph &gt;}} -To call in other document\n\nggplot(HomeStateUse, aes(x = reorder(State, BedPer), y = BedPer, fill = BedPer &gt; 1)) +\n  geom_col(width = .6) +\n  coord_flip() +\n  scale_fill_manual(\n    values = c(\"TRUE\" = \"blue\", \"FALSE\" = \"red\"),\n    labels = c(\"FALSE\" = \"&lt;= 1\", \"TRUE\" = \"&gt; 1\"),\n    guide = FALSE  # hides the legend; remove if you want legend\n  ) +\n  labs(\n    title = \"Individual Emergency Shelter Beds per Homeless Individual by State (2024)\",\n    x = \"State\",\n    y = \"Beds per Homeless Individual\"\n  ) +\n  theme_minimal() +\n  theme(\n    axis.text.y = element_text(angle = 45, hjust = 1)  # slant y-axis labels\n  )\n\nWarning: The `guide` argument in `scale_*()` cannot be `FALSE`. This was deprecated in\nggplot2 3.3.4.\nℹ Please use \"none\" instead."
+    "text": "If you would like to contact me regarding my research, data visualizations, collaboration opportunities, or any other opportunity please use the form below.\n\n \n\nYour Email \nSubject \nMessage\n\nSend message"
   },
   {
     "objectID": "forecast.html",

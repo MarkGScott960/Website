@@ -93,3 +93,9 @@
   border: 0;
   margin-bottom: 1rem;
 }
+
+/* --- Forecast scorecard (forecast-scorecard.qmd) --- */
+.sc-table table td:first-child,
+.sc-table table th:first-child {
+  white-space: nowrap;
+}

@@ -1,0 +1,401 @@
+---
+title: "2026 Forecast Scorecard"
+subtitle: "How the Team 5 Senate forecast and my House forecast held up against the results"
+format:
+  html:
+    page-layout: full
+    toc: true
+    toc-depth: 2
+engine: knitr
+---
+
+```{r}
+#| label: scorecard-setup
+#| echo: false
+#| message: false
+#| warning: false
+
+# Every number on this page comes from VizCode/Forecast/scores.rds, written by
+# VizCode/Forecast/score_forecasts.R. Nothing is typed in by hand.
+library(knitr)
+library(ggplot2)
+
+sc  <- readRDS("VizCode/Forecast/scores.rds")
+SEN <- sc$senate
+HOU <- sc$house
+
+pct  <- function(x, d = 1) ifelse(is.na(x), "-", paste0(formatC(100 * x, format = "f", digits = d), "%"))
+num  <- function(x, d = 1) ifelse(is.na(x), "-", formatC(x, format = "f", digits = d))
+sgn  <- function(x, d = 1) ifelse(is.na(x), "-", formatC(x, format = "f", digits = d, flag = "+"))
+marg <- function(m) ifelse(is.na(m), "-", ifelse(abs(m) < 0.05, "Even",
+                       ifelse(m > 0, paste0("D+", num(m)), paste0("R+", num(-m)))))
+party <- function(s) ifelse(is.na(s), "-", ifelse(s == "D", "Democrats", "Republicans"))
+
+SERIES <- c("Model" = "#2a78d6", "Kalshi" = "#eb6834", "Fundamentals only" = "#1baf7a")
+theme_sc <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(colour = "#e6e6e3", linewidth = 0.3),
+        axis.text = element_text(colour = "#52514e"),
+        legend.position = "top", legend.title = element_blank(),
+        plot.title.position = "plot")
+
+board_table <- function(S, sub) {
+  if (is.null(S$board)) return(invisible())
+  b <- S$board[S$board$subset == sub, ]
+  b <- b[order(b$rank), ]
+  kable(data.frame(
+    Rank                = b$rank,
+    Forecaster          = b$label,
+    `Brier, Kalshi races` = num(b$brier_overlap, 3),
+    `Kalshi races`      = b$n_kalshi_overlap,
+    `Brier, all races`  = num(b$brier, 3),
+    `All races`         = b$n,
+    `Log loss`          = num(b$log_loss, 3),
+    `Correct calls`     = pct(b$accuracy, 0),
+    `Skill vs. Kalshi`  = ifelse(b$forecaster == "kalshi", "-", pct(b$bss_vs_kalshi, 1)),
+    Reliability         = num(b$reliability, 3),
+    Resolution          = num(b$resolution, 3),
+    check.names = FALSE), align = "rlrrrrrrrrr")
+}
+
+margin_table <- function(S) {
+  m <- S$margins
+  kable(data.frame(
+    Forecaster              = m$label,
+    Races                   = m$n,
+    `Mean abs. error`       = paste(num(m$mae), "pts"),
+    RMSE                    = paste(num(m$rmse), "pts"),
+    `Bias (+ = too D)`      = paste(sgn(m$bias), "pts"),
+    `Inside 80% interval`   = pct(m$cover80, 0),
+    `Inside 95% interval`   = pct(m$cover95, 0),
+    check.names = FALSE), align = "lrrrrrr")
+}
+
+chamber_table <- function(S) {
+  c_ <- S$chamber
+  kable(data.frame(
+    Measure = c("Control", "Democratic seats", "Seat error (actual - median)",
+                "Inside 80% seat range", "Forecast probability of the seat range still possible",
+                "Seat-distribution CRPS (lower is better)"),
+    Forecast = c(paste0(pct(c_$p_control_model), " D (Kalshi ", pct(c_$p_control_kalshi), ")"),
+                 paste0("median ", c_$seats_median, ", 80% range ", c_$seats_p10, " to ", c_$seats_p90),
+                 "-", "-", "-", "-"),
+    Result = c(party(c_$control_side),
+               ifelse(is.na(c_$seats_final),
+                      paste0(c_$seat_lo, " to ", c_$seat_hi, " (", c_$seats_pending, " races pending)"),
+                      as.character(c_$seats_final)),
+               ifelse(is.na(c_$seat_error), "pending", sgn(c_$seat_error, 0)),
+               ifelse(is.na(c_$in_80), "pending", ifelse(c_$in_80, "Yes", "No")),
+               pct(c_$p_seat_range),
+               ifelse(is.na(c_$crps), "pending", num(c_$crps, 2))),
+    check.names = FALSE), align = "lll")
+}
+
+calib_plot <- function(S) {
+  d <- S$calibration
+  if (is.null(d) || !nrow(d)) return(invisible())
+  d$label <- factor(d$label, levels = names(SERIES))
+  ggplot(d, aes(mean_p, obs, colour = label)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = "#9a9994", linewidth = 0.4) +
+    geom_line(linewidth = 0.7) +
+    geom_point(aes(size = n)) +
+    scale_colour_manual(values = SERIES) +
+    scale_size_area(max_size = 6, guide = "none") +
+    scale_x_continuous(labels = scales::percent, limits = c(0, 1)) +
+    scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+    labs(x = "Forecast probability of a Democratic win (bin average)",
+         y = "Share of races Democrats actually won") +
+    coord_equal() + theme_sc
+}
+
+margin_plot <- function(S) {
+  d <- S$margin_races
+  d$miss <- (d$p_dem > 0.5) != (d$o == 1)
+  lim <- range(c(d$margin, d$d_margin), na.rm = TRUE)
+  ggplot(d, aes(margin, d_margin)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = "#9a9994", linewidth = 0.4) +
+    geom_hline(yintercept = 0, colour = "#c9c8c3", linewidth = 0.3) +
+    geom_vline(xintercept = 0, colour = "#c9c8c3", linewidth = 0.3) +
+    geom_point(colour = SERIES[["Model"]], size = 2.4, alpha = 0.8) +
+    geom_text(data = d[d$miss, ], aes(label = label), size = 3.2, hjust = -0.12,
+              vjust = ifelse(seq_len(sum(d$miss)) %% 2 == 1, -0.4, 1.3), colour = "#0b0b0b") +
+    coord_equal(xlim = lim, ylim = lim) +
+    labs(x = "Forecast margin (D minus R, points)", y = "Actual margin (D minus R, points)") +
+    theme_sc
+}
+
+seat_plot <- function(S) {
+  c_ <- S$chamber; d <- S$seat_dist
+  d$possible <- d$dem_seats >= c_$seat_lo & d$dem_seats <= c_$seat_hi
+  p <- ggplot(d, aes(dem_seats, share)) +
+    geom_col(aes(fill = possible), width = 0.85) +
+    scale_fill_manual(values = c(`TRUE` = SERIES[["Model"]], `FALSE` = "#d5d4cf"), guide = "none") +
+    scale_y_continuous(labels = scales::percent) +
+    labs(x = "Democratic seats", y = "Share of simulations") + theme_sc
+  if (!is.na(c_$seats_final))
+    p <- p + geom_vline(xintercept = c_$seats_final, colour = "#0b0b0b", linewidth = 0.6)
+  p
+}
+
+misses_table <- function(m) {
+  if (is.null(m) || !nrow(m)) return(invisible())
+  kable(data.frame(
+    Race               = m$label,
+    `Model P(Dem)`       = pct(m$p_dem),
+    `Kalshi P(Dem)`    = pct(m$kalshi_p),
+    `Fundamentals P(Dem)` = pct(m$p_fund),
+    Winner             = party(m$winner_side),
+    `Forecast margin`  = marg(m$margin),
+    `Actual margin`    = marg(m$d_margin),
+    `Model Brier`        = num(m$bs_model, 3),
+    `Kalshi Brier`     = num(m$bs_kalshi, 3),
+    check.names = FALSE), align = "lrrrlrrrr")
+}
+
+race_table <- function(S) {
+  d <- S$races[S$races$scorable, ]
+  d <- d[order(-pmin(d$p_dem, 1 - d$p_dem)), ]
+  kable(data.frame(
+    Race              = d$label,
+    `Model P(Dem)`      = pct(d$p_dem),
+    `Kalshi P(Dem)`   = pct(d$kalshi_p),
+    Winner            = party(d$winner_side),
+    `Forecast margin` = marg(d$margin),
+    `Actual margin`   = marg(d$d_margin),
+    `Call source`     = ifelse(is.na(d$winner_source), "uncalled", sub(" \\(.*$", "", d$winner_source)),
+    check.names = FALSE), align = "lrrlrrl")
+}
+
+status_line <- function(S) {
+  c_ <- S$chamber
+  paste0(c_$n_resolved, " of ", c_$n_scorable, " contested races resolved (", pct(c_$coverage_calls, 0),
+         "), ", c_$n_margin, " with vote margins")
+}
+```
+
+::: {.lead}
+A forecast is only as good as its record. This page scores the final 9:00 AM Election Day forecasts from the [forecast page](forecast.qmd) against what actually happened, race by race and seat by seat, and holds them up against two benchmarks: the Kalshi prediction market and a fundamentals-only baseline built from each model's own prior.
+:::
+
+::: {.callout-note appearance="simple"}
+**Results as of `r sc$meta$scored_at`.** Senate: `r status_line(SEN)`. House: `r status_line(HOU)`. Race-level scores are treated as final once `r pct(sc$meta$min_coverage, 0)` of contested races are resolved. Vote margins are provisional until states certify their results.
+:::
+
+# How the forecasts are scored
+
+Each forecast gave every race a probability $p_i$ that the Democrat (or the Democratic-aligned independent) would win, and a projected margin with an uncertainty band. Each race then has an outcome $o_i$, which is 1 if that side won and 0 otherwise. The scores below measure two different things.
+
+**Accuracy** asks how close the probabilities were to what happened.
+
+- **Brier score** (the ranking metric): $BS = \frac{1}{N}\sum_{i=1}^{N} (p_i - o_i)^2$. Zero is perfect; always guessing 50% scores 0.25.
+- **Log loss**: $LL = -\frac{1}{N}\sum_{i=1}^{N} \left[ o_i \ln p_i + (1 - o_i)\ln(1 - p_i) \right]$. This punishes confident misses much harder than the Brier score. Probabilities are clipped to $[`r sc$meta$p_clip`, 1 - `r sc$meta$p_clip`]$ so that one 0% forecast cannot make the score infinite.
+- **Skill vs. Kalshi**: $1 - BS_{\text{forecast}} / BS_{\text{Kalshi}}$, computed on the races that had a Kalshi market. Positive means the forecast beat the market, and it puts the Senate and House on the same scale.
+- **Margin error**: mean absolute error, RMSE, and bias of the projected margin, where positive bias means the forecast leaned too Democratic.
+
+**Reliability** asks whether the stated confidence was honest.
+
+- **Murphy decomposition**: $BS = \text{Reliability} - \text{Resolution} + \text{Uncertainty}$, using `r sc$meta$n_bins` equal-width probability bins. *Reliability* is the calibration error (lower is better): do the 70% calls come in about 70% of the time? *Resolution* measures how sharply the forecast separated winners from losers (higher is better).
+- **Interval coverage**: the share of actual margins that landed inside the forecast's 80% and 95% intervals. A well-calibrated forecast hits close to 80% and 95%.
+- **Seat distribution**: the continuous ranked probability score, $CRPS = \sum_k \left(F(k) - \mathbf{1}\{k \ge y\}\right)^2$, where $F$ is the forecast's cumulative seat distribution and $y$ is the actual number of Democratic seats. It rewards a distribution that is both close and appropriately confident.
+
+Two rules keep the comparison fair. Safe seats make every forecaster look good, so each table is also shown for **competitive races** only: races where *any* of the three forecasters gave the trailing side at least `r pct(sc$meta$competitive, 0)`. And House seats that could not change hands, because both finalists were from the same party or only one party ran, are left out of the race-level scores.
+
+The fundamentals-only baseline turns each model's prior (partisan lean, the national environment, and incumbency, before any polls or Kalshi) into a probability, using the model's own prior uncertainty: `r num(sc$meta$sen_prior_sd, 2)` points in the Senate and `r num(sc$meta$hou_prior_sd, 2)` in the House. If the full model cannot beat it, the polls and market inputs added nothing.
+
+# Senate
+
+## The chamber
+
+```{r}
+#| label: sc-senate-chamber
+#| echo: false
+#| classes: sc-table
+chamber_table(SEN)
+```
+
+```{r}
+#| label: sc-senate-seats
+#| echo: false
+#| classes: sc-table
+#| fig-height: 3.6
+#| fig-width: 9
+#| fig-cap: "Simulated Democratic Senate seats. Blue bars are seat totals still possible given the races called so far; a black line marks the final total once every race is called."
+seat_plot(SEN)
+```
+
+## Race-level accuracy
+
+Forecasters are ranked by Brier score on the races all three covered, the ones with a Kalshi market; the score on all races is shown alongside.
+
+`r if (SEN$chamber$ready_calls) "" else paste0("*Provisional: only ", pct(SEN$chamber$coverage_calls, 0), " of contested races are resolved so far.*")`
+
+**Competitive races**
+
+```{r}
+#| label: sc-senate-board-comp
+#| echo: false
+#| classes: sc-table
+board_table(SEN, "competitive")
+```
+
+**All contested races**
+
+```{r}
+#| label: sc-senate-board-all
+#| echo: false
+#| classes: sc-table
+board_table(SEN, "all")
+```
+
+Race by race, the Team 5 model had a lower Brier score than Kalshi in `r SEN$h2h$model_closer` of the `r SEN$h2h$n` competitive races that had a market, and Kalshi was closer in `r SEN$h2h$kalshi_closer`.
+
+## Calibration
+
+```{r}
+#| label: sc-senate-calib
+#| echo: false
+#| classes: sc-table
+#| fig-height: 5
+#| fig-width: 6
+#| fig-cap: "Reliability diagram. Points on the dashed line mean a forecaster's probabilities came true as often as stated; point size is the number of races in the bin."
+calib_plot(SEN)
+```
+
+## Margins
+
+`r if (is.null(SEN$margins)) "*Vote margins are not in yet. This section fills in automatically once results tables are published.*" else ""`
+
+```{r}
+#| label: sc-senate-margin-table
+#| echo: false
+#| classes: sc-table
+if (!is.null(SEN$margins)) margin_table(SEN)
+```
+
+```{r}
+#| label: sc-senate-margins
+#| echo: false
+#| classes: sc-table
+#| fig-height: 5.5
+#| fig-width: 6
+#| fig-cap: "Forecast vs. actual margin in each resolved race. Labeled points are races the model called wrong."
+if (!is.null(SEN$margin_races)) margin_plot(SEN)
+```
+
+## Largest errors
+
+```{r}
+#| label: sc-senate-misses
+#| echo: false
+#| classes: sc-table
+misses_table(sc$misses$senate)
+```
+
+## Every race
+
+```{r}
+#| label: sc-senate-races
+#| echo: false
+#| classes: sc-table
+race_table(SEN)
+```
+
+# House
+
+## The chamber
+
+```{r}
+#| label: sc-house-chamber
+#| echo: false
+#| classes: sc-table
+chamber_table(HOU)
+```
+
+```{r}
+#| label: sc-house-seats
+#| echo: false
+#| classes: sc-table
+#| fig-height: 3.6
+#| fig-width: 9
+#| fig-cap: "Simulated Democratic House seats. Blue bars are seat totals still possible given the races called so far; a black line marks the final total once every race is called."
+seat_plot(HOU)
+```
+
+## Race-level accuracy
+
+Kalshi only listed markets for `r HOU$board$n_kalshi_overlap[HOU$board$forecaster == "model" & HOU$board$subset == "all"]` of the resolved districts, so forecasters are ranked on those shared districts; the model and baseline scores on every resolved district are shown alongside.
+
+`r if (HOU$chamber$ready_calls) "" else paste0("*Provisional: only ", pct(HOU$chamber$coverage_calls, 0), " of contested races are resolved so far, and the earliest calls are not a random sample, so treat these numbers with caution.*")`
+
+**Competitive races**
+
+```{r}
+#| label: sc-house-board-comp
+#| echo: false
+#| classes: sc-table
+board_table(HOU, "competitive")
+```
+
+**All contested races**
+
+```{r}
+#| label: sc-house-board-all
+#| echo: false
+#| classes: sc-table
+board_table(HOU, "all")
+```
+
+Race by race, my model had a lower Brier score than Kalshi in `r HOU$h2h$model_closer` of the `r HOU$h2h$n` competitive districts that had a market, and Kalshi was closer in `r HOU$h2h$kalshi_closer`.
+
+## Calibration
+
+```{r}
+#| label: sc-house-calib
+#| echo: false
+#| classes: sc-table
+#| fig-height: 5
+#| fig-width: 6
+#| fig-cap: "Reliability diagram. Points on the dashed line mean a forecaster's probabilities came true as often as stated; point size is the number of races in the bin."
+calib_plot(HOU)
+```
+
+## Margins
+
+`r if (is.null(HOU$margins)) "*Vote margins are not in yet. This section fills in automatically once results tables are published.*" else ""`
+
+```{r}
+#| label: sc-house-margin-table
+#| echo: false
+#| classes: sc-table
+if (!is.null(HOU$margins)) margin_table(HOU)
+```
+
+```{r}
+#| label: sc-house-margins
+#| echo: false
+#| classes: sc-table
+#| fig-height: 5.5
+#| fig-width: 6
+#| fig-cap: "Forecast vs. actual margin in each resolved district. Labeled points are districts the model called wrong."
+if (!is.null(HOU$margin_races)) margin_plot(HOU)
+```
+
+## Largest errors
+
+```{r}
+#| label: sc-house-misses
+#| echo: false
+#| classes: sc-table
+misses_table(sc$misses$house)
+```
+
+# Reading these numbers carefully
+
+- **The races are not independent.** Both models simulate a shared national polling error, and a real-world miss moves every race in the same direction at once. Thirty-odd Senate races are therefore far fewer than thirty-odd independent tests, and small gaps between forecasters are mostly noise.
+- **One election is one draw.** A well-calibrated forecast can still have a bad night. The calibration and coverage numbers matter more over many elections than over this one.
+- **Margins move after Election Night.** Mail and provisional ballots are still being counted in many states, so margin scores will shift until results are certified.
+- **Early calls are not a random sample.** Safe and lopsided races are called first, so partial results flatter every forecaster.
+
+# Data and sources
+
+Race calls come from settled [Kalshi](https://kalshi.com) election markets (each market settles once at least four of its eight designated media outlets have called the race), vote shares come from Wikipedia's 2026 [Senate](https://en.wikipedia.org/wiki/2026_United_States_Senate_elections) and [House](https://en.wikipedia.org/wiki/2026_United_States_House_of_Representatives_elections) results tables, and calls made on Election Night are seeded from news reports, with the source recorded for every race. When sources disagree, the script keeps the higher-priority source and logs the disagreement; there are currently `r nrow(sc$checks)` logged disagreements. The combined results tables and the scoring script are in this site's repository under [`VizCode/Forecast/`](https://github.com/MarkGScott960/Website/tree/main/VizCode/Forecast).
