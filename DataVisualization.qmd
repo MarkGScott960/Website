@@ -965,7 +965,7 @@ ggplot(
 
 ## Does Military Might Deter Conflict?
 
-Full write-up: <a href="DeterenceProject.html" target="_blank">Deterrence Project (Full Project Analysis)</a>
+Full write-up: <a href="files/DeterenceProject.html" target="_blank">Deterrence Project (Full Project Analysis)</a>
 
 ```{r}
 #| label: COWPrep
