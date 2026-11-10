@@ -3,33 +3,60 @@ project:
   output-dir: docs
   render:
     - "*.qmd"
+    - "research/*.qmd"
     - "!VizCodes.qmd"
   resources:
     - "forecast/**"
     - "files/**"
+    - "img/**"
+
+# Heavy pages (Epstein, deterrence, census) only re-run when their own .qmd
+# changes. The forecast pages opt out in their own front matter so they
+# always pick up fresh results from VizCode/Forecast/scores.rds.
+execute:
+  freeze: auto
 
 website:
-  title: "Mark G Scott"
+  title: "Mark G. Scott"
+  description: "Political science and computational social science: networks, forecasting, text, and machine learning."
+  site-url: "https://markgscott960.github.io/Website/"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - projects.qmd
+      - href: projects.qmd
+        text: Research
+      - text: 2026 Forecasts
+        menu:
+          - href: forecast.qmd
+            text: Final forecasts
+          - href: forecast-scorecard.qmd
+            text: Forecast scorecard
       - href: DataVisualization.qmd
-        text: Data Exploration
+        text: Visualization
+      - href: methods.qmd
+        text: Methods
+      - href: cv.qmd
+        text: CV
       - href: contactme.qmd
-        text: Contact Me
+        text: Contact
     tools:
+      - icon: github
+        text: GitHub
+        href: https://github.com/MarkGScott960
       - icon: linkedin
-        text: Linkedin
-        href: https://www.linkedin.com/in/mark-scott-bb6ab4329/?isSelfProfile=true
+        text: LinkedIn
+        href: https://www.linkedin.com/in/mark-scott-bb6ab4329/
+      - icon: envelope
+        text: Contact
+        href: contactme.qmd
   page-footer:
-    right: "Built with [Quarto](https://quarto.org/)"
-    left: "&copy; Copyright 2025, Mark G Scott"
+    left: "&copy; 2025-2026, Mark G. Scott"
+    right: "Built with [Quarto](https://quarto.org/) and R"
 
 format:
   html:
-    theme: journal
+    theme: [litera, theme.scss]
     css: styles.css
     toc: true
     toc-depth: 1

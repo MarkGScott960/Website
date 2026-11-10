@@ -1,0 +1,24 @@
+[
+  {
+    "listing": "/projects.html",
+    "items": [
+      "/research/midterm-forecasts.html",
+      "/research/epstein-network.html",
+      "/research/commander-in-chief.html",
+      "/research/democratic-backsliding.html",
+      "/research/fly-connectome.html",
+      "/research/china-un-voting.html",
+      "/research/deterrence.html",
+      "/research/paterson-coc.html",
+      "/research/end-of-life-planning.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/research/midterm-forecasts.html",
+      "/research/epstein-network.html",
+      "/research/democratic-backsliding.html"
+    ]
+  }
+]

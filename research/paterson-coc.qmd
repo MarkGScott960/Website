@@ -1,0 +1,21 @@
+---
+title: "Paterson City Mayor's Office Collaboration"
+subtitle: "Bringing emergency shelters into compliance with New Jersey law"
+description: "A Montclair State white paper chapter, written with the Paterson City Mayor's Office, on emergency shelter length-of-stay compliance and Continuum of Care reform."
+image: ../img/thumbs/placeholder.svg
+categories: [Complete, Policy Analysis, Housing]
+---
+
+::: {.project-meta}
+**Status:** Complete (published) | **Course:** POLS 324: Advanced Public Policy Analysis (Spring 2024), Dr. Fanny Lauby | **Recognition:** Certificate of Recognition for Solving Authentic Complex Challenges (2024) | **Collaborators:** two Montclair State University peers; Paterson City Mayor's Office | **Output:** white paper chapter (PDF)
+:::
+
+As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor's Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuums of Care to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.
+
+```{=html}
+<div class="forecast-buttons">
+  <a class="btn btn-primary btn-sm" href="../files/PassaicCoC.pdf" target="_blank">Read the chapter (PDF)</a>
+</div>
+```
+
+This project was completed for Advanced Public Policy Analysis at Montclair State University in Spring 2024, taught by Dr. Fanny Lauby, and received the university's Certificate of Recognition for Solving Authentic Complex Challenges.

@@ -1,0 +1,337 @@
+---
+title: "Epstein Email Network"
+subtitle: "Brokerage, homophily, and tie formation in an elite communication network"
+description: "A temporal network of the released Epstein email records, modeled with bootstrapped TERGMs to test brokerage and same-sex homophily."
+image: ../img/thumbs/epstein-network.png
+categories: [In progress, Networks, Python, R]
+page-layout: full
+engine: knitr
+---
+
+::: {.project-meta}
+**Status:** In progress | **Collaborators:** Boaz Alkalay, Elizabeth Miller | **Methods:** OCR pipeline, Mask R-CNN, name resolution, btergm | **Tools:** Python, R | **Code:** private, available on request
+:::
+
+The full write-up - model specification, nesting strategy, diagnostics, and replication details - is available upon request via the **Contact** page.
+
+```{r}
+#| label: EpsteinSetup
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(network)
+library(igraph)
+library(tidygraph)
+library(ggraph)
+library(betareg)
+library(scales)
+
+
+nets          <- readRDS("../VizCode/Epstein/networks.rds")
+mod_final     <- readRDS("../VizCode/Epstein/mod_final.rds")
+gof_final     <- readRDS("../VizCode/Epstein/gof_mod_final.rds")
+constraint_df <- readRDS("../VizCode/Epstein/constraint_df.rds")
+
+# ---- GOF tie-prediction values (same accessors as Summary.qmd) -------------
+roc_auc  <- round(gof_final[["Tie prediction"]]$auc.roc[1], 3)
+pr_auc   <- round(gof_final[["Tie prediction"]]$auc.pr[1], 3)
+roc_base <- round(gof_final[["Tie prediction"]]$auc.roc.rgraph, 3)
+pr_base  <- round(gof_final[["Tie prediction"]]$auc.pr.rgraph, 3)
+
+# ---- Standardize the sex attribute (M / F / U coding) -----------------------
+sex_std <- function(x) {
+  case_when(
+    str_to_lower(x) %in% c("m", "male")   ~ "Male",
+    str_to_lower(x) %in% c("f", "female") ~ "Female",
+    TRUE                                  ~ "Unknown"   # includes "U" and NA
+  )
+}
+
+sex_cols <- c(Female = "#C2185B", Male = "#1565C0", Unknown = "gray70")
+
+# ---- Aggregate the 21 yearly networks into one weighted directed graph -----
+# Inactive nodes are stored as NA in the yearly adjacency matrices (so btergm
+# excludes them from the likelihood); for the pooled descriptive graph those
+# NAs simply mean "no tie", so they are zeroed before summing.
+mats <- map(nets, function(net) {
+  m <- network::as.matrix.network(net, matrix.type = "adjacency")
+  m[is.na(m)] <- 0
+  m
+})
+
+A     <- reduce(mats, `+`)
+g_agg <- graph_from_adjacency_matrix(A, mode = "directed", weighted = TRUE)
+V(g_agg)$sex <- sex_std(network::get.vertex.attribute(nets[[1]], "sex"))
+
+n_nodes   <- gorder(g_agg)
+n_dyads   <- gsize(g_agg)
+n_periods <- length(nets)
+
+# ---- Bootstrap CIs and odds ratios from the btergm object ------------------
+cfs      <- mod_final@coef
+boot_mat <- mod_final@boot$t
+ci       <- apply(boot_mat, 2, quantile, probs = c(0.025, 0.975), na.rm = TRUE)
+
+coef_df <- tibble(
+  term = names(cfs),
+  est  = as.numeric(cfs),
+  lo   = ci[1, ],
+  hi   = ci[2, ]
+) |>
+  filter(term != "edges") |>   # baseline density term; dominates the axis
+  mutate(
+    OR    = exp(est),
+    or_lo = exp(lo),
+    or_hi = exp(hi),
+    label = case_when(
+      str_detect(term, "nodeocov.*constraint") ~ "Sender constraint (H1)",
+      str_detect(term, "nodeicov.*constraint") ~ "Receiver constraint (H1)",
+      str_detect(term, "nodematch.*sex")       ~ "Same-sex tie (H2)",
+      str_detect(term, "nodeofactor.*sex")     ~ "Male sender",
+      str_detect(term, "nodeifactor.*sex")     ~ "Male receiver",
+      str_detect(term, "mutual")               ~ "Reciprocity",
+      str_detect(term, "gwideg")               ~ "GW in-degree (0.5)",
+      str_detect(term, "gwodeg")               ~ "GW out-degree (0.5)",
+      str_detect(term, "gwesp")                ~ "GWESP (transitivity)",
+      str_detect(term, "memory")               ~ "Tie memory (t \u2212 1)",
+      str_detect(term, "timecov")              ~ "Linear time trend",
+      TRUE                                     ~ term
+    ),
+    hyp = case_when(
+      str_detect(term, "constraint")     ~ "H1: Brokerage",
+      str_detect(term, "nodematch.*sex") ~ "H2: Homophily",
+      TRUE                               ~ "Structural control"
+    )
+  )
+
+# ---- Inline helpers (mirrors Summary.qmd conventions) -----------------------
+or_val  <- function(t) round(exp(cfs[t]), 2)
+pct_val <- function(t) round((exp(cfs[t]) - 1) * 100, 1)
+or_ci   <- function(t) sprintf("[%.2f, %.2f]", exp(ci[1, t]), exp(ci[2, t]))
+
+# ---- Beta regression: who occupies brokerage positions? ---------------------
+# Matches the Summary.qmd specification: lagged Burt's constraint on sex with
+# year fixed effects, active nodes only, pooled node-years, restricted to the
+# 2009-2019 estimation window of M-Final.
+breg_df <- constraint_df |>
+  mutate(sex = sex_std(sex)) |>
+  filter(
+    sex %in% c("Male", "Female"),
+    active,
+    !is.na(constraint),
+    year >= 2009, year <= 2019
+  ) |>
+  # isolates carry constraint = 1 exactly; squeeze onto (0, 1) for the
+  # beta likelihood
+  mutate(cons_sq = (pmin(constraint, 1) * (n() - 1) + 0.5) / n())
+
+bmod   <- betareg(cons_sq ~ sex + factor(year), data = breg_df)
+b_tab  <- summary(bmod)$coefficients$mean
+b_coef <- round(b_tab["sexMale", "Estimate"], 3)
+b_se   <- b_tab["sexMale", "Std. Error"]
+b_ci   <- sprintf("[%.3f, %.3f]",
+                  b_tab["sexMale", "Estimate"] - 1.96 * b_se,
+                  b_tab["sexMale", "Estimate"] + 1.96 * b_se)
+b_z    <- round(b_tab["sexMale", "z value"], 2)
+
+gap_sd <- breg_df |>
+  summarise(
+    d = (mean(constraint[sex == "Male"]) - mean(constraint[sex == "Female"])) /
+        sd(constraint)
+  ) |>
+  pull(d) |>
+  round(2)
+```
+
+## Project summary
+
+This ongoing project maps the social network embedded in the released Epstein corpus from the Epstein Transparency Act. A custom Python pipeline extracts email headers from roughly 1.4 million released email records, using a Mask R-CNN model to detect redactions and dual OCR engines to recover text, before a multi-pass name resolution process in R consolidates senders and recipients into a clean longitudinal network of `r comma(n_nodes)` individuals across `r n_periods` time periods. The network is then modeled using Bootstrapped Temporal Exponential Random Graph Models (BTERGM) to test two hypotheses drawn from the literature on gender and social capital. **Research Questions**: (1) Do ties form disproportionately between individuals of the same sex? (2) Are women more likely to occupy brokerage positions, as measured by lagged Burt's constraint? Results support sex-based homophily in tie formation and offer weak support for the brokerage hypothesis-women exhibit marginally lower constraint (i.e., are slightly more broker-like), though the effect is small. A notable secondary finding is an asymmetric sex pattern in tie formation: men initiate fewer ties but receive more. This work was completed in collaboration with Boaz Alkalay and Elizabeth Miller.
+
+## Analysis
+
+
+The Department of Justice's release of the Epstein records[^E1] offers a rare chance to observe an elite communication network directly rather than through court testimony or journalistic reconstruction. With two collaborators, I built a Python pipeline that extracts headers from roughly 1.4 million released email records - classifying pages with dual OCR engines, locating redactions with a fine-tuned Mask R-CNN, and recovering sender and recipient fields - then resolved names in R through a six-pass matching pipeline (exact, substring, middle-initial, reversal, Jaro-Winkler fuzzy, and curated regex) into a longitudinal directed network of `r comma(n_nodes)` confirmed unique individuals across `r n_periods` yearly waves, 2000–2020 (`r comma(n_dyads)` unique communication ties). Two hypotheses drawn from the literature on brokerage and gendered social capital[^E2] structure the analysis: **H1**, that actors in structural brokerage positions - operationalized as low lagged Burt's constraint[^E3] - are disproportionately active in tie formation, with a supplementary question of *who* occupies those positions; and **H2**, that ties form disproportionately between individuals of the same sex.
+
+::: {layout-ncol=2}
+::: {layout-cell}
+
+```{r}
+#| label: EpsteinNetworkGraph
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 7
+
+set.seed(42)
+g_plot <- delete_vertices(g_agg, degree(g_agg) == 0)
+
+ggraph(g_plot, layout = "fr") +
+  geom_edge_link(alpha = 0.04, colour = "gray35") +
+  geom_node_point(aes(colour = sex), size = 1.2, alpha = 0.85) +
+  scale_colour_manual(values = sex_cols, name = "Sex") +
+  labs(
+    title    = "The Aggregated Email Network",
+    subtitle = paste0(comma(gorder(g_plot)), " non-isolate nodes, ",
+                      n_periods, " yearly waves pooled"),
+    caption  = "Node identities intentionally suppressed."
+  ) +
+  theme_void(base_size = 13) +
+  theme(
+    legend.position = "bottom",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+:::
+
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+The pooled network shows the classic core–periphery shape of an ego-anchored corpus: a dense communicative core surrounded by hundreds of low-degree contacts. Nodes are colored by sex; all names and identifying labels are deliberately withheld - the analysis concerns the *structure* of the network, not the identification of individuals. Activity is far from uniform in time: the network is sparse before Epstein's 2008 plea agreement and peaks between roughly 2013 and 2018, which motivates estimating the final model on the 2009–2019 window rather than the full panel.
+</div>
+:::
+:::
+
+::: {layout-ncol=2}
+::: {layout-cell}
+<div style="padding-right: .25rem;">
+A descriptive first pass at H2: row-normalizing ties by sender sex shows how each group distributes its emails across recipient sexes. Descriptives like this cannot distinguish genuine homophily from confounding structure - reciprocity, degree heterogeneity, and the strong tendency of past ties to persist all shape raw same-sex proportions - which is exactly what the temporal ERGM below is for.
+</div>
+:::
+
+::: {layout-cell}
+
+```{r}
+#| label: EpsteinMixingMatrix
+#| echo: false
+#| message: false
+#| warning: false
+
+el <- as_edgelist(g_agg, names = FALSE)
+
+mix <- tibble(
+  Sender    = V(g_agg)$sex[el[, 1]],
+  Recipient = V(g_agg)$sex[el[, 2]],
+  w         = E(g_agg)$weight
+) |>
+  filter(Sender != "Unknown", Recipient != "Unknown") |>
+  count(Sender, Recipient, wt = w, name = "ties") |>
+  group_by(Sender) |>
+  mutate(prop = ties / sum(ties)) |>
+  ungroup()
+
+ggplot(mix, aes(x = Recipient, y = Sender, fill = prop)) +
+  geom_tile(colour = "white", linewidth = 1) +
+  geom_text(aes(label = percent(prop, accuracy = 1)),
+            size = 5, colour = "white", fontface = "bold") +
+  scale_fill_gradient(low = "#9FB4CC", high = "#1A1A2E", guide = "none") +
+  labs(
+    title    = "Who Emails Whom?",
+    subtitle = "Share of each sender group's ties, by recipient sex",
+    x = "Recipient sex", y = "Sender sex"
+  ) +
+  coord_fixed() +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+```
+
+:::
+:::
+
+## Modeling Tie Formation Over Time
+
+Because ties are interdependent - an email begets a reply, shared contacts beget introductions - standard regression is inappropriate. We instead estimate a Bootstrapped Temporal Exponential Random Graph Model (btergm)[^E4] on the 2009–2019 window, with structural controls for reciprocity, geometrically weighted degree distributions, transitive closure (GWESP), a linear time trend, and a one-year tie-memory term (R = 1,000 bootstrap resamples). H1 enters as sender- and receiver-side effects of Burt's constraint, computed on the *prior* year's network so the predictor is not endogenous to the ties being modeled; H2 enters as a same-sex match term alongside sender and receiver sex main effects. Out-of-sample tie prediction is strong (ROC AUC = `r roc_auc` vs. a `r roc_base` random baseline; precision–recall AUC = `r pr_auc` vs. `r pr_base`), though a substantial share of that performance is carried by the memory term - persistence, not novelty, dominates elite email networks.
+
+::: {layout-ncol=2}
+::: {layout-cell}
+
+```{r}
+#| label: EpsteinForest
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 5.5
+
+ggplot(coef_df, aes(x = OR, y = fct_reorder(label, OR), colour = hyp)) +
+  geom_vline(xintercept = 1, linetype = "dashed", colour = "gray50") +
+  geom_pointrange(aes(xmin = or_lo, xmax = or_hi), linewidth = 0.8) +
+  scale_x_log10(labels = label_number(drop0trailing = TRUE)) +
+  scale_colour_manual(values = c(
+    "H1: Brokerage"      = "#E65100",
+    "H2: Homophily"      = "#C2185B",
+    "Structural control" = "gray45"
+  )) +
+  labs(
+    title    = "Odds Ratios, Final Temporal ERGM (2009\u20132019)",
+    subtitle = "95% bootstrap CIs (R = 1,000); baseline density (edges) term omitted",
+    x = "Odds Ratio (log scale)", y = NULL, colour = NULL,
+    caption  = "Values above 1 increase tie odds; below 1 decrease them."
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position     = "bottom",
+    plot.title          = element_text(face = "bold"),
+    plot.title.position = "plot"
+  )
+```
+
+:::
+
+::: {layout-cell}
+<div style="padding-left: .25rem;">
+**H1 is supported.** A one-unit increase in constraint cuts the odds of receiving a tie by `r abs(pct_val("nodeicov.constraint"))`% (OR = `r or_val("nodeicov.constraint")`, 95% CI `r or_ci("nodeicov.constraint")`) and of sending one by `r abs(pct_val("nodeocov.constraint"))`% (OR = `r or_val("nodeocov.constraint")`, 95% CI `r or_ci("nodeocov.constraint")`) - low-constraint brokers are the network's most active participants. **H2 is supported.** Same-sex dyads are `r pct_val("nodematch.sex")`% more likely to form a tie than mixed-sex dyads (OR = `r or_val("nodematch.sex")`, 95% CI `r or_ci("nodematch.sex")`), net of reciprocity (OR = `r or_val("mutual")`), popularity, transitivity, and tie persistence (memory OR = `r or_val("edgecov.memory[[i]]")`). The sex main effects reveal an unhypothesized asymmetry: male *senders* are `r abs(pct_val("nodeofactor.sex.M"))`% less likely to initiate a tie (OR = `r or_val("nodeofactor.sex.M")`), while male *receivers* are `r pct_val("nodeifactor.sex.M")`% more likely to receive one (OR = `r or_val("nodeifactor.sex.M")`) - women disproportionately write, men are disproportionately written to.
+</div>
+:::
+:::
+
+::: {layout-ncol=2}
+::: {layout-cell}
+<div style="padding-right: .25rem;">
+H1's supplementary question - *who* occupies the brokerage positions? Burt's constraint is bounded on [0, 1]: high values mean an ego's contacts are densely interconnected (little brokerage opportunity), low values mark brokers bridging otherwise disconnected groups. Because the outcome is bounded, it is modeled with a beta regression (logit link) rather than OLS, whose residual diagnostics failed here - a specification choice that materially changed the conclusion. Controlling for year fixed effects among active nodes, men have significantly higher constraint than women (β = `r b_coef`, 95% CI `r b_ci`, z = `r b_z`), meaning women disproportionately occupy the broker-like positions - though the gap is modest in practical terms (about `r gap_sd` SD).
+</div>
+:::
+
+::: {layout-cell}
+
+```{r}
+#| label: EpsteinConstraintDist
+#| echo: false
+#| message: false
+#| warning: false
+
+mean_df <- breg_df |>
+  group_by(sex) |>
+  summarise(m = mean(constraint), .groups = "drop")
+
+ggplot(breg_df, aes(x = constraint, fill = sex, colour = sex)) +
+  geom_density(alpha = 0.35, linewidth = 0.8) +
+  geom_vline(data = mean_df, aes(xintercept = m, colour = sex),
+             linetype = "dashed", linewidth = 0.7) +
+  scale_fill_manual(values = sex_cols, name = "Sex") +
+  scale_colour_manual(values = sex_cols, name = "Sex") +
+  labs(
+    title    = "Brokerage by Sex",
+    subtitle = "Lagged Burt's constraint, active node-years 2009\u20132019 (lower = more broker-like);\ndashed lines mark group means",
+    x = "Burt's constraint", y = "Density"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+:::
+:::
+
+The picture that emerges is of an elite network whose most active participants are its brokers, that clusters strongly by sex in *who talks to whom*, and in which women both initiate more communication and - modestly - occupy more of the structurally advantageous positions. Three caveats travel with these results: the corpus is the product of a federal investigation and is therefore an inherently selected sample of the true communication network; predictive performance leans heavily on tie persistence; and an MCMC-based mtergm robustness check proved computationally infeasible at this network size, leaving coefficient stability across bootstrap seeds as the primary robustness evidence. Full details, diagnostics, and replication materials are available upon request via the **Contact** page.
+
+
+[^E1]: U.S. Department of Justice, release of the Epstein email records (2025). <!-- add link to the release page when finalized -->
+[^E2]: Burt, R. S. (1998). "The Gender of Social Capital." *Rationality and Society*, 10(1), 5–46.
+[^E3]: Burt, R. S. (1992). *Structural Holes: The Social Structure of Competition.* Harvard University Press.
+[^E4]: Leifeld, P., Cranmer, S. J., & Desmarais, B. A. (2018). "Temporal Exponential Random Graph Models with btergm." *Journal of Statistical Software*, 83(6).

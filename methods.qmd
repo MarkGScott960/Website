@@ -1,0 +1,185 @@
+---
+title: "Methods and Training"
+subtitle: "Graduate and undergraduate coursework, and the toolkit it gave me"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+::: {.lead}
+I am completing an M.S. in Data Analytics and Computational Social Science at the University of Massachusetts Amherst (expected May 2027). My foundation is a B.A. in Political Science with a minor in Policy Studies from Montclair State University (2024). The courses below are summarized: projects that grew out of them have their own pages under [Research](projects.qmd).
+:::
+
+## Coursework
+
+::: {.course-grid}
+
+::: {.course-card}
+[Spring 2026]{.course-term}
+
+[DACSS 603 / POLISCI 755: Quantitative Methods]{.course-title}
+
+Distributions and sampling, standard errors and confidence intervals, OLS and multiple regression, diagnostics and model comparison, logistic regression with clustered standard errors.
+
+[Tools]{.course-label} R (tidyverse, ggplot2, sandwich, lmtest)
+
+[Related work]{.course-label} [Deterrence and Interstate Conflict](research/deterrence.qmd)
+
+:::
+
+::: {.course-card}
+[Spring 2026]{.course-term}
+
+[DACSS 790: Network Inference]{.course-title}
+
+Constructing networks from raw records, exponential random graph models, temporal ERGMs (btergm), goodness of fit, and a published-paper replication.
+
+[Tools]{.course-label} R (network, sna, btergm, igraph, ggraph)
+
+[Related work]{.course-label} [Epstein Email Network](research/epstein-network.qmd)
+
+:::
+
+::: {.course-card}
+[Summer 2026]{.course-term}
+
+[DACSS 611: Introduction to Python]{.course-title}
+
+Control flow and functions, containers, NumPy and pandas wrangling, APIs and web scraping, SQL with DuckDB, visualization, and panel regression.
+
+[Tools]{.course-label} Python (pandas, NumPy, requests, DuckDB, linearmodels)
+
+[Related work]{.course-label} [UN Voting Alignment with China](research/china-un-voting.qmd)
+
+:::
+
+::: {.course-card}
+[Summer 2026]{.course-term}
+
+[DACSS 690C: Computational Social Science Methods]{.course-title}
+
+Spatial autocorrelation (global Moran's I, LISA with Queen and KNN weights), network centrality and community detection (Girvan-Newman, Louvain), optimization and multicriteria decision making, and agent-based modeling.
+
+[Tools]{.course-label} Python (GeoPandas, libpysal, esda), R (igraph, ggraph), NetLogo
+
+:::
+
+::: {.course-card}
+[Fall 2026]{.course-term}
+
+[DACSS 756: Machine Learning for Social Scientists]{.course-title}
+
+Supervised learning workflow, regularized regression, classification, trees and random forests, boosting, validation design and leakage, calibration, and pre-registered evaluation.
+
+[Tools]{.course-label} Python (scikit-learn), R
+
+[Related work]{.course-label} [Forecasting Democratic Backsliding](research/democratic-backsliding.qmd); [Can a Fly Brain Forecast War?](research/fly-connectome.qmd)
+
+:::
+
+::: {.course-card}
+[Fall 2026]{.course-term}
+
+[DACSS 758: Text as Data]{.course-title}
+
+The full text-as-data workflow: acquiring corpora through APIs and scraping, preprocessing and its downstream consequences, bag-of-words and word-embedding representations, dictionary and supervised classification methods, topic models (LDA, STM), text in causal inference, and contextual embeddings and large language models, ending with the design and validation of LLM-based annotation pipelines.
+
+[Tools]{.course-label} R (quanteda, congress)
+
+[Related work]{.course-label} [Constraining the Commander in Chief](research/commander-in-chief.qmd)
+
+:::
+
+:::
+
+
+
+## Undergraduate Foundation
+
+B.A. in Political Science with a minor in Policy Studies, Montclair State University (2024). Courses are grouped by subfield.
+
+::: {.course-grid}
+
+::: {.course-card}
+[Montclair State University]{.course-term}
+
+[International Relations and Security]{.course-title}
+
+[Courses]{.course-label} International Relations; American Foreign Policy; Globalization and Security
+
+[Related work]{.course-label} [Deterrence and Interstate Conflict](research/deterrence.qmd)
+
+:::
+
+::: {.course-card}
+[Montclair State University]{.course-term}
+
+[Comparative Politics]{.course-title}
+
+[Courses]{.course-label} Comparative Politics; Government and Politics of China and Japan; Government and Politics of Latin America
+
+[Related work]{.course-label} [UN Voting Alignment with China](research/china-un-voting.qmd)
+
+:::
+
+::: {.course-card}
+[Montclair State University]{.course-term}
+
+[American Institutions and Law]{.course-title}
+
+[Courses]{.course-label} American Government and Politics; American Constitutional Law: The Federal System; U.S. Immigration: Law and Politics
+
+[Related work]{.course-label} [Constraining the Commander in Chief](research/commander-in-chief.qmd)
+
+:::
+
+::: {.course-card}
+[Montclair State University]{.course-term}
+
+[Political Theory]{.course-title}
+
+[Courses]{.course-label} Essentials of Political Thought
+
+:::
+
+::: {.course-card}
+[Montclair State University]{.course-term}
+
+[Public Policy (minor)]{.course-title}
+
+[Courses]{.course-label} Public Policy Analysis; Advanced Public Policy Analysis
+
+[Related work]{.course-label} [Paterson City Mayor's Office Collaboration](research/paterson-coc.qmd)
+
+:::
+
+::: {.course-card}
+[Montclair State University and Penn State]{.course-term}
+
+[Quantitative Foundations]{.course-title}
+
+[Courses]{.course-label} Statistics for Social Research; Applied Microeconomics; Calculus I (Penn State)
+
+:::
+
+:::
+
+## Toolkit
+
+::: {.toolkit-table}
+
+| Area | Methods | Tools |
+|---|---|---|
+| Statistical modeling | Linear and generalized linear models, panel fixed effects, clustered and robust standard errors, beta regression, randomization inference | R (sandwich, lmtest, betareg), Python (linearmodels) |
+| Networks | Descriptive network analysis, community detection, ERGM / TERGM, brokerage and constraint | R (igraph, tidygraph, ggraph, network, btergm, statnet, igraph) |
+| Text | Large-scale document pipelines, OCR, parsing structured legal text, dictionary measures | R (quanteda), Python (OCR engines, Detectron2 / Mask R-CNN) |
+| Forecasting and machine learning | Monte Carlo simulation, poll aggregation, rolling-origin validation, regularized and tree-based models, calibration, reservoir computing | Python (scikit-learn, NumPy, pandas, PyTorch), R |
+| Spatial and simulation | Spatial weights and local autocorrelation, agent-based models | Python (GeoPandas, esda, libpysal), NetLogo |
+| Reproducibility and communication | Literate programming, version control, scheduled pipelines, interactive graphics | Quarto, Git and GitHub, ggplot2, plotly |
+
+: {tbl-colwidths="[22,44,34]"}
+
+:::
+
+

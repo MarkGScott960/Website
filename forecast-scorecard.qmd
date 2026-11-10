@@ -7,6 +7,8 @@ format:
     toc: true
     toc-depth: 2
 engine: knitr
+execute:
+  freeze: false  # always re-run so new results in scores.rds show up
 ---
 
 ```{r}

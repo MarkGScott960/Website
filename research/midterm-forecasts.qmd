@@ -1,0 +1,30 @@
+---
+title: "2026 Midterm Election Forecasts"
+subtitle: "U.S. Senate (Team 5) and U.S. House (independent extension)"
+description: "Polling, fundamentals, and prediction-market prices blended in 100,000 simulations per chamber, scored against the results after Election Day."
+image: ../img/thumbs/midterm-forecasts.png
+categories: [Complete, Forecasting, Simulation, Python, American Politics]
+---
+
+::: {.project-meta}
+**Status:** Complete; post-election scoring in progress | **Collaborators:** Team 5, UMass Amherst DACSS | **Methods:** Bayesian poll aggregation, Monte Carlo simulation, calibration on past midterms | **Tools:** Python, R | **Code:** public on GitHub
+:::
+
+Forecasts of the 2026 U.S. Senate and House elections, each run has 100,000 simulations that blend VoteHub polling, partisan-lean fundamentals, and Kalshi prediction-market prices. The Senate model was built with Team 5 in UMass Amherst's DACSS program, chosen from seven competing versions we built and tested against one another and calibrated against more than two decades of historical polling misses. I extended it on my own into a district-by-district House model covering all 435 seats, recalibrated on the 2018 and 2022 midterms. Both models ran on a schedule every three hours through the final week and made their last call at 9:00 AM on Election Day.
+
+```{=html}
+<div class="forecast-buttons">
+  <a class="btn btn-primary btn-sm" href="../forecast.html">Final forecasts</a>
+  <a class="btn btn-outline-primary btn-sm" href="../forecast-scorecard.html">Forecast scorecard</a>
+  <a class="btn btn-outline-primary btn-sm" href="../forecast/senate/dashboard.html" target="_blank">Senate dashboard</a>
+  <a class="btn btn-outline-primary btn-sm" href="../forecast/house/dashboard.html" target="_blank">House dashboard</a>
+  <a class="btn btn-outline-primary btn-sm" href="../forecast/senate/writeup.pdf" target="_blank">Team write-up (PDF)</a>
+  <a class="btn btn-outline-primary btn-sm" href="https://github.com/MarkGScott960/2026_Midterm_Forecast" target="_blank">Code (GitHub)</a>
+</div>
+```
+
+## How the forecasts held up
+
+::: {.placeholder}
+Analysis will be added once all vote counts have been reported. Please check back soon.
+:::

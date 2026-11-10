@@ -7,6 +7,6 @@ format:
 
 Your message has been sent. I read every message personally and will get back to you as soon as I can, typically within a few business days.
 
-In the meantime, feel free to browse my [data visualization work](DataVisualization.qmd) or [current projects](projects.qmd).
+In the meantime, feel free to browse my [research](projects.qmd), the [2026 midterm forecasts](forecast.qmd), or my [data visualization work](DataVisualization.qmd).
 
 [Return to the home page](index.qmd)

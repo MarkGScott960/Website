@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>About Me – Mark G Scott</title>
+<title>About Me – Mark G. Scott</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -36,6 +36,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -44,7 +46,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ffa7aff1ec5c5cca5c5c4a13fb783f1b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-91d3cbafacbd635a29ab9a12edd06c64.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -72,7 +74,65 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-featured .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-featured'] = new List('listing-featured', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -85,7 +145,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Mark G Scott</span>
+    <span class="navbar-title">Mark G. Scott</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -100,20 +160,45 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./projects.html"> 
-<span class="menu-text">Projects</span></a>
+<span class="menu-text">Research</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-forecasts" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">2026 Forecasts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-forecasts">    
+        <li>
+    <a class="dropdown-item" href="./forecast.html">
+ <span class="dropdown-text">Final forecasts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./forecast-scorecard.html">
+ <span class="dropdown-text">Forecast scorecard</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./DataVisualization.html"> 
-<span class="menu-text">Data Exploration</span></a>
+<span class="menu-text">Visualization</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./methods.html"> 
+<span class="menu-text">Methods</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./cv.html"> 
+<span class="menu-text">CV</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./contactme.html"> 
-<span class="menu-text">Contact Me</span></a>
+<span class="menu-text">Contact</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-    <a href="https://www.linkedin.com/in/mark-scott-bb6ab4329/?isSelfProfile=true" title="Linkedin" class="quarto-navigation-tool px-1" aria-label="Linkedin"><i class="bi bi-linkedin"></i></a>
+            <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/MarkGScott960" title="GitHub" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
+    <a href="https://www.linkedin.com/in/mark-scott-bb6ab4329/" title="LinkedIn" class="quarto-navigation-tool px-1" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+    <a href="./contactme.html" title="Contact" class="quarto-navigation-tool px-1" aria-label="Contact"><i class="bi bi-envelope"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -143,25 +228,104 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-anchor-id="goals">Goals</h2>
 <p><em>I view life as one long learning experience. I love gathering knowledge from all disparate fields of study, ranging from engineering to political science. As part of this, I cannot help but focus on uncovering the mechanisms that form our world before our very eyes. My aim is to become a researcher and professor of political science, incorporating data analytics with all its beauty to such a philosophical science.</em></p>
 </section>
+<section id="research-interests" class="level2">
+<h2 data-anchor-id="research-interests">Research Interests</h2>
+<p>While I love exploring all facets of political science, I find myself inevitably drawn to investigations of why wars start, end, or never begin; how the structure of legislatures shapes what they produce; how people experiencing homelessness navigate fragmented systems of care. I also find my drawn to quantitative investigations including advanced regression, network analysis, and machine learning.</p>
+</section>
 <section id="education" class="level2">
 <h2 data-anchor-id="education">Education</h2>
-<p><strong><em>Bachelor’s</em></strong> <em>- Political Science, received 2024 from Montclair State University.</em></p>
+<p><strong><em>Bachelor’s</em></strong> <em>- Political Science, minor in Policy Studies, received 2024 from Montclair State University.</em></p>
+<p><em>Began undergraduate study in engineering at Penn State (calculus, chemistry, physics) before transferring to Montclair State to study political science.</em></p>
 <p><strong><em>Master’s</em></strong> <em>- Data Analytics, Expected May 2027 from University of Massachusetts.</em></p>
 </section>
 <section id="experience" class="level2">
 <h2 data-anchor-id="experience">Experience</h2>
-<p><strong><em>2025 - Current:</em></strong> <em>System and Ops Engineer - <a href="https://www.greencollarma.com/">Green Collar LLC</a></em></p>
-<p><strong><em>2024 - 2025:</em></strong> <em>Research Assistant - <a href="https://www.appriseinc.org/">APPRISE INC</a></em></p>
-<p><strong><em>2023 - 2024:</em></strong> <em>Research Assistant - <a href="https://www.montclair.edu/">Montclair State University</a></em></p>
+<p><strong><em>2025 - Current:</em></strong> <em>Administrative Assistant / Systems Engineer - <a href="https://www.greencollarma.com/">Green Collar LLC</a></em></p>
+<p><strong><em>2025:</em></strong> <em>Research Assistant - <a href="https://www.appriseinc.org/">APPRISE INC</a></em></p>
+<p><strong><em>2024:</em></strong> <em>Research Assistant - <a href="https://www.montclair.edu/">Montclair State University</a></em></p>
+<p><em>Research assistant to Dr.&nbsp;Fanny Lauby on a project examining how school counselors’ knowledge and local law shape college and educational outcomes for youth across census-designated places. Built and coded a contact dataset for survey outreach, and coded texts for the project’s literature review.</em></p>
 <p><strong><em>2018 - 2024:</em></strong> <em>Shift Leader - <a href="https://www.qdoba.com/">Qdoba</a></em></p>
-<p><a href="files/resume.pdf" target="_blank">Full Résumé (PDF)</a></p>
+<p><a href="./cv.html">Full CV</a> | <a href="files/resume.pdf" target="_blank">Download CV (PDF)</a></p>
 </section>
-</div>  
+</div> 
+  <hr class="about-sep">
+   <div class="about-links">
+  <a href="https://github.com/MarkGScott960" class="about-link" rel="" target="">
+    <i class="bi bi-github"></i>
+     <span class="about-link-text">GitHub</span>
+  </a>
+  <a href="https://www.linkedin.com/in/mark-scott-bb6ab4329/" class="about-link" rel="" target="">
+    <i class="bi bi-linkedin"></i>
+     <span class="about-link-text">LinkedIn</span>
+  </a>
+  <a href="/cv.html" class="about-link" rel="" target="">
+    <i class="bi bi-file-earmark-person"></i>
+     <span class="about-link-text">CV</span>
+  </a>
+</div>
 </div>
 
+<section id="featured-work" class="level2 home-section-title">
+<h2 class="home-section-title" data-anchor-id="featured-work">Featured Work</h2>
+<div id="listing-featured" class="quarto-listing quarto-listing-container-grid">
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-categories="Q29tcGxldGUlMkNGb3JlY2FzdGluZyUyQ1NpbXVsYXRpb24lMkNQeXRob24lMkNBbWVyaWNhbiUyMFBvbGl0aWNz" data-listing-file-modified-sort="1794275715234" data-listing-reading-time-sort="2" data-listing-word-count-sort="203">
+<a href="./research/midterm-forecasts.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/midterm-forecasts.png" class="thumbnail-image card-img" style="height: 160px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+2026 Midterm Election Forecasts
+</h5>
+<div class="card-text listing-description delink">
+<p>Polling, fundamentals, and prediction-market prices blended in 100,000 simulations per chamber, scored against the results after Election Day.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="SW4lMjBwcm9ncmVzcyUyQ05ldHdvcmtzJTJDUHl0aG9uJTJDUg==" data-listing-file-modified-sort="1793846862052" data-listing-reading-time-sort="14" data-listing-word-count-sort="2781">
+<a href="./research/epstein-network.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/epstein-network.png" class="thumbnail-image card-img" style="height: 160px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Epstein Email Network
+</h5>
+<div class="card-text listing-description delink">
+<p>A temporal network of the released Epstein email records, modeled with bootstrapped TERGMs to test brokerage and same-sex homophily.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="2" data-categories="SW4lMjBwcm9ncmVzcyUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ0ZvcmVjYXN0aW5nJTJDUHl0aG9uJTJDQ29tcGFyYXRpdmUlMjBQb2xpdGljcw==" data-listing-file-modified-sort="1794275488022" data-listing-reading-time-sort="3" data-listing-word-count-sort="411">
+<a href="./research/democratic-backsliding.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/democratic-backsliding.png" class="thumbnail-image card-img" style="height: 160px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Forecasting Democratic Backsliding
+</h5>
+<div class="card-text listing-description delink">
+<p>A pre-registered machine-learning study testing whether Paxton-style warning signs in V-Dem data forecast the onset and breakdown of democratic backsliding.</p>
+</div>
+</div>
+</div></a>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
+<p><a href="./projects.html">See all research</a></p>
 
 
 
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -230,7 +394,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/markgscott960\.github\.io\/Website\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -566,13 +730,13 @@ ul.task-list li input[type="checkbox"] {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>© Copyright 2025, Mark G Scott</p>
+<p>© 2025-2026, Mark G. Scott</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p>Built with <a href="https://quarto.org/">Quarto</a></p>
+<p>Built with <a href="https://quarto.org/">Quarto</a> and R</p>
 </div>
   </div>
 </footer>

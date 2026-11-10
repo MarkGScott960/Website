@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Projects – Mark G Scott</title>
+<title>Research – Mark G. Scott</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -36,6 +36,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -45,7 +47,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ffa7aff1ec5c5cca5c5c4a13fb783f1b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-91d3cbafacbd635a29ab9a12edd06c64.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,7 +75,65 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-research-list .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-title','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-research-list'] = new List('listing-research-list', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -86,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Mark G Scott</span>
+    <span class="navbar-title">Mark G. Scott</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -101,20 +161,45 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./projects.html" aria-current="page"> 
-<span class="menu-text">Projects</span></a>
+<span class="menu-text">Research</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-forecasts" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">2026 Forecasts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-forecasts">    
+        <li>
+    <a class="dropdown-item" href="./forecast.html">
+ <span class="dropdown-text">Final forecasts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./forecast-scorecard.html">
+ <span class="dropdown-text">Forecast scorecard</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./DataVisualization.html"> 
-<span class="menu-text">Data Exploration</span></a>
+<span class="menu-text">Visualization</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./methods.html"> 
+<span class="menu-text">Methods</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./cv.html"> 
+<span class="menu-text">CV</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./contactme.html"> 
-<span class="menu-text">Contact Me</span></a>
+<span class="menu-text">Contact</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-    <a href="https://www.linkedin.com/in/mark-scott-bb6ab4329/?isSelfProfile=true" title="Linkedin" class="quarto-navigation-tool px-1" aria-label="Linkedin"><i class="bi bi-linkedin"></i></a>
+            <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/MarkGScott960" title="GitHub" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
+    <a href="https://www.linkedin.com/in/mark-scott-bb6ab4329/" title="LinkedIn" class="quarto-navigation-tool px-1" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+    <a href="./contactme.html" title="Contact" class="quarto-navigation-tool px-1" aria-label="Contact"><i class="bi bi-envelope"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -124,21 +209,14 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#professional-projects" id="toc-professional-projects" class="nav-link active" data-scroll-target="#professional-projects">Professional Projects</a></li>
-  <li><a href="#personal-projects" id="toc-personal-projects" class="nav-link" data-scroll-target="#personal-projects">Personal Projects</a></li>
-  </ul>
-</nav>
-    </div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(9)</span></div><div class="category" data-category="QW1lcmljYW4lMjBQb2xpdGljcw==">American Politics <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Q29tcGFyYXRpdmUlMjBQb2xpdGljcw==">Comparative Politics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q29tcGxldGU=">Complete <span class="quarto-category-count">(5)</span></div><div class="category" data-category="Q29uZmxpY3Q=">Conflict <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Rm9yZWNhc3Rpbmc=">Forecasting <span class="quarto-category-count">(3)</span></div><div class="category" data-category="SG91c2luZw==">Housing <span class="quarto-category-count">(2)</span></div><div class="category" data-category="SW4lMjBwcm9ncmVzcw==">In progress <span class="quarto-category-count">(3)</span></div><div class="category" data-category="SW50ZXJuYXRpb25hbCUyMFJlbGF0aW9ucw==">International Relations <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TWl4ZWQlMjBNZXRob2Rz">Mixed Methods <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TmV0d29ya3M=">Networks <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UGFuZWwlMjBSZWdyZXNzaW9u">Panel Regression <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UGxhbm5lZA==">Planned <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UG9saWN5JTIwQW5hbHlzaXM=">Policy Analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(5)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(3)</span></div><div class="category" data-category="UmVncmVzc2lvbg==">Regression <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2ltdWxhdGlvbg==">Simulation <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3VydmV5JTIwUmVzZWFyY2g=">Survey Research <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGV4dCUyMGFzJTIwRGF0YQ==">Text as Data <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Projects</h1>
+<h1 class="title">Research</h1>
+<p class="subtitle lead">Projects in political science and computational social science</p>
 </div>
 
 
@@ -155,47 +233,262 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="professional-projects" class="level1">
-<h1>Professional Projects</h1>
-<section id="completed-projects" class="level2">
-<h2 class="anchored" data-anchor-id="completed-projects">Completed Projects</h2>
-<section id="midterm-election-forecasts" class="level3">
-<h3 class="anchored" data-anchor-id="midterm-election-forecasts">2026 Midterm Election Forecasts</h3>
-<p>Forecasts of the 2026 U.S. Senate and House elections, each run as 100,000 simulations that blend VoteHub polling, partisan-lean fundamentals, and Kalshi prediction-market prices. The Senate model was built with Team 5 in UMass Amherst’s DACSS program, chosen from seven competing versions we built and tested against one another and calibrated against more than two decades of historical polling misses. I extended it on my own into a district-by-district House model covering all 435 seats, recalibrated on the 2018 and 2022 midterms. Both models ran on a schedule every three hours through the final week and made their last call at 9:00 AM on Election Day.</p>
-<p>You can find the forecast summary here: <a href="./forecast.html">2026 Midterm Forecasts</a>, or open the full dashboards directly: <a href="forecast/senate/dashboard.html" target="_blank">Senate Dashboard (HTML)</a> | <a href="forecast/house/dashboard.html" target="_blank">House Dashboard (HTML)</a> | <a href="https://github.com/MarkGScott960/2026_Midterm_Forecast" target="_blank">Code (GitHub)</a></p>
-</section>
-<section id="paterson-city-mayors-office-collaboration" class="level3">
-<h3 class="anchored" data-anchor-id="paterson-city-mayors-office-collaboration">Paterson City Mayor’s Office Collaboration</h3>
-<p>As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor’s Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuums of Care to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.</p>
-<p>You can find the full chapter here: <a href="files/PassaicCoC.pdf" target="_blank">Paterson City Mayor’s Office Collaboration (PDF)</a></p>
-</section>
-</section>
-<section id="planned-projects" class="level2">
-<h2 class="anchored" data-anchor-id="planned-projects">Planned Projects</h2>
-<section id="an-exploratory-study-of-end-of-life-planning-among-unsheltered-and-unhoused-individuals" class="level3">
-<h3 class="anchored" data-anchor-id="an-exploratory-study-of-end-of-life-planning-among-unsheltered-and-unhoused-individuals">An Exploratory Study of End-of-Life Planning Among Unsheltered and Unhoused Individuals</h3>
-<p>This project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life’s end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.</p>
-<p>You can find the full proposal here: <a href="files/ResearchProposal.pdf" target="_blank">Research Proposal (PDF)</a></p>
-</section>
-</section>
-</section>
-<section id="personal-projects" class="level1">
-<h1>Personal Projects</h1>
-<section id="current-projects" class="level2">
-<h2 class="anchored" data-anchor-id="current-projects">Current Projects</h2>
-<section id="epstein-files-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="epstein-files-analysis">Epstein Files Analysis</h3>
-<p>This ongoing project maps the social network embedded in the released Epstein corpus from the Epstein Transparency Act. A custom Python pipeline extracts email headers from tens of thousands of PDF pages, using a Mask R-CNN model to detect redactions and dual OCR engines to recover text, before a multi-pass name resolution process in R consolidates senders and recipients into a clean longitudinal network of roughly 1,000 individuals across 21 time periods. The network is then modeled using Bootstrapped Temporal Exponential Random Graph Models (BTERGM) to test two hypotheses drawn from the literature on gender and social capital. <strong>Research Questions</strong>: (1) Do ties form disproportionately between individuals of the same sex? (2) Are women more likely to occupy brokerage positions, as measured by lagged Burt’s constraint? Results support sex-based homophily in tie formation and offer weak support for the brokerage hypothesis-women exhibit marginally lower constraint (i.e., are slightly more broker-like), though the effect is small. A notable secondary finding is an asymmetric sex pattern in tie formation: men initiate fewer ties but receive more. This work was completed in collaboration with Boaz Alkalay and Elizabeth Miller.</p>
-<p>For the full analysis please use the contact me page, or for a short synopsis please view the Data Exploration page.</p>
-</section>
-<section id="deterence-theory-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="deterence-theory-analysis">Deterence Theory Analysis</h3>
-<p>This project examined deterrence theory using state-year data from the Correlates of War (COW) and Varieties of Democracy (V-Dem) projects. Deterrence theory posits that States with greater military capability are less likely to be attacked and, therefore, to participate in conflict. This is closely related to Realist theories, which argue that the distribution of relative power in the international system is the primary influence on the probability of conflict. This yields a straightforward, testable hypothesis: as military capability increases, does the probability of participation in interstate conflict decrease? <strong>Research Question</strong>: Does greater military capability reduce the probability that a state participates in interstate conflict? You can find an abbreviated summary on the <code>Data Visualization</code> tab, or find the full text here: <a href="files/DeterenceProject.html" target="_blank">Deterence Project (HTML)</a></p>
+<p>Each card opens a short write-up of the question, data, methods, and findings. Use the categories on the right to filter by status (Complete, In progress, Planned) or by method.</p>
+<div id="listing-research-list" class="quarto-listing quarto-listing-container-grid">
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-categories="Q29tcGxldGUlMkNGb3JlY2FzdGluZyUyQ1NpbXVsYXRpb24lMkNQeXRob24lMkNBbWVyaWNhbiUyMFBvbGl0aWNz" data-listing-file-modified-sort="1794275715234" data-listing-reading-time-sort="2" data-listing-word-count-sort="203">
+<a href="./research/midterm-forecasts.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/midterm-forecasts.png" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+2026 Midterm Election Forecasts
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGxldGU='); return false;">Complete</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Rm9yZWNhc3Rpbmc='); return false;">Forecasting</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2ltdWxhdGlvbg=='); return false;">Simulation</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QW1lcmljYW4lMjBQb2xpdGljcw=='); return false;">American Politics</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Polling, fundamentals, and prediction-market prices blended in 100,000 simulations per chamber, scored against the results after Election Day.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="SW4lMjBwcm9ncmVzcyUyQ05ldHdvcmtzJTJDUHl0aG9uJTJDUg==" data-listing-file-modified-sort="1793846862052" data-listing-reading-time-sort="14" data-listing-word-count-sort="2781">
+<a href="./research/epstein-network.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/epstein-network.png" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Epstein Email Network
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('SW4lMjBwcm9ncmVzcw=='); return false;">In progress</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TmV0d29ya3M='); return false;">Networks</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A temporal network of the released Epstein email records, modeled with bootstrapped TERGMs to test brokerage and same-sex homophily.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="2" data-categories="SW4lMjBwcm9ncmVzcyUyQ1RleHQlMjBhcyUyMERhdGElMkNSJTJDQW1lcmljYW4lMjBQb2xpdGljcw==" data-listing-file-modified-sort="1794275492962" data-listing-reading-time-sort="3" data-listing-word-count-sort="489">
+<a href="./research/commander-in-chief.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/commander-in-chief.png" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Constraining the Commander in Chief
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('SW4lMjBwcm9ncmVzcw=='); return false;">In progress</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('VGV4dCUyMGFzJTIwRGF0YQ=='); return false;">Text as Data</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QW1lcmljYW4lMjBQb2xpdGljcw=='); return false;">American Politics</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Section-level text analysis of every public law since 1993, asking whether Congress constrains the President less on national security and under unified government.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="3" data-categories="SW4lMjBwcm9ncmVzcyUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ0ZvcmVjYXN0aW5nJTJDUHl0aG9uJTJDQ29tcGFyYXRpdmUlMjBQb2xpdGljcw==" data-listing-file-modified-sort="1794275488022" data-listing-reading-time-sort="3" data-listing-word-count-sort="411">
+<a href="./research/democratic-backsliding.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/democratic-backsliding.png" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Forecasting Democratic Backsliding
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('SW4lMjBwcm9ncmVzcw=='); return false;">In progress</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">Machine Learning</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Rm9yZWNhc3Rpbmc='); return false;">Forecasting</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGFyYXRpdmUlMjBQb2xpdGljcw=='); return false;">Comparative Politics</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A pre-registered machine-learning study testing whether Paxton-style warning signs in V-Dem data forecast the onset and breakdown of democratic backsliding.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="4" data-categories="Q29tcGxldGUlMkNNYWNoaW5lJTIwTGVhcm5pbmclMkNGb3JlY2FzdGluZyUyQ1B5dGhvbiUyQ0NvbmZsaWN0" data-listing-file-modified-sort="1794275549507" data-listing-reading-time-sort="4" data-listing-word-count-sort="622">
+<a href="./research/fly-connectome.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/placeholder.svg" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Can a Fly Brain Forecast War?
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGxldGU='); return false;">Complete</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">Machine Learning</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Rm9yZWNhc3Rpbmc='); return false;">Forecasting</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29uZmxpY3Q='); return false;">Conflict</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>The Drosophila mushroom-body wiring used as a reservoir computer to forecast monthly conflict deaths, tested against random networks and standard machine learning.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="5" data-categories="Q29tcGxldGUlMkNQYW5lbCUyMFJlZ3Jlc3Npb24lMkNQeXRob24lMkNJbnRlcm5hdGlvbmFsJTIwUmVsYXRpb25z" data-listing-file-modified-sort="1794275497393" data-listing-reading-time-sort="4" data-listing-word-count-sort="694">
+<a href="./research/china-un-voting.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/china-un-voting.png" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Economic Dependence and UN Voting Alignment with China
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGxldGU='); return false;">Complete</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UGFuZWwlMjBSZWdyZXNzaW9u'); return false;">Panel Regression</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('SW50ZXJuYXRpb25hbCUyMFJlbGF0aW9ucw=='); return false;">International Relations</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Five datasets merged into a country-year panel to test whether trade or Chinese investment and debt predicts voting with China in the UN General Assembly.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="6" data-categories="Q29tcGxldGUlMkNSZWdyZXNzaW9uJTJDUiUyQ0ludGVybmF0aW9uYWwlMjBSZWxhdGlvbnM=" data-listing-file-modified-sort="1793846608776" data-listing-reading-time-sort="12" data-listing-word-count-sort="2258">
+<a href="./research/deterrence.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/deterrence.png" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Deterrence and Interstate Conflict
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGxldGU='); return false;">Complete</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmVncmVzc2lvbg=='); return false;">Regression</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('SW50ZXJuYXRpb25hbCUyMFJlbGF0aW9ucw=='); return false;">International Relations</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Logistic models with state-clustered standard errors on Correlates of War and V-Dem state-year data test whether military capability reduces conflict participation.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="7" data-categories="Q29tcGxldGUlMkNQb2xpY3klMjBBbmFseXNpcyUyQ0hvdXNpbmc=" data-listing-file-modified-sort="1794274013790" data-listing-reading-time-sort="1" data-listing-word-count-sort="187">
+<a href="./research/paterson-coc.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/placeholder.svg" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Paterson City Mayor’s Office Collaboration
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGxldGU='); return false;">Complete</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UG9saWN5JTIwQW5hbHlzaXM='); return false;">Policy Analysis</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('SG91c2luZw=='); return false;">Housing</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A Montclair State white paper chapter, written with the Paterson City Mayor’s Office, on emergency shelter length-of-stay compliance and Continuum of Care reform.</p>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="8" data-categories="UGxhbm5lZCUyQ1N1cnZleSUyMFJlc2VhcmNoJTJDTWl4ZWQlMjBNZXRob2RzJTJDSG91c2luZw==" data-listing-file-modified-sort="1793846767665" data-listing-reading-time-sort="1" data-listing-word-count-sort="152">
+<a href="./research/end-of-life-planning.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./img/thumbs/placeholder.svg" class="thumbnail-image card-img" style="height: 190px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+End-of-Life Planning Among Unsheltered and Unhoused Individuals
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UGxhbm5lZA=='); return false;">Planned</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3VydmV5JTIwUmVzZWFyY2g='); return false;">Survey Research</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TWl4ZWQlMjBNZXRob2Rz'); return false;">Mixed Methods</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('SG91c2luZw=='); return false;">Housing</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A planned mixed-methods study of how shelter status, mobility, and access to services shape end-of-life planning among people experiencing homelessness.</p>
+</div>
+</div>
+</div></a>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
 
 
-</section>
-</section>
-</section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -271,7 +564,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/markgscott960\.github\.io\/Website\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -607,13 +900,13 @@ ul.task-list li input[type="checkbox"] {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>© Copyright 2025, Mark G Scott</p>
+<p>© 2025-2026, Mark G. Scott</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p>Built with <a href="https://quarto.org/">Quarto</a></p>
+<p>Built with <a href="https://quarto.org/">Quarto</a> and R</p>
 </div>
   </div>
 </footer>

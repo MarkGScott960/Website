@@ -1,0 +1,19 @@
+---
+title: "End-of-Life Planning Among Unsheltered and Unhoused Individuals"
+subtitle: "An exploratory study (proposal)"
+description: "A planned mixed-methods study of how shelter status, mobility, and access to services shape end-of-life planning among people experiencing homelessness."
+image: ../img/thumbs/placeholder.svg
+categories: [Planned, Survey Research, Mixed Methods, Housing]
+---
+
+::: {.project-meta}
+**Status:** Planned (proposal written) | **Methods:** survey, semi-structured interviews | **Output:** research proposal (PDF)
+:::
+
+This project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life's end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.
+
+```{=html}
+<div class="forecast-buttons">
+  <a class="btn btn-primary btn-sm" href="../files/ResearchProposal.pdf" target="_blank">Read the proposal (PDF)</a>
+</div>
+```

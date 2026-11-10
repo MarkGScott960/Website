@@ -8,3 +8,11 @@ VizCode/Census/USAPOP.csv
 VizCode/Census/USAPOP.csv
 
 **/*.quarto_ipynb
+
+# R / RStudio scratch
+.RDataTmp*
+.Rhistory
+.Rproj.user/
+
+# Files staged for manual deletion during the site overhaul
+_to_delete/

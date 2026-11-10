@@ -1,39 +1,32 @@
 ---
-title: "Projects"
+title: "Research"
+subtitle: "Projects in political science and computational social science"
+listing:
+  id: research-list
+  contents:
+    - research/midterm-forecasts.qmd
+    - research/epstein-network.qmd
+    - research/commander-in-chief.qmd
+    - research/democratic-backsliding.qmd
+    - research/fly-connectome.qmd
+    - research/china-un-voting.qmd
+    - research/deterrence.qmd
+    - research/paterson-coc.qmd
+    - research/end-of-life-planning.qmd
+  type: grid
+  grid-columns: 3
+  sort: false
+  categories: true
+  fields: [image, title, description, categories]
+  image-height: 190px
+  image-placeholder: img/thumbs/placeholder.svg
+format:
+  html:
+    toc: false
 ---
 
-# Professional Projects
+Each card opens a short write-up of the question, data, methods, and findings. Use the categories on the right to filter by status (Complete, In progress, Planned) or by method.
 
-## Completed Projects
-### 2026 Midterm Election Forecasts
 
-Forecasts of the 2026 U.S. Senate and House elections, each run as 100,000 simulations that blend VoteHub polling, partisan-lean fundamentals, and Kalshi prediction-market prices. The Senate model was built with Team 5 in UMass Amherst's DACSS program, chosen from seven competing versions we built and tested against one another and calibrated against more than two decades of historical polling misses. I extended it on my own into a district-by-district House model covering all 435 seats, recalibrated on the 2018 and 2022 midterms. Both models ran on a schedule every three hours through the final week and made their last call at 9:00 AM on Election Day.
-
-You can find the forecast summary here: [2026 Midterm Forecasts](forecast.qmd), or open the full dashboards directly: <a href="forecast/senate/dashboard.html" target="_blank">Senate Dashboard (HTML)</a> | <a href="forecast/house/dashboard.html" target="_blank">House Dashboard (HTML)</a> | <a href="https://github.com/MarkGScott960/2026_Midterm_Forecast" target="_blank">Code (GitHub)</a>
-
-### Paterson City Mayor's Office Collaboration
-
-As part of a white paper published by Montclair State University, two of my peers and I worked in close collaboration with the Paterson City Mayor's Office to identify and develop solutions to an ongoing crisis in local emergency shelters. Local state law stipulates that the average length of stay in an emergency shelter must remain below a set number of days, but local shelters were not in compliance. We found that, by utilizing niche techniques ranging from merging Continuums of Care to modifying funding schemes, local emergency shelter conditions could be brought into compliance with New Jersey state law.
-
-You can find the full chapter here: <a href="files/PassaicCoC.pdf" target="_blank">Paterson City Mayor's Office Collaboration (PDF)</a>
-
-## Planned Projects
-### An Exploratory Study of End-of-Life Planning Among Unsheltered and Unhoused Individuals
-
-This project aims to examine how unsheltered and unhoused individuals engage in end-of-life (EoL) planning, an area that remains largely overlooked in homelessness and public health research. By drawing on survey data and semi-structured interviews, the study will explore how shelter status, geographic mobility, and access to medical and legal resources shape attitudes toward and engagement with EoL planning. By distinguishing between unsheltered individuals and those who are unhoused but mobile (e.g., living in vehicles), the research aims to highlight how mobility and fragmented service systems can disrupt continuity of care and planning at life's end. It is my hope the findings will inform more humane and effective policies within Continuums of Care, emphasizing the importance of aligning end-of-life decisions with individual wishes rather than structural constraints.
-
-You can find the full proposal here: <a href="files/ResearchProposal.pdf" target="_blank">Research Proposal (PDF)</a>
-
-# Personal Projects
-
-## Current Projects
-
-### Epstein Files Analysis
-
-This ongoing project maps the social network embedded in the released Epstein corpus from the Epstein Transparency Act. A custom Python pipeline extracts email headers from tens of thousands of PDF pages, using a Mask R-CNN model to detect redactions and dual OCR engines to recover text, before a multi-pass name resolution process in R consolidates senders and recipients into a clean longitudinal network of roughly 1,000 individuals across 21 time periods. The network is then modeled using Bootstrapped Temporal Exponential Random Graph Models (BTERGM) to test two hypotheses drawn from the literature on gender and social capital. **Research Questions**: (1) Do ties form disproportionately between individuals of the same sex? (2) Are women more likely to occupy brokerage positions, as measured by lagged Burt's constraint? Results support sex-based homophily in tie formation and offer weak support for the brokerage hypothesis-women exhibit marginally lower constraint (i.e., are slightly more broker-like), though the effect is small. A notable secondary finding is an asymmetric sex pattern in tie formation: men initiate fewer ties but receive more. This work was completed in collaboration with Boaz Alkalay and Elizabeth Miller. 
-
-For the full analysis please use the contact me page, or for a short synopsis please view the Data Exploration page.
-
-### Deterence Theory Analysis
-
-This project examined deterrence theory using state-year data from the Correlates of War (COW) and Varieties of Democracy (V-Dem) projects. Deterrence theory posits that States with greater military capability are less likely to be attacked and, therefore, to participate in conflict. This is closely related to Realist theories, which argue that the distribution of relative power in the international system is the primary influence on the probability of conflict. This yields a straightforward, testable hypothesis: as military capability increases, does the probability of participation in interstate conflict decrease? **Research Question**: Does greater military capability reduce the probability that a state participates in interstate conflict? You can find an abbreviated summary on the `Data Visualization` tab, or find the full text here: <a href="files/DeterenceProject.html" target="_blank">Deterence Project (HTML)</a>
+::: {#research-list}
+:::

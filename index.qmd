@@ -4,6 +4,30 @@ about:
   id: me
   template: jolla
   image: img/profile.jpg
+  links:
+    - icon: github
+      text: GitHub
+      href: https://github.com/MarkGScott960
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/mark-scott-bb6ab4329/
+    - icon: file-earmark-person
+      text: CV
+      href: cv.qmd
+listing:
+  id: featured
+  contents:
+    - research/midterm-forecasts.qmd
+    - research/epstein-network.qmd
+    - research/democratic-backsliding.qmd
+  type: grid
+  grid-columns: 3
+  sort: false
+  fields: [image, title, description]
+  image-height: 160px
+format:
+  html:
+    toc: false
 ---
 
 :::{#me}
@@ -11,22 +35,38 @@ about:
 ## Goals
 *I view life as one long learning experience. I love gathering knowledge from all disparate fields of study, ranging from engineering to political science. As part of this, I cannot help but focus on uncovering the mechanisms that form our world before our very eyes. My aim is to become a researcher and professor of political science, incorporating data analytics with all its beauty to such a philosophical science.*
 
+## Research Interests
+
+While I love exploring all facets of political science, I find myself inevitably drawn to investigations of why wars start, end, or never begin; how the structure of legislatures shapes what they produce; how people experiencing homelessness navigate fragmented systems of care. I also find my drawn to quantitative investigations including advanced regression, network analysis, and machine learning.
+
+
 ## Education
 
-***Bachelor's*** *- Political Science, received 2024 from Montclair State University.*
+***Bachelor's*** *- Political Science, minor in Policy Studies, received 2024 from Montclair State University.*
+
+*Began undergraduate study in engineering at Penn State (calculus, chemistry, physics) before transferring to Montclair State to study political science.*
 
 ***Master's*** *- Data Analytics, Expected May 2027 from University of Massachusetts.*
 
 ## Experience 
 
-***2025 - Current:*** *System and Ops Engineer - [Green Collar LLC](https://www.greencollarma.com/)*
+***2025 - Current:*** *Administrative Assistant / Systems Engineer - [Green Collar LLC](https://www.greencollarma.com/)*
 
-***2024 - 2025:*** *Research Assistant - [APPRISE INC](https://www.appriseinc.org/)*
+***2025:*** *Research Assistant - [APPRISE INC](https://www.appriseinc.org/)*
 
-***2023 - 2024:*** *Research Assistant - [Montclair State University](https://www.montclair.edu/)*
+***2024:*** *Research Assistant - [Montclair State University](https://www.montclair.edu/)*
+
+*Research assistant to Dr. Fanny Lauby on a project examining how school counselors' knowledge and local law shape college and educational outcomes for youth across census-designated places. Built and coded a contact dataset for survey outreach, and coded texts for the project's literature review.*
 
 ***2018 - 2024:*** *Shift Leader - [Qdoba](https://www.qdoba.com/)*
 
-<a href="files/resume.pdf" target="_blank">Full Résumé (PDF)</a>
+[Full CV](cv.qmd) | <a href="files/resume.pdf" target="_blank">Download CV (PDF)</a>
 
 :::
+
+## Featured Work {.home-section-title}
+
+::: {#featured}
+:::
+
+[See all research](projects.qmd)
